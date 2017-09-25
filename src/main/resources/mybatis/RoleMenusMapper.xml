@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.RoleMenusMapper">
+    <resultMap id="menuResult" type="com.marketing.system.entity.RoleMenus">
+        <id column="Rid" property="Rid" jdbcType="INTEGER"/>
+        <id column="Mid" property="Mid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap type="java.util.HashMap" id="menuHashMap">
+        <result column="id" property="value"/>
+        <result column="Name" property="Name"/>
+        <result column="Url" property="Url"/>
+        <result column="GroupId" property="GroupId"/>
+        <result column="Px" property="Px"/>
+        <result column="ParentId" property="ParentId"/>
+        <result column="Scriptid" property="Scriptid"/>
+        <result column="SystemId" property="SystemId"/>
+    </resultMap>
+
+
+    <select id="getRoleSysMenu" resultType="java.util.HashMap" parameterType="java.util.Map">
+        SELECT DISTINCT
+          rm.Mid
+        FROM
+          RoleMenus rm
+        JOIN Menu menu ON menu.id = rm.Mid
+        WHERE
+          rm.Rid IN ( #{0} )
+        AND NOT EXISTS (
+        SELECT
+          1
+        FROM
+          Menu
+        WHERE
+          parentId = rm.Mid
+        )
+   </select>
+
+
+    <select id="getMenuParentId" resultType="java.util.HashMap">
+        SELECT DISTINCT
+        ParentId id
+        FROM
+        Menu
+        WHERE
+        SystemId = #{SystemId,jdbcType=INTEGER}
+        <foreach item="item" index="index" collection="menuLeafIds"
+                 open="and id IN (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getMenuByParentIds" resultMap="menuHashMap"
+            parameterType="java.lang.String">
+        SELECT
+        id,
+        ParentId,
+        Name,
+        Url,
+        GroupId,
+        Px,
+        Scriptid,
+        SystemId
+        FROM
+        Menu
+        WHERE
+         SystemId = #{SystemId,jdbcType=INTEGER}
+        <foreach item="item" index="index" collection="ids"
+                 open="and id IN (" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+
+    <select id="fetchAllMenu" resultMap="menuHashMap">
+        SELECT
+        id,
+        ParentId,
+        Name,
+        Url,
+        GroupId,
+        Px,
+        Scriptid,
+        SystemId
+        FROM
+        Menu
+        WHERE SystemId = #{SystemId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="com.marketing.system.entity.RoleMenus">
+    delete from RoleMenus
+    where Rid = #{Rid,jdbcType=INTEGER}
+      and Mid = #{Mid,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.marketing.system.entity.RoleMenus">
+    insert into RoleMenus (Rid, Mid)
+    values (#{Rid,jdbcType=INTEGER}, #{Mid,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.marketing.system.entity.RoleMenus">
+        insert into RoleMenus
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Rid != null">
+                Rid,
+            </if>
+            <if test="Mid != null">
+                Mid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Rid != null">
+                #{Rid,jdbcType=INTEGER},
+            </if>
+            <if test="Mid != null">
+                #{Mid,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="addMenu" parameterType="java.util.HashMap">
+        <!--<selectKey resultType="int" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>-->
+        set identity_insert Menu OFF;
+        insert into Menu(
+        ParentId,
+        Name,
+        Url,
+        GroupId,
+        Px,
+        Scriptid,
+        SystemId
+        )
+        values (
+        #{ParentId},
+        #{Name},
+        #{Url},
+        #{GroupId},
+        #{Px},
+        #{Scriptid},
+        #{SystemId}
+        );
+        set identity_insert Menu OFF;
+        set identity_insert Menu ON;
+    </insert>
+
+    <update id="updateMenu" parameterType="java.util.Map">
+        update Menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ParentId!=null">
+                ParentId = #{ParentId},
+            </if>
+            <if test="Name!=null">
+                Name = #{Name},
+            </if>
+            <if test="Url!=null">
+                Url = #{Url},
+            </if>
+            <if test="GroupId!=null">
+                GroupId = #{GroupId},
+            </if>
+            <if test="Px!=null">
+                Px = #{Px},
+            </if>
+            <if test="Scriptid!=null">
+                Scriptid = #{Scriptid},
+            </if>
+            <if test="SystemId!=null">
+                SystemId = #{SystemId},
+            </if>
+        </trim>
+        where
+        id = #{id}
+    </update>
+</mapper>

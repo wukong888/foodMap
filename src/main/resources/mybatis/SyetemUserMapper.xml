@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.marketing.system.mapper.SystemUserMapper">
+    <sql id="Base_Column_List" >
+        id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job
+    </sql>
+
+    <select id="selectAll" resultType="com.marketing.system.entity.SystemUser" parameterType="java.lang.Long">
+        select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser
+    </select>
+
+    <select id="selectByPrimaryKey" resultType="com.marketing.system.entity.SystemUser" parameterType="com.marketing.system.entity.SystemUser">
+        select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByMap"  parameterType="java.util.HashMap" resultType="com.marketing.system.entity.SystemUser" >
+        select
+        <include refid="Base_Column_List" />
+        from SystemUser
+        where UserName = #{UserName,jdbcType=VARCHAR} AND Password = #{Password,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

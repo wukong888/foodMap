@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.UserInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="login_pwd" property="loginPwd" jdbcType="VARCHAR" />
+    <result column="loginpwd_modify_time" property="loginpwdModifyTime" jdbcType="TIMESTAMP" />
+    <result column="regist_time" property="registTime" jdbcType="TIMESTAMP" />
+    <result column="register_client" property="registerClient" jdbcType="VARCHAR" />
+    <result column="trade_pwd" property="tradePwd" jdbcType="VARCHAR" />
+    <result column="tradepwd_modify_time" property="tradepwdModifyTime" jdbcType="TIMESTAMP" />
+    <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="login_time" property="loginTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, uuid, login_name, login_pwd, loginpwd_modify_time, regist_time, register_client, 
+    trade_pwd, tradepwd_modify_time, invitation_code, channel_id, level, login_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from cl_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <!-- -->
+  <select id="selectByMap"  parameterType="java.util.HashMap" resultType="com.marketing.system.entity.UserInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from cl_user
+    where login_name = #{loginName,jdbcType=VARCHAR} AND login_pwd = #{loginPwd,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from cl_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.UserInfo" >
+    insert into cl_user (id, uuid, login_name, 
+      login_pwd, loginpwd_modify_time, regist_time, 
+      register_client, trade_pwd, tradepwd_modify_time, 
+      invitation_code, channel_id, level, 
+      login_time)
+    values (#{id,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
+      #{loginPwd,jdbcType=VARCHAR}, #{loginpwdModifyTime,jdbcType=TIMESTAMP}, #{registTime,jdbcType=TIMESTAMP}, 
+      #{registerClient,jdbcType=VARCHAR}, #{tradePwd,jdbcType=VARCHAR}, #{tradepwdModifyTime,jdbcType=TIMESTAMP}, 
+      #{invitationCode,jdbcType=VARCHAR}, #{channelId,jdbcType=BIGINT}, #{level,jdbcType=VARCHAR}, 
+      #{loginTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.UserInfo" >
+    insert into cl_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="loginPwd != null" >
+        login_pwd,
+      </if>
+      <if test="loginpwdModifyTime != null" >
+        loginpwd_modify_time,
+      </if>
+      <if test="registTime != null" >
+        regist_time,
+      </if>
+      <if test="registerClient != null" >
+        register_client,
+      </if>
+      <if test="tradePwd != null" >
+        trade_pwd,
+      </if>
+      <if test="tradepwdModifyTime != null" >
+        tradepwd_modify_time,
+      </if>
+      <if test="invitationCode != null" >
+        invitation_code,
+      </if>
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="loginTime != null" >
+        login_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null" >
+        #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="loginpwdModifyTime != null" >
+        #{loginpwdModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registTime != null" >
+        #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerClient != null" >
+        #{registerClient,jdbcType=VARCHAR},
+      </if>
+      <if test="tradePwd != null" >
+        #{tradePwd,jdbcType=VARCHAR},
+      </if>
+      <if test="tradepwdModifyTime != null" >
+        #{tradepwdModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invitationCode != null" >
+        #{invitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null" >
+        #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="com.marketing.system.entity.UserInfo" >
+    update cl_user
+    <set >
+      <if test="uuid != null" >
+        uuid = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null" >
+        login_pwd = #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="loginpwdModifyTime != null" >
+        loginpwd_modify_time = #{loginpwdModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registTime != null" >
+        regist_time = #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerClient != null" >
+        register_client = #{registerClient,jdbcType=VARCHAR},
+      </if>
+      <if test="tradePwd != null" >
+        trade_pwd = #{tradePwd,jdbcType=VARCHAR},
+      </if>
+      <if test="tradepwdModifyTime != null" >
+        tradepwd_modify_time = #{tradepwdModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invitationCode != null" >
+        invitation_code = #{invitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null" >
+        login_time = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.UserInfo" >
+    update cl_user
+    set uuid = #{uuid,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      login_pwd = #{loginPwd,jdbcType=VARCHAR},
+      loginpwd_modify_time = #{loginpwdModifyTime,jdbcType=TIMESTAMP},
+      regist_time = #{registTime,jdbcType=TIMESTAMP},
+      register_client = #{registerClient,jdbcType=VARCHAR},
+      trade_pwd = #{tradePwd,jdbcType=VARCHAR},
+      tradepwd_modify_time = #{tradepwdModifyTime,jdbcType=TIMESTAMP},
+      invitation_code = #{invitationCode,jdbcType=VARCHAR},
+      channel_id = #{channelId,jdbcType=BIGINT},
+      level = #{level,jdbcType=VARCHAR},
+      login_time = #{loginTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

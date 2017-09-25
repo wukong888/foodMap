@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.SysPermMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.SysPerm" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="InterfaceUrl " property="interfaceurl" jdbcType="VARCHAR" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="PermissionInit" property="permissioninit" jdbcType="VARCHAR" />
+    <result column="AddTime" property="addtime" jdbcType="TIMESTAMP" />
+    <result column="Mid" property="mid" jdbcType="INTEGER" />
+    <result column="AddUser" property="adduser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from SysPerm
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from SysPerm
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from SysPerm
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.SysPerm" >
+    insert into SysPerm (id, "InterfaceUrl ", Name, 
+      PermissionInit, AddTime, Mid, 
+      AddUser)
+    values (#{id,jdbcType=INTEGER}, #{interfaceurl,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{permissioninit,jdbcType=VARCHAR}, #{addtime,jdbcType=TIMESTAMP}, #{mid,jdbcType=INTEGER}, 
+      #{adduser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.SysPerm" >
+    insert into SysPerm
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="interfaceurl != null" >
+        "InterfaceUrl ",
+      </if>
+      <if test="name != null" >
+        Name,
+      </if>
+      <if test="permissioninit != null" >
+        PermissionInit,
+      </if>
+      <if test="addtime != null" >
+        AddTime,
+      </if>
+      <if test="mid != null" >
+        Mid,
+      </if>
+      <if test="adduser != null" >
+        AddUser,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="interfaceurl != null" >
+        #{interfaceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="permissioninit != null" >
+        #{permissioninit,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="adduser != null" >
+        #{adduser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.SysPerm" >
+    update SysPerm
+    <set >
+      <if test="interfaceurl != null" >
+        "InterfaceUrl " = #{interfaceurl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="permissioninit != null" >
+        PermissionInit = #{permissioninit,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        AddTime = #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mid != null" >
+        Mid = #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="adduser != null" >
+        AddUser = #{adduser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.SysPerm" >
+    update SysPerm
+    set "InterfaceUrl " = #{interfaceurl,jdbcType=VARCHAR},
+      Name = #{name,jdbcType=VARCHAR},
+      PermissionInit = #{permissioninit,jdbcType=VARCHAR},
+      AddTime = #{addtime,jdbcType=TIMESTAMP},
+      Mid = #{mid,jdbcType=INTEGER},
+      AddUser = #{adduser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

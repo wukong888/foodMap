@@ -18297,3 +18297,17 @@ java.lang.NullPointerException: null
 2017/09/25-09:48 [http-nio-8080-exec-10] DEBUG com.marketing.system.mapper.RoleMenusMapper.getMenuByParentIds- ==>  Preparing: SELECT id, ParentId, Name, Url, GroupId, Px, Scriptid, SystemId FROM Menu WHERE SystemId = ? and id IN ( ? , ? , ? , ? , ? , ? , ? , ? , ? ) 
 2017/09/25-09:48 [http-nio-8080-exec-10] DEBUG com.marketing.system.mapper.RoleMenusMapper.getMenuByParentIds- ==> Parameters: 3(Integer), 0(String), 10000(String), 10010(String), 10020(String), 10110(String), 10200(String), 10300(String), 10400(String), 10500(String)
 2017/09/25-09:48 [http-nio-8080-exec-10] DEBUG com.marketing.system.mapper.RoleMenusMapper.getMenuByParentIds- <==      Total: 8
+2017/09/25-19:41 [main] INFO  com.marketing.system.MarketingApplicationTests- Starting MarketingApplicationTests on 104lou42-64 with PID 32728 (started by aguan in E:\vsWorkspaces2\projectManage)
+2017/09/25-19:41 [main] DEBUG com.marketing.system.MarketingApplicationTests- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/25-19:41 [main] INFO  com.marketing.system.MarketingApplicationTests- No active profile set, falling back to default profiles: default
+2017/09/25-19:41 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/25-19:41 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/25-19:41 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/25-19:41 [main] INFO  com.marketing.system.MarketingApplicationTests- Started MarketingApplicationTests in 16.567 seconds (JVM running for 18.056)
+2017/09/25-19:47 [main] INFO  com.marketing.system.MarketingApplicationTests- Starting MarketingApplicationTests on 104lou42-64 with PID 38760 (started by aguan in E:\vsWorkspaces2\projectManage)
+2017/09/25-19:47 [main] DEBUG com.marketing.system.MarketingApplicationTests- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/25-19:47 [main] INFO  com.marketing.system.MarketingApplicationTests- No active profile set, falling back to default profiles: default
+2017/09/25-19:47 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/25-19:47 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/25-19:47 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/25-19:47 [main] INFO  com.marketing.system.MarketingApplicationTests- Started MarketingApplicationTests in 6.741 seconds (JVM running for 7.571)

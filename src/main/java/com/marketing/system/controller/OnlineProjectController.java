@@ -1,3 +1,4 @@
+/*
 package com.marketing.system.controller;
 
 
@@ -11,11 +12,13 @@ public class UpProjectController {
 
 
 
-    /**
+    */
+/**
      * 查询立项待审批列表
      *
      * @return
-     */
+     *//*
+
     @ApiOperation(value = "查询上线待审批列表")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
@@ -23,4 +26,4 @@ public class UpProjectController {
             @ApiImplicitParam(paramType = "query", name = "", value = "项目发起部门", required = false, dataType = "String")
     })
 
-}
+}*/

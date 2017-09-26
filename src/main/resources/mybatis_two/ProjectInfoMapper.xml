@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.marketing.system.mapper.ProjectInfoMapper" >
+<mapper namespace="com.marketing.system.mapper_two.ProjectInfoMapper" >
   <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProjectInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="proId" property="proid" jdbcType="VARCHAR" />
@@ -29,6 +29,21 @@
     from project_info
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <select id="getMyApplyProject" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select
+  COUNT (creater)
+  from project_info
+  where creater = #{name}
+</select>
+
+  <select id="getUpApplyProject"  parameterType="java.lang.String" >
+    select
+    COUNT (id)
+    from project_info
+    WHERE  proType = #{proType}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_info
     where id = #{id,jdbcType=INTEGER}

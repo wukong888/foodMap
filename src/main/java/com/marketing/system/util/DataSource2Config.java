@@ -18,31 +18,31 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@MapperScan(basePackages = "com.marketing.system.mapper_two", sqlSessionTemplateRef = "SqlSessionTemplate")
+@MapperScan(basePackages = "com.marketing.system.mapper_two", sqlSessionTemplateRef = "SqlSessionTemplate_two")
 public class DataSource2Config {
 
-    @Bean(name = "DataSource")
+    @Bean(name = "second-DataSource")
     @ConfigurationProperties(prefix = "spring.second-datasource")
     public DataSource testDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "SqlSessionFactory")
-    public SqlSessionFactory testSqlSessionFactory(@Qualifier("DataSource") DataSource dataSource, PageHelper pageHelper) throws Exception {
+    @Bean(name = "SqlSessionFactory_two")
+    public SqlSessionFactory testSqlSessionFactory(@Qualifier("second-DataSource") DataSource dataSource, PageHelper pageHelper) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         bean.setPlugins(new Interceptor[]{pageHelper});
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:/mybatis/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:/mybatis_two/*.xml"));
         return bean.getObject();
     }
 
-    @Bean(name = "TransactionManager")
-    public DataSourceTransactionManager testTransactionManager(@Qualifier("DataSource") DataSource dataSource) {
+    @Bean(name = "TransactionManager_two")
+    public DataSourceTransactionManager testTransactionManager(@Qualifier("second-DataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Bean(name = "SqlSessionTemplate")
-    public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("SqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+    @Bean(name = "SqlSessionTemplate_two")
+    public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("SqlSessionFactory_two") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 

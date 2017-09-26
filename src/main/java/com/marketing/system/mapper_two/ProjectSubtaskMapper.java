@@ -1,4 +1,4 @@
-package com.marketing.system.mapper;
+package com.marketing.system.mapper_two;
 
 import com.marketing.system.entity.ProjectSubtask;
 
@@ -14,4 +14,6 @@ public interface ProjectSubtaskMapper {
     int updateByPrimaryKeySelective(ProjectSubtask record);
 
     int updateByPrimaryKey(ProjectSubtask record);
+
+    Integer getMyJoinProject(String name);
 }

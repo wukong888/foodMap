@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.Properties;
 //@MapperScan("com.marketing.system.mapper")
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+		DataSourceAutoConfiguration.class})
 public class MarketingApplication extends SpringBootServletInitializer {
 	private static final Logger logger = LoggerFactory.getLogger(MarketingApplication.class);
 	//DataSource配置
@@ -50,7 +52,7 @@ public class MarketingApplication extends SpringBootServletInitializer {
 		return new DataSourceTransactionManager(dataSource());
 	}*/
 
-	@Bean
+	/*@Bean
 	public PageHelper pageHelper() {
 		PageHelper pageHelper = new PageHelper();
 		Properties p = new Properties();
@@ -63,7 +65,7 @@ public class MarketingApplication extends SpringBootServletInitializer {
 		p.setProperty("pageSizeZero", "true");
 		pageHelper.setProperties(p);
 		return pageHelper;
-	}
+	}*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(MarketingApplication.class, args);

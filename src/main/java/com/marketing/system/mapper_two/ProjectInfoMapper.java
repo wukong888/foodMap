@@ -1,4 +1,4 @@
-package com.marketing.system.mapper;
+package com.marketing.system.mapper_two;
 
 import com.marketing.system.entity.ProjectInfo;
 
@@ -14,4 +14,8 @@ public interface ProjectInfoMapper {
     int updateByPrimaryKeySelective(ProjectInfo record);
 
     int updateByPrimaryKey(ProjectInfo record);
+
+    Integer getMyApplyProject(String name);
+
+    int getUpApplyProject(String proType);
 }

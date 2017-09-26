@@ -23,6 +23,16 @@ public class ProjectTask {
 
     private Integer taskdeveloplogid;
 
+    private String handler;
+
+    public String getHandler() {
+        return handler;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
     public Integer getId() {
         return id;
     }

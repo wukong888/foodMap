@@ -103,30 +103,30 @@ public class LoginController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "username", value = "用户名", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "accessCode", value = "验证码", required = true, dataType = "String")
+            /*@ApiImplicitParam(paramType = "query", name = "accessCode", value = "验证码", required = true, dataType = "String")*/
     })
     @RequestMapping(value = "index",method = RequestMethod.GET)
     public ApiResult<SystemUser> loginDeal(@RequestParam(value = "username", required = true) String username,
                                            @RequestParam(value = "password", required = true) String password,
-                                           @RequestParam(value = "accessCode", required = false) String accessCode,
+                                           /*@RequestParam(value = "accessCode", required = false) String accessCode,*/
                                            HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
 
         ApiResult<SystemUser> r = null;
-        if (accessCode == null || accessCode == "") {
+       /* if (accessCode == null || accessCode == "") {
             r = new ApiResult<SystemUser>(Constant.FAIL_CODE_PARAM_INSUFFICIENT, "验证码不能为空！", null, null);
             return r;
-        }
+        }*/
 
         Session session = SecurityUtils.getSubject().getSession();
         //转化成小写字母
-        accessCode = accessCode.toLowerCase();
-        String v = (String) session.getAttribute("_code");
+        //accessCode = accessCode.toLowerCase();
+        //String v = (String) session.getAttribute("_code");
         //还可以读取一次后把验证码清空，这样每次登录都必须获取验证码
         //session.removeAttribute("_come");
-        if (!accessCode.equals(v)) {
+        /*if (!accessCode.equals(v)) {
             r = new ApiResult<SystemUser>(Constant.FAIL_CODE_VALUE, "验证码错误！", null, null);
             return r;
-        }
+        }*/
 
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);

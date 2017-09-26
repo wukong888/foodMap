@@ -30,8 +30,8 @@ public class IndexController {
 
     private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    /*@Autowired
-    private IndexService indexService;*/
+    @Autowired
+    private IndexService indexService;
 
     /**
      * 用户首页
@@ -55,14 +55,29 @@ public class IndexController {
         map.put("dutyName",dutyName);
         map.put("list", user);
 
-        list.add(map);
-
-
 
         //项目推送
+        //我申请的项目
+        Integer i = indexService.getMyApplyProject(user.getUserName());
+
+        //参与的项目 j 项目任务+子任务
+        Integer j = indexService.getMyJoinProject(user.getUserName());
+
+        //立项待审批
+        String proType = "1";
+        int k = indexService.getUpApplyProject(proType);
+
+
+        //上线待审批
+
+
+        map.put("applyProject",i);
+        map.put("joinProject",j);
 
         //逾期提示
 
+
+        list.add(map);
         result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,list,null);
 
         return result;

@@ -11,6 +11,12 @@ public class Menu {
 
     private Integer px;
 
+    private Integer parentid;
+
+    private String scriptid;
+
+    private Integer systemid;
+
     public Integer getId() {
         return id;
     }
@@ -24,7 +30,7 @@ public class Menu {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.trim();
     }
 
     public String getUrl() {
@@ -32,7 +38,7 @@ public class Menu {
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url = url == null ? null : url.trim();
     }
 
     public Integer getGroupid() {
@@ -49,5 +55,29 @@ public class Menu {
 
     public void setPx(Integer px) {
         this.px = px;
+    }
+
+    public Integer getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(Integer parentid) {
+        this.parentid = parentid;
+    }
+
+    public String getScriptid() {
+        return scriptid;
+    }
+
+    public void setScriptid(String scriptid) {
+        this.scriptid = scriptid == null ? null : scriptid.trim();
+    }
+
+    public Integer getSystemid() {
+        return systemid;
+    }
+
+    public void setSystemid(Integer systemid) {
+        this.systemid = systemid;
     }
 }

@@ -17,7 +17,7 @@
 
 		<!-- 数据库链接URL，用户名、密码 -->
 		<jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-			connectionURL="jdbc:sqlserver://192.168.3.14;DatabaseName=WS_Admin"
+			connectionURL="jdbc:sqlserver://192.168.3.14;DatabaseName=projectManage"
 			userId="wsdb" password="wsloan123"></jdbcConnection>
 
 		<!--生成模型的包名和位置 -->
@@ -38,10 +38,11 @@
 
 		<!-- 要生成哪些表 -->
 		<!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-		<table tableName="Menu" domainObjectName="Menu"
+		<table tableName="task_LogRecord" domainObjectName="TaskLogRecord"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false"></table>
+
 		
 	</context>
 

@@ -33,6 +33,8 @@ public class ProjectInfo {
 
     private String proprogress;
 
+    private Integer creatersquadid;
+
     public Integer getId() {
         return id;
     }
@@ -159,5 +161,13 @@ public class ProjectInfo {
 
     public void setProprogress(String proprogress) {
         this.proprogress = proprogress == null ? null : proprogress.trim();
+    }
+
+    public Integer getCreatersquadid() {
+        return creatersquadid;
+    }
+
+    public void setCreatersquadid(Integer creatersquadid) {
+        this.creatersquadid = creatersquadid;
     }
 }

@@ -38,7 +38,7 @@
 
 		<!-- 要生成哪些表 -->
 		<!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-		<table tableName="task_LogRecord" domainObjectName="TaskLogRecord"
+		<table tableName="project_info" domainObjectName="ProjectInfo"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false"></table>

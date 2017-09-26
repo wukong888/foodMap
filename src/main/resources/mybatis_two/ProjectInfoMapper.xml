@@ -20,11 +20,48 @@
     <result column="proProgress" property="proprogress" jdbcType="VARCHAR" />
     <result column="createrSquadId" property="creatersquadid" jdbcType="INTEGER" />
   </resultMap>
+
+  <resultMap type="java.util.HashMap" id="taskHashMap">
+    <result column="taskId" property="taskId" jdbcType="INTEGER" />
+    <result column="proId" property="proid" jdbcType="INTEGER" />
+    <result column="squadId" property="squadid" jdbcType="INTEGER" />
+    <result column="taskName" property="taskname" jdbcType="VARCHAR" />
+    <result column="sDate" property="sdate" jdbcType="VARCHAR" />
+    <result column="eDate" property="edate" jdbcType="VARCHAR" />
+    <result column="taskState" property="taskstate" jdbcType="VARCHAR" />
+    <result column="taskProgress" property="taskprogress" jdbcType="VARCHAR" />
+    <result column="taskLogRecordId" property="tasklogrecordid" jdbcType="INTEGER" />
+    <result column="taskDevelopLogId" property="taskdeveloplogid" jdbcType="INTEGER" />
+    <result column="handler" property="handler" jdbcType="VARCHAR" />
+  </resultMap>
+
   <sql id="Base_Column_List" >
     id, proId, proName, proType, planSDate, planEDate, proDeclare, joinId, proFilePath, 
     createDate, proState, creater, proLogRecordId, proDevelopLogId, taskId, proProgress, 
     createrSquadId
   </sql>
+
+  <!-- 基本的sql查询条件公共引用 -->
+  <sql id="searchBy">
+    <trim prefix="where" prefixOverrides="and|or">
+      <!--<if test="creater != null and creater != '' ">-->
+        creater = #{creater}
+      <!--</if>-->
+    </trim>
+  </sql>
+
+  <sql id="searchByTask">
+    <trim prefix="where" prefixOverrides="and|or">
+        task.creater = #{creater}
+    </trim>
+  </sql>
+
+  <sql id="searchBySubTask">
+    <trim prefix="where" prefixOverrides="and|or">
+        task.creater = #{creater}
+    </trim>
+  </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -32,19 +69,63 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="getMyApplyProject" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="getMyApplyProject" resultType="java.lang.Integer" parameterType="java.lang.String" >
   select
   COUNT (creater)
   from project_info
-  where creater = #{name}
+  where creater = #{creater}
 </select>
 
-  <select id="getUpApplyProject"  parameterType="java.lang.String" >
+  <select id="getUpApplyProject" resultType="java.lang.Integer"  parameterType="java.lang.String" >
     select
     COUNT (id)
     from project_info
-    WHERE  proType = #{proType}
+    WHERE  proState = #{prostate}
   </select>
+
+  <select id="getProjectInfoList" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+    select
+    id,proName,planSDate,creater,proProgress
+    from project_info
+    <include refid="searchBy"/>
+  </select>
+  <select id="getProjectInfoListNull" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+    select
+    id,proName,planSDate,creater,proProgress
+    from project_info
+
+  </select>
+
+  <select id="getProjectTaskList"  resultMap="taskHashMap"  parameterType="java.lang.String" >
+    select
+    task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress
+    from project_task task
+    JOIN project_info info ON task.proId = info.id
+    <include refid="searchByTask"/>
+  </select>
+  <select id="getProjectTaskListNull"  resultMap="taskHashMap"  parameterType="java.lang.String" >
+    select
+    task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress
+    from project_task task
+    JOIN project_info info ON task.proId = info.id
+  </select>
+
+  <select id="getProjectSubTaskList" resultType="com.marketing.system.entity.ProjectSubtask"  parameterType="java.lang.String" >
+    select
+    task.id,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress
+    from project_subtask task
+    JOIN project_task info ON task.taskId = info.taskId
+
+    <include refid="searchBySubTask"/>
+  </select>
+  <select id="getProjectSubTaskListNull"  resultType="com.marketing.system.entity.ProjectSubtask" parameterType="java.lang.String" >
+    select
+    task.id,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress
+    from project_subtask task
+    JOIN project_task info ON task.taskId = info.taskId
+
+  </select>
+
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_info

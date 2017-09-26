@@ -1,5 +1,8 @@
 package com.marketing.system.controller;
 
+import com.marketing.system.entity.ProjectInfo;
+import com.marketing.system.entity.ProjectSubtask;
+import com.marketing.system.entity.ProjectTask;
 import com.marketing.system.entity.SystemUser;
 import com.marketing.system.service.IndexService;
 import com.marketing.system.util.ApiResult;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,9 +43,8 @@ public class IndexController {
      * @return
      */
     @ApiOperation(value = "用户首页")
-    @ApiImplicitParam(paramType = "query", name = "SystemId", value = "系统Id,3:项目管理系统", required = true, dataType = "int")
     @RequestMapping(value = "/getIndexInfo", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getIndexInfo() {
+    public ApiResult<List<Map<String, Object>>> getIndexInfo() throws ParseException {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
@@ -52,9 +55,7 @@ public class IndexController {
         //职位，立项待审批、上线待审批暂时只有CEO有该权限
         String dutyName = user.getDuty();
 
-        map.put("dutyName",dutyName);
-        map.put("list", user);
-
+        map.put("dutyName", dutyName);
 
         //项目推送
         //我申请的项目
@@ -64,21 +65,46 @@ public class IndexController {
         Integer j = indexService.getMyJoinProject(user.getUserName());
 
         //立项待审批
-        String proType = "1";
-        int k = indexService.getUpApplyProject(proType);
-
+        String proState = "1";
+        Integer k = indexService.getUpApplyProject(proState);
 
         //上线待审批
+        String proTypeOnline = "3";
+        Integer m = indexService.getUpApplyProject(proTypeOnline);
 
+        map.put("applyProject", i);//我申请的项目
+        map.put("joinProject", j);//参与的项目
+        map.put("upProject", k);//立项待审批
+        map.put("onlineProject", k);//上线待审批
 
-        map.put("applyProject",i);
-        map.put("joinProject",j);
+        String creater = "";
 
-        //逾期提示
+        if ("CEO".equals(dutyName)) {
+            creater = "";
+        } else {
+            creater = user.getUserName();
+        }
+        //逾期提示 1：项目
+        List<ProjectInfo> infoList = new ArrayList<>();
 
+        infoList = indexService.getProjectInfoList(creater);
+
+        //逾期提示 2：任务
+        List<Map<String, Object>> taskList = new ArrayList<>();
+
+        taskList = indexService.getProjectTaskList(creater);
+
+        //逾期提示 3：子任务
+        List<ProjectSubtask> subtaskList = new ArrayList<>();
+
+        subtaskList = indexService.getProjectSubTaskList(creater);
+
+        map.put("infoList",infoList);
+        map.put("taskList",taskList);
+        map.put("subtaskList",subtaskList);
 
         list.add(map);
-        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,list,null);
+        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
 
         return result;
     }

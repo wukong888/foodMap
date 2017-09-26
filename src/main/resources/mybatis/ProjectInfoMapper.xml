@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.ProjectInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProjectInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="proId" property="proid" jdbcType="VARCHAR" />
+    <result column="proName" property="proname" jdbcType="VARCHAR" />
+    <result column="proType" property="protype" jdbcType="VARCHAR" />
+    <result column="planSDate" property="plansdate" jdbcType="VARCHAR" />
+    <result column="planEDate" property="planedate" jdbcType="VARCHAR" />
+    <result column="proDeclare" property="prodeclare" jdbcType="VARCHAR" />
+    <result column="joinId" property="joinid" jdbcType="INTEGER" />
+    <result column="proFilePath" property="profilepath" jdbcType="VARCHAR" />
+    <result column="createDate" property="createdate" jdbcType="VARCHAR" />
+    <result column="proState" property="prostate" jdbcType="VARCHAR" />
+    <result column="creater" property="creater" jdbcType="VARCHAR" />
+    <result column="proLogRecordId" property="prologrecordid" jdbcType="INTEGER" />
+    <result column="proDevelopLogId" property="prodeveloplogid" jdbcType="INTEGER" />
+    <result column="taskId" property="taskid" jdbcType="INTEGER" />
+    <result column="proProgress" property="proprogress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, proId, proName, proType, planSDate, planEDate, proDeclare, joinId, proFilePath, 
+    createDate, proState, creater, proLogRecordId, proDevelopLogId, taskId, proProgress
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from project_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from project_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.ProjectInfo" >
+    insert into project_info (id, proId, proName, 
+      proType, planSDate, planEDate, 
+      proDeclare, joinId, proFilePath, 
+      createDate, proState, creater, 
+      proLogRecordId, proDevelopLogId, taskId, 
+      proProgress)
+    values (#{id,jdbcType=INTEGER}, #{proid,jdbcType=VARCHAR}, #{proname,jdbcType=VARCHAR}, 
+      #{protype,jdbcType=VARCHAR}, #{plansdate,jdbcType=VARCHAR}, #{planedate,jdbcType=VARCHAR}, 
+      #{prodeclare,jdbcType=VARCHAR}, #{joinid,jdbcType=INTEGER}, #{profilepath,jdbcType=VARCHAR}, 
+      #{createdate,jdbcType=VARCHAR}, #{prostate,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
+      #{prologrecordid,jdbcType=INTEGER}, #{prodeveloplogid,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER}, 
+      #{proprogress,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectInfo" >
+    insert into project_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="proid != null" >
+        proId,
+      </if>
+      <if test="proname != null" >
+        proName,
+      </if>
+      <if test="protype != null" >
+        proType,
+      </if>
+      <if test="plansdate != null" >
+        planSDate,
+      </if>
+      <if test="planedate != null" >
+        planEDate,
+      </if>
+      <if test="prodeclare != null" >
+        proDeclare,
+      </if>
+      <if test="joinid != null" >
+        joinId,
+      </if>
+      <if test="profilepath != null" >
+        proFilePath,
+      </if>
+      <if test="createdate != null" >
+        createDate,
+      </if>
+      <if test="prostate != null" >
+        proState,
+      </if>
+      <if test="creater != null" >
+        creater,
+      </if>
+      <if test="prologrecordid != null" >
+        proLogRecordId,
+      </if>
+      <if test="prodeveloplogid != null" >
+        proDevelopLogId,
+      </if>
+      <if test="taskid != null" >
+        taskId,
+      </if>
+      <if test="proprogress != null" >
+        proProgress,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="proid != null" >
+        #{proid,jdbcType=VARCHAR},
+      </if>
+      <if test="proname != null" >
+        #{proname,jdbcType=VARCHAR},
+      </if>
+      <if test="protype != null" >
+        #{protype,jdbcType=VARCHAR},
+      </if>
+      <if test="plansdate != null" >
+        #{plansdate,jdbcType=VARCHAR},
+      </if>
+      <if test="planedate != null" >
+        #{planedate,jdbcType=VARCHAR},
+      </if>
+      <if test="prodeclare != null" >
+        #{prodeclare,jdbcType=VARCHAR},
+      </if>
+      <if test="joinid != null" >
+        #{joinid,jdbcType=INTEGER},
+      </if>
+      <if test="profilepath != null" >
+        #{profilepath,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=VARCHAR},
+      </if>
+      <if test="prostate != null" >
+        #{prostate,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null" >
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="prologrecordid != null" >
+        #{prologrecordid,jdbcType=INTEGER},
+      </if>
+      <if test="prodeveloplogid != null" >
+        #{prodeveloplogid,jdbcType=INTEGER},
+      </if>
+      <if test="taskid != null" >
+        #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="proprogress != null" >
+        #{proprogress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.ProjectInfo" >
+    update project_info
+    <set >
+      <if test="proid != null" >
+        proId = #{proid,jdbcType=VARCHAR},
+      </if>
+      <if test="proname != null" >
+        proName = #{proname,jdbcType=VARCHAR},
+      </if>
+      <if test="protype != null" >
+        proType = #{protype,jdbcType=VARCHAR},
+      </if>
+      <if test="plansdate != null" >
+        planSDate = #{plansdate,jdbcType=VARCHAR},
+      </if>
+      <if test="planedate != null" >
+        planEDate = #{planedate,jdbcType=VARCHAR},
+      </if>
+      <if test="prodeclare != null" >
+        proDeclare = #{prodeclare,jdbcType=VARCHAR},
+      </if>
+      <if test="joinid != null" >
+        joinId = #{joinid,jdbcType=INTEGER},
+      </if>
+      <if test="profilepath != null" >
+        proFilePath = #{profilepath,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null" >
+        createDate = #{createdate,jdbcType=VARCHAR},
+      </if>
+      <if test="prostate != null" >
+        proState = #{prostate,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null" >
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="prologrecordid != null" >
+        proLogRecordId = #{prologrecordid,jdbcType=INTEGER},
+      </if>
+      <if test="prodeveloplogid != null" >
+        proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER},
+      </if>
+      <if test="taskid != null" >
+        taskId = #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="proprogress != null" >
+        proProgress = #{proprogress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectInfo" >
+    update project_info
+    set proId = #{proid,jdbcType=VARCHAR},
+      proName = #{proname,jdbcType=VARCHAR},
+      proType = #{protype,jdbcType=VARCHAR},
+      planSDate = #{plansdate,jdbcType=VARCHAR},
+      planEDate = #{planedate,jdbcType=VARCHAR},
+      proDeclare = #{prodeclare,jdbcType=VARCHAR},
+      joinId = #{joinid,jdbcType=INTEGER},
+      proFilePath = #{profilepath,jdbcType=VARCHAR},
+      createDate = #{createdate,jdbcType=VARCHAR},
+      proState = #{prostate,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR},
+      proLogRecordId = #{prologrecordid,jdbcType=INTEGER},
+      proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER},
+      taskId = #{taskid,jdbcType=INTEGER},
+      proProgress = #{proprogress,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

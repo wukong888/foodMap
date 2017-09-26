@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.TaskDevelopLogMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.TaskDevelopLog" >
+    <id column="taskDevelopLogId" property="taskdeveloplogid" jdbcType="INTEGER" />
+    <result column="taskId" property="taskid" jdbcType="INTEGER" />
+    <result column="Date" property="date" jdbcType="VARCHAR" />
+    <result column="squadId" property="squadid" jdbcType="INTEGER" />
+    <result column="Emp" property="emp" jdbcType="VARCHAR" />
+    <result column="explain" property="explain" jdbcType="VARCHAR" />
+    <result column="filePath" property="filepath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    taskDevelopLogId, taskId, Date, squadId, Emp, explain, filePath
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from task_DevelopLog
+    where taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from task_DevelopLog
+    where taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.TaskDevelopLog" >
+    insert into task_DevelopLog (taskDevelopLogId, taskId, Date, 
+      squadId, Emp, explain, 
+      filePath)
+    values (#{taskdeveloplogid,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, 
+      #{squadid,jdbcType=INTEGER}, #{emp,jdbcType=VARCHAR}, #{explain,jdbcType=VARCHAR}, 
+      #{filepath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.TaskDevelopLog" >
+    insert into task_DevelopLog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskdeveloplogid != null" >
+        taskDevelopLogId,
+      </if>
+      <if test="taskid != null" >
+        taskId,
+      </if>
+      <if test="date != null" >
+        Date,
+      </if>
+      <if test="squadid != null" >
+        squadId,
+      </if>
+      <if test="emp != null" >
+        Emp,
+      </if>
+      <if test="explain != null" >
+        explain,
+      </if>
+      <if test="filepath != null" >
+        filePath,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskdeveloplogid != null" >
+        #{taskdeveloplogid,jdbcType=INTEGER},
+      </if>
+      <if test="taskid != null" >
+        #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="squadid != null" >
+        #{squadid,jdbcType=INTEGER},
+      </if>
+      <if test="emp != null" >
+        #{emp,jdbcType=VARCHAR},
+      </if>
+      <if test="explain != null" >
+        #{explain,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null" >
+        #{filepath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.TaskDevelopLog" >
+    update task_DevelopLog
+    <set >
+      <if test="taskid != null" >
+        taskId = #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        Date = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="squadid != null" >
+        squadId = #{squadid,jdbcType=INTEGER},
+      </if>
+      <if test="emp != null" >
+        Emp = #{emp,jdbcType=VARCHAR},
+      </if>
+      <if test="explain != null" >
+        explain = #{explain,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null" >
+        filePath = #{filepath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.TaskDevelopLog" >
+    update task_DevelopLog
+    set taskId = #{taskid,jdbcType=INTEGER},
+      Date = #{date,jdbcType=VARCHAR},
+      squadId = #{squadid,jdbcType=INTEGER},
+      Emp = #{emp,jdbcType=VARCHAR},
+      explain = #{explain,jdbcType=VARCHAR},
+      filePath = #{filepath,jdbcType=VARCHAR}
+    where taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
+  </update>
+</mapper>

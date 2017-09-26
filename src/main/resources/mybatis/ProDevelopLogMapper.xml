@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.ProDevelopLogMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProDevelopLog" >
+    <id column="proDevelopLogId" property="prodeveloplogid" jdbcType="INTEGER" />
+    <result column="proId" property="proid" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="Date" property="date" jdbcType="VARCHAR" />
+    <result column="squadId" property="squadid" jdbcType="VARCHAR" />
+    <result column="Emp" property="emp" jdbcType="VARCHAR" />
+    <result column="explain" property="explain" jdbcType="VARCHAR" />
+    <result column="filePath" property="filepath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    proDevelopLogId, proId, type, Date, squadId, Emp, explain, filePath
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from pro_DevelopLog
+    where proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from pro_DevelopLog
+    where proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.ProDevelopLog" >
+    insert into pro_DevelopLog (proDevelopLogId, proId, type, 
+      Date, squadId, Emp, 
+      explain, filePath)
+    values (#{prodeveloplogid,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{date,jdbcType=VARCHAR}, #{squadid,jdbcType=VARCHAR}, #{emp,jdbcType=VARCHAR}, 
+      #{explain,jdbcType=VARCHAR}, #{filepath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.ProDevelopLog" >
+    insert into pro_DevelopLog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prodeveloplogid != null" >
+        proDevelopLogId,
+      </if>
+      <if test="proid != null" >
+        proId,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="date != null" >
+        Date,
+      </if>
+      <if test="squadid != null" >
+        squadId,
+      </if>
+      <if test="emp != null" >
+        Emp,
+      </if>
+      <if test="explain != null" >
+        explain,
+      </if>
+      <if test="filepath != null" >
+        filePath,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prodeveloplogid != null" >
+        #{prodeveloplogid,jdbcType=INTEGER},
+      </if>
+      <if test="proid != null" >
+        #{proid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="squadid != null" >
+        #{squadid,jdbcType=VARCHAR},
+      </if>
+      <if test="emp != null" >
+        #{emp,jdbcType=VARCHAR},
+      </if>
+      <if test="explain != null" >
+        #{explain,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null" >
+        #{filepath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.ProDevelopLog" >
+    update pro_DevelopLog
+    <set >
+      <if test="proid != null" >
+        proId = #{proid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        Date = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="squadid != null" >
+        squadId = #{squadid,jdbcType=VARCHAR},
+      </if>
+      <if test="emp != null" >
+        Emp = #{emp,jdbcType=VARCHAR},
+      </if>
+      <if test="explain != null" >
+        explain = #{explain,jdbcType=VARCHAR},
+      </if>
+      <if test="filepath != null" >
+        filePath = #{filepath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProDevelopLog" >
+    update pro_DevelopLog
+    set proId = #{proid,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      Date = #{date,jdbcType=VARCHAR},
+      squadId = #{squadid,jdbcType=VARCHAR},
+      Emp = #{emp,jdbcType=VARCHAR},
+      explain = #{explain,jdbcType=VARCHAR},
+      filePath = #{filepath,jdbcType=VARCHAR}
+    where proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER}
+  </update>
+</mapper>

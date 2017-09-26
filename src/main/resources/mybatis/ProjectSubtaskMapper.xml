@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.ProjectSubtaskMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProjectSubtask" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="taskId" property="taskid" jdbcType="INTEGER" />
+    <result column="handler" property="handler" jdbcType="VARCHAR" />
+    <result column="subtaskName" property="subtaskname" jdbcType="VARCHAR" />
+    <result column="sDate" property="sdate" jdbcType="VARCHAR" />
+    <result column="eDate" property="edate" jdbcType="VARCHAR" />
+    <result column="subtaskState" property="subtaskstate" jdbcType="VARCHAR" />
+    <result column="subtaskProgress" property="subtaskprogress" jdbcType="VARCHAR" />
+    <result column="subtaskHandler" property="subtaskhandler" jdbcType="VARCHAR" />
+    <result column="subtaskLogRecordId" property="subtasklogrecordid" jdbcType="INTEGER" />
+    <result column="subtaskDevelopLogId" property="subtaskdeveloplogid" jdbcType="INTEGER" />
+    <result column="subtaskId" property="subtaskid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, taskId, handler, subtaskName, sDate, eDate, subtaskState, subtaskProgress, subtaskHandler, 
+    subtaskLogRecordId, subtaskDevelopLogId, subtaskId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from project_subtask
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from project_subtask
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.ProjectSubtask" >
+    insert into project_subtask (id, taskId, handler, 
+      subtaskName, sDate, eDate, 
+      subtaskState, subtaskProgress, subtaskHandler, 
+      subtaskLogRecordId, subtaskDevelopLogId, 
+      subtaskId)
+    values (#{id,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR}, 
+      #{subtaskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
+      #{subtaskstate,jdbcType=VARCHAR}, #{subtaskprogress,jdbcType=VARCHAR}, #{subtaskhandler,jdbcType=VARCHAR}, 
+      #{subtasklogrecordid,jdbcType=INTEGER}, #{subtaskdeveloplogid,jdbcType=INTEGER}, 
+      #{subtaskid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectSubtask" >
+    insert into project_subtask
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="taskid != null" >
+        taskId,
+      </if>
+      <if test="handler != null" >
+        handler,
+      </if>
+      <if test="subtaskname != null" >
+        subtaskName,
+      </if>
+      <if test="sdate != null" >
+        sDate,
+      </if>
+      <if test="edate != null" >
+        eDate,
+      </if>
+      <if test="subtaskstate != null" >
+        subtaskState,
+      </if>
+      <if test="subtaskprogress != null" >
+        subtaskProgress,
+      </if>
+      <if test="subtaskhandler != null" >
+        subtaskHandler,
+      </if>
+      <if test="subtasklogrecordid != null" >
+        subtaskLogRecordId,
+      </if>
+      <if test="subtaskdeveloplogid != null" >
+        subtaskDevelopLogId,
+      </if>
+      <if test="subtaskid != null" >
+        subtaskId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="taskid != null" >
+        #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="handler != null" >
+        #{handler,jdbcType=VARCHAR},
+      </if>
+      <if test="subtaskname != null" >
+        #{subtaskname,jdbcType=VARCHAR},
+      </if>
+      <if test="sdate != null" >
+        #{sdate,jdbcType=VARCHAR},
+      </if>
+      <if test="edate != null" >
+        #{edate,jdbcType=VARCHAR},
+      </if>
+      <if test="subtaskstate != null" >
+        #{subtaskstate,jdbcType=VARCHAR},
+      </if>
+      <if test="subtaskprogress != null" >
+        #{subtaskprogress,jdbcType=VARCHAR},
+      </if>
+      <if test="subtaskhandler != null" >
+        #{subtaskhandler,jdbcType=VARCHAR},
+      </if>
+      <if test="subtasklogrecordid != null" >
+        #{subtasklogrecordid,jdbcType=INTEGER},
+      </if>
+      <if test="subtaskdeveloplogid != null" >
+        #{subtaskdeveloplogid,jdbcType=INTEGER},
+      </if>
+      <if test="subtaskid != null" >
+        #{subtaskid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.ProjectSubtask" >
+    update project_subtask
+    <set >
+      <if test="taskid != null" >
+        taskId = #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="handler != null" >
+        handler = #{handler,jdbcType=VARCHAR},
+      </if>
+      <if test="subtaskname != null" >
+        subtaskName = #{subtaskname,jdbcType=VARCHAR},
+      </if>
+      <if test="sdate != null" >
+        sDate = #{sdate,jdbcType=VARCHAR},
+      </if>
+      <if test="edate != null" >
+        eDate = #{edate,jdbcType=VARCHAR},
+      </if>
+      <if test="subtaskstate != null" >
+        subtaskState = #{subtaskstate,jdbcType=VARCHAR},
+      </if>
+      <if test="subtaskprogress != null" >
+        subtaskProgress = #{subtaskprogress,jdbcType=VARCHAR},
+      </if>
+      <if test="subtaskhandler != null" >
+        subtaskHandler = #{subtaskhandler,jdbcType=VARCHAR},
+      </if>
+      <if test="subtasklogrecordid != null" >
+        subtaskLogRecordId = #{subtasklogrecordid,jdbcType=INTEGER},
+      </if>
+      <if test="subtaskdeveloplogid != null" >
+        subtaskDevelopLogId = #{subtaskdeveloplogid,jdbcType=INTEGER},
+      </if>
+      <if test="subtaskid != null" >
+        subtaskId = #{subtaskid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectSubtask" >
+    update project_subtask
+    set taskId = #{taskid,jdbcType=INTEGER},
+      handler = #{handler,jdbcType=VARCHAR},
+      subtaskName = #{subtaskname,jdbcType=VARCHAR},
+      sDate = #{sdate,jdbcType=VARCHAR},
+      eDate = #{edate,jdbcType=VARCHAR},
+      subtaskState = #{subtaskstate,jdbcType=VARCHAR},
+      subtaskProgress = #{subtaskprogress,jdbcType=VARCHAR},
+      subtaskHandler = #{subtaskhandler,jdbcType=VARCHAR},
+      subtaskLogRecordId = #{subtasklogrecordid,jdbcType=INTEGER},
+      subtaskDevelopLogId = #{subtaskdeveloplogid,jdbcType=INTEGER},
+      subtaskId = #{subtaskid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

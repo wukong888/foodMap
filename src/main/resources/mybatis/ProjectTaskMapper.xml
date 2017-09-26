@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.ProjectTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProjectTask" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="proId" property="proid" jdbcType="INTEGER" />
+    <result column="squadId" property="squadid" jdbcType="INTEGER" />
+    <result column="taskName" property="taskname" jdbcType="VARCHAR" />
+    <result column="sDate" property="sdate" jdbcType="VARCHAR" />
+    <result column="eDate" property="edate" jdbcType="VARCHAR" />
+    <result column="taskState" property="taskstate" jdbcType="VARCHAR" />
+    <result column="taskProgress" property="taskprogress" jdbcType="VARCHAR" />
+    <result column="taskId" property="taskid" jdbcType="INTEGER" />
+    <result column="taskLogRecordId" property="tasklogrecordid" jdbcType="INTEGER" />
+    <result column="taskDevelopLogId" property="taskdeveloplogid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, proId, squadId, taskName, sDate, eDate, taskState, taskProgress, taskId, taskLogRecordId, 
+    taskDevelopLogId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from project_task
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from project_task
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.ProjectTask" >
+    insert into project_task (id, proId, squadId, 
+      taskName, sDate, eDate, 
+      taskState, taskProgress, taskId, 
+      taskLogRecordId, taskDevelopLogId)
+    values (#{id,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{squadid,jdbcType=INTEGER}, 
+      #{taskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
+      #{taskstate,jdbcType=VARCHAR}, #{taskprogress,jdbcType=VARCHAR}, #{taskid,jdbcType=INTEGER}, 
+      #{tasklogrecordid,jdbcType=INTEGER}, #{taskdeveloplogid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectTask" >
+    insert into project_task
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="proid != null" >
+        proId,
+      </if>
+      <if test="squadid != null" >
+        squadId,
+      </if>
+      <if test="taskname != null" >
+        taskName,
+      </if>
+      <if test="sdate != null" >
+        sDate,
+      </if>
+      <if test="edate != null" >
+        eDate,
+      </if>
+      <if test="taskstate != null" >
+        taskState,
+      </if>
+      <if test="taskprogress != null" >
+        taskProgress,
+      </if>
+      <if test="taskid != null" >
+        taskId,
+      </if>
+      <if test="tasklogrecordid != null" >
+        taskLogRecordId,
+      </if>
+      <if test="taskdeveloplogid != null" >
+        taskDevelopLogId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="proid != null" >
+        #{proid,jdbcType=INTEGER},
+      </if>
+      <if test="squadid != null" >
+        #{squadid,jdbcType=INTEGER},
+      </if>
+      <if test="taskname != null" >
+        #{taskname,jdbcType=VARCHAR},
+      </if>
+      <if test="sdate != null" >
+        #{sdate,jdbcType=VARCHAR},
+      </if>
+      <if test="edate != null" >
+        #{edate,jdbcType=VARCHAR},
+      </if>
+      <if test="taskstate != null" >
+        #{taskstate,jdbcType=VARCHAR},
+      </if>
+      <if test="taskprogress != null" >
+        #{taskprogress,jdbcType=VARCHAR},
+      </if>
+      <if test="taskid != null" >
+        #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="tasklogrecordid != null" >
+        #{tasklogrecordid,jdbcType=INTEGER},
+      </if>
+      <if test="taskdeveloplogid != null" >
+        #{taskdeveloplogid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.ProjectTask" >
+    update project_task
+    <set >
+      <if test="proid != null" >
+        proId = #{proid,jdbcType=INTEGER},
+      </if>
+      <if test="squadid != null" >
+        squadId = #{squadid,jdbcType=INTEGER},
+      </if>
+      <if test="taskname != null" >
+        taskName = #{taskname,jdbcType=VARCHAR},
+      </if>
+      <if test="sdate != null" >
+        sDate = #{sdate,jdbcType=VARCHAR},
+      </if>
+      <if test="edate != null" >
+        eDate = #{edate,jdbcType=VARCHAR},
+      </if>
+      <if test="taskstate != null" >
+        taskState = #{taskstate,jdbcType=VARCHAR},
+      </if>
+      <if test="taskprogress != null" >
+        taskProgress = #{taskprogress,jdbcType=VARCHAR},
+      </if>
+      <if test="taskid != null" >
+        taskId = #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="tasklogrecordid != null" >
+        taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER},
+      </if>
+      <if test="taskdeveloplogid != null" >
+        taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectTask" >
+    update project_task
+    set proId = #{proid,jdbcType=INTEGER},
+      squadId = #{squadid,jdbcType=INTEGER},
+      taskName = #{taskname,jdbcType=VARCHAR},
+      sDate = #{sdate,jdbcType=VARCHAR},
+      eDate = #{edate,jdbcType=VARCHAR},
+      taskState = #{taskstate,jdbcType=VARCHAR},
+      taskProgress = #{taskprogress,jdbcType=VARCHAR},
+      taskId = #{taskid,jdbcType=INTEGER},
+      taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER},
+      taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

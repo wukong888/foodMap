@@ -18297,3 +18297,324 @@ java.lang.NullPointerException: null
 2017/09/25-09:48 [http-nio-8080-exec-10] DEBUG com.marketing.system.mapper.RoleMenusMapper.getMenuByParentIds- ==>  Preparing: SELECT id, ParentId, Name, Url, GroupId, Px, Scriptid, SystemId FROM Menu WHERE SystemId = ? and id IN ( ? , ? , ? , ? , ? , ? , ? , ? , ? ) 
 2017/09/25-09:48 [http-nio-8080-exec-10] DEBUG com.marketing.system.mapper.RoleMenusMapper.getMenuByParentIds- ==> Parameters: 3(Integer), 0(String), 10000(String), 10010(String), 10020(String), 10110(String), 10200(String), 10300(String), 10400(String), 10500(String)
 2017/09/25-09:48 [http-nio-8080-exec-10] DEBUG com.marketing.system.mapper.RoleMenusMapper.getMenuByParentIds- <==      Total: 8
+2017/09/25-16:06 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 7524 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/25-16:06 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/25-16:06 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/25-16:06 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/25-16:06 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/25-16:06 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/25-16:06 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 4.898 seconds (JVM running for 5.687)
+2017/09/25-16:06 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============
+2017/09/25-16:11 [http-nio-5826-exec-6] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser where UserName = ? AND Password = ? 
+2017/09/25-16:11 [http-nio-5826-exec-6] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==> Parameters: 陈冬和(String), 5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5(String)
+2017/09/25-16:11 [http-nio-5826-exec-6] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- <==      Total: 1
+2017/09/25-16:11 [http-nio-5826-exec-6] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser WHERE id = ? 
+2017/09/25-16:11 [http-nio-5826-exec-6] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==> Parameters: 163(Integer)
+2017/09/25-16:11 [http-nio-5826-exec-6] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- <==      Total: 1
+2017/09/25-16:11 [http-nio-5826-exec-6] INFO  com.marketing.system.shiro.MyShiroRealm- 身份认证成功，登录用户：陈冬和
+2017/09/25-16:16 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.RoleMenusMapper.fetchAllMenu- ==>  Preparing: SELECT id, ParentId, Name, Url, GroupId, Px, Scriptid, SystemId FROM Menu WHERE SystemId = ? 
+2017/09/25-16:16 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.RoleMenusMapper.fetchAllMenu- ==> Parameters: 3(Integer)
+2017/09/25-16:16 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.RoleMenusMapper.fetchAllMenu- <==      Total: 9
+2017/09/25-16:30 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 9048 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/25-16:30 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/25-16:30 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/25-16:30 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/25-16:30 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/25-16:30 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/25-16:31 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 4.807 seconds (JVM running for 5.506)
+2017/09/25-16:31 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============
+2017/09/25-16:35 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser where UserName = ? AND Password = ? 
+2017/09/25-16:35 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==> Parameters: 陈冬和(String), 5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5(String)
+2017/09/25-16:35 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- <==      Total: 1
+2017/09/25-16:35 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser WHERE id = ? 
+2017/09/25-16:35 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==> Parameters: 163(Integer)
+2017/09/25-16:35 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- <==      Total: 1
+2017/09/25-16:35 [http-nio-5826-exec-2] INFO  com.marketing.system.shiro.MyShiroRealm- 身份认证成功，登录用户：陈冬和
+2017/09/25-16:39 [http-nio-5826-exec-8] ERROR org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/].[dispatcherServlet]- Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'indexController': Unsatisfied dependency expressed through field 'indexService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.marketing.system.service.IndexService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}] with root cause
+org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.marketing.system.service.IndexService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1493)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1104)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1264)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:325)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.web.method.HandlerMethod.createWithResolvedBean(HandlerMethod.java:299)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.getHandlerInternal(AbstractHandlerMethodMapping.java:323)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodMapping.getHandlerInternal(AbstractHandlerMethodMapping.java:61)
+	at org.springframework.web.servlet.handler.AbstractHandlerMapping.getHandler(AbstractHandlerMapping.java:352)
+	at org.springframework.web.servlet.DispatcherServlet.getHandler(DispatcherServlet.java:1160)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:940)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:901)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:970)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:872)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:661)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:846)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.shiro.web.servlet.ProxiedFilterChain.doFilter(ProxiedFilterChain.java:61)
+	at org.apache.shiro.web.servlet.AdviceFilter.executeChain(AdviceFilter.java:108)
+	at org.apache.shiro.web.servlet.AdviceFilter.doFilterInternal(AdviceFilter.java:137)
+	at org.apache.shiro.web.servlet.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:125)
+	at org.apache.shiro.web.servlet.ProxiedFilterChain.doFilter(ProxiedFilterChain.java:66)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter.executeChain(AbstractShiroFilter.java:449)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter$1.call(AbstractShiroFilter.java:365)
+	at org.apache.shiro.subject.support.SubjectCallable.doCall(SubjectCallable.java:90)
+	at org.apache.shiro.subject.support.SubjectCallable.call(SubjectCallable.java:83)
+	at org.apache.shiro.subject.support.DelegatingSubject.execute(DelegatingSubject.java:383)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter.doFilterInternal(AbstractShiroFilter.java:362)
+	at org.apache.shiro.web.servlet.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:125)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at com.marketing.system.util.CorsFilter.doFilter(CorsFilter.java:32)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:108)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:81)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:478)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:80)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:799)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:868)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1457)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)
+2017/09/25-16:40 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 6072 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/25-16:40 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/25-16:40 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/25-16:40 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/25-16:40 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/25-16:40 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/25-16:40 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 5.065 seconds (JVM running for 5.755)
+2017/09/25-16:40 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============
+2017/09/25-16:40 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser where UserName = ? AND Password = ? 
+2017/09/25-16:40 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==> Parameters: 陈冬和(String), 5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5(String)
+2017/09/25-16:40 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- <==      Total: 1
+2017/09/25-16:40 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser WHERE id = ? 
+2017/09/25-16:40 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==> Parameters: 163(Integer)
+2017/09/25-16:40 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- <==      Total: 1
+2017/09/25-16:40 [http-nio-5826-exec-3] INFO  com.marketing.system.shiro.MyShiroRealm- 身份认证成功，登录用户：陈冬和
+2017/09/25-16:40 [http-nio-5826-exec-2] ERROR org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/].[dispatcherServlet]- Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
+java.lang.NullPointerException: null
+	at com.marketing.system.controller.IndexController.getIndexInfo(IndexController.java:55)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:133)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:97)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:827)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:738)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:967)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:901)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:970)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:872)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:661)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:846)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.shiro.web.servlet.ProxiedFilterChain.doFilter(ProxiedFilterChain.java:61)
+	at org.apache.shiro.web.servlet.AdviceFilter.executeChain(AdviceFilter.java:108)
+	at org.apache.shiro.web.servlet.AdviceFilter.doFilterInternal(AdviceFilter.java:137)
+	at org.apache.shiro.web.servlet.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:125)
+	at org.apache.shiro.web.servlet.ProxiedFilterChain.doFilter(ProxiedFilterChain.java:66)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter.executeChain(AbstractShiroFilter.java:449)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter$1.call(AbstractShiroFilter.java:365)
+	at org.apache.shiro.subject.support.SubjectCallable.doCall(SubjectCallable.java:90)
+	at org.apache.shiro.subject.support.SubjectCallable.call(SubjectCallable.java:83)
+	at org.apache.shiro.subject.support.DelegatingSubject.execute(DelegatingSubject.java:383)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter.doFilterInternal(AbstractShiroFilter.java:362)
+	at org.apache.shiro.web.servlet.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:125)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at com.marketing.system.util.CorsFilter.doFilter(CorsFilter.java:32)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:108)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:81)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:478)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:80)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:799)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:868)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1457)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)
+2017/09/25-16:42 [http-nio-5826-exec-7] ERROR org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/].[dispatcherServlet]- Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
+java.lang.NullPointerException: null
+	at com.marketing.system.controller.IndexController.getIndexInfo(IndexController.java:55)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:133)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:97)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:827)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:738)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:967)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:901)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:970)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:872)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:661)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:846)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.shiro.web.servlet.ProxiedFilterChain.doFilter(ProxiedFilterChain.java:61)
+	at org.apache.shiro.web.servlet.AdviceFilter.executeChain(AdviceFilter.java:108)
+	at org.apache.shiro.web.servlet.AdviceFilter.doFilterInternal(AdviceFilter.java:137)
+	at org.apache.shiro.web.servlet.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:125)
+	at org.apache.shiro.web.servlet.ProxiedFilterChain.doFilter(ProxiedFilterChain.java:66)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter.executeChain(AbstractShiroFilter.java:449)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter$1.call(AbstractShiroFilter.java:365)
+	at org.apache.shiro.subject.support.SubjectCallable.doCall(SubjectCallable.java:90)
+	at org.apache.shiro.subject.support.SubjectCallable.call(SubjectCallable.java:83)
+	at org.apache.shiro.subject.support.DelegatingSubject.execute(DelegatingSubject.java:383)
+	at org.apache.shiro.web.servlet.AbstractShiroFilter.doFilterInternal(AbstractShiroFilter.java:362)
+	at org.apache.shiro.web.servlet.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:125)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at com.marketing.system.util.CorsFilter.doFilter(CorsFilter.java:32)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:108)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:81)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:478)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:80)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:799)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:868)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1457)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:745)
+2017/09/25-16:48 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 1124 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/25-16:48 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/25-16:48 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/25-16:48 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/25-16:48 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/25-16:48 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/25-16:48 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 4.52 seconds (JVM running for 5.139)
+2017/09/25-16:48 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============
+2017/09/25-16:48 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser where UserName = ? AND Password = ? 
+2017/09/25-16:48 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==> Parameters: 陈冬和(String), 5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5(String)
+2017/09/25-16:48 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- <==      Total: 1
+2017/09/25-16:48 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser WHERE id = ? 
+2017/09/25-16:48 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==> Parameters: 163(Integer)
+2017/09/25-16:48 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- <==      Total: 1
+2017/09/25-16:48 [http-nio-5826-exec-2] INFO  com.marketing.system.shiro.MyShiroRealm- 身份认证成功，登录用户：陈冬和
+2017/09/25-16:56 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 3880 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/25-16:56 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/25-16:56 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/25-16:56 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/25-16:56 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/25-16:56 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/25-16:56 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 4.475 seconds (JVM running for 5.181)
+2017/09/25-16:56 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============
+2017/09/25-16:56 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser where UserName = ? AND Password = ? 
+2017/09/25-16:56 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==> Parameters: 陈冬和(String), 5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5(String)
+2017/09/25-16:56 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- <==      Total: 1
+2017/09/25-16:56 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser WHERE id = ? 
+2017/09/25-16:56 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==> Parameters: 163(Integer)
+2017/09/25-16:56 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- <==      Total: 1
+2017/09/25-16:56 [http-nio-5826-exec-3] INFO  com.marketing.system.shiro.MyShiroRealm- 身份认证成功，登录用户：陈冬和
+2017/09/25-17:00 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 4788 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/25-17:00 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/25-17:00 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/25-17:00 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/25-17:00 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/25-17:00 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/25-17:01 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 4.945 seconds (JVM running for 5.583)
+2017/09/25-17:01 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============
+2017/09/26-08:29 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 2424 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/26-08:29 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/26-08:29 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/26-08:29 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/26-08:29 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/26-08:29 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/26-08:29 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 4.541 seconds (JVM running for 6.571)
+2017/09/26-08:29 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============

@@ -133,13 +133,10 @@ public class LoginController {
             SecurityUtils.getSubject().login(token);
             //RememberMe这个参数设置为true后，在登陆的时候就会在客户端设置remenberme的相应cookie
             token.setRememberMe(true);
-            SystemUser userInfo = new SystemUser();
-            userInfo.setUserName(token.getUsername());
 
-            Subject currentUser = SecurityUtils.getSubject();
-            Object ob = currentUser.getPrincipal();
+            SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
 
-            r = new ApiResult<SystemUser>(Constant.SUCCEED_CODE_VALUE, "登录成功！", userInfo, null);
+            r = new ApiResult<SystemUser>(Constant.SUCCEED_CODE_VALUE, "登录成功！", user, null);
             //存入Session
             httpSession = request.getSession(true);
             httpSession.setAttribute("SysUser", token);

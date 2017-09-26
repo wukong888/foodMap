@@ -25,6 +25,20 @@ public class ProjectSubtask {
 
     private Integer subtaskid;
 
+    /**
+     * 距离逾期天数（24小时）
+     */
+    private long betweenHours;
+
+
+    public long getBetweenHours() {
+        return betweenHours;
+    }
+
+    public void setBetweenHours(long betweenHours) {
+        this.betweenHours = betweenHours;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -1,7 +1,7 @@
 package com.marketing.system.entity;
 
 public class ProjectTask {
-    private Integer id;
+    private Integer taskId;
 
     private Integer proid;
 
@@ -17,13 +17,24 @@ public class ProjectTask {
 
     private String taskprogress;
 
-    private Integer taskid;
-
     private Integer tasklogrecordid;
 
     private Integer taskdeveloplogid;
 
     private String handler;
+
+    /**
+     * 距离逾期天数
+     */
+    private long betweenDays;
+
+    public long getBetweenDays() {
+        return betweenDays;
+    }
+
+    public void setBetweenDays(long betweenDays) {
+        this.betweenDays = betweenDays;
+    }
 
     public String getHandler() {
         return handler;
@@ -31,14 +42,6 @@ public class ProjectTask {
 
     public void setHandler(String handler) {
         this.handler = handler;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getProid() {
@@ -97,12 +100,12 @@ public class ProjectTask {
         this.taskprogress = taskprogress == null ? null : taskprogress.trim();
     }
 
-    public Integer getTaskid() {
-        return taskid;
+    public Integer getTaskId() {
+        return taskId;
     }
 
-    public void setTaskid(Integer taskid) {
-        this.taskid = taskid;
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public Integer getTasklogrecordid() {

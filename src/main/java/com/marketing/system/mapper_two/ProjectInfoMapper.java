@@ -1,0 +1,35 @@
+package com.marketing.system.mapper_two;
+
+import com.marketing.system.entity.ProjectInfo;
+import com.marketing.system.entity.ProjectSubtask;
+import com.marketing.system.entity.ProjectTask;
+
+import java.util.List;
+import java.util.Map;
+
+public interface ProjectInfoMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ProjectInfo record);
+
+    int insertSelective(ProjectInfo record);
+
+    ProjectInfo selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(ProjectInfo record);
+
+    int updateByPrimaryKey(ProjectInfo record);
+
+    Integer getMyApplyProject(String name);
+
+    Integer getUpApplyProject(String prostate);
+
+    List<ProjectInfo> getProjectInfoList(String name);
+    List<ProjectInfo> getProjectInfoListNull();
+
+    List<Map<String, Object>> getProjectTaskList(String name);
+    List<Map<String, Object>> getProjectTaskListNull();
+
+    List<ProjectSubtask> getProjectSubTaskList(String name);
+    List<ProjectSubtask> getProjectSubTaskListNull();
+}

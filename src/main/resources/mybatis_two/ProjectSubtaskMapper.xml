@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProjectSubtask" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="taskId" property="taskid" jdbcType="INTEGER" />
-    <result column="handler" property="handler" jdbcType="VARCHAR" />
     <result column="subtaskName" property="subtaskname" jdbcType="VARCHAR" />
     <result column="sDate" property="sdate" jdbcType="VARCHAR" />
     <result column="eDate" property="edate" jdbcType="VARCHAR" />
@@ -16,7 +15,7 @@
     <result column="subtaskId" property="subtaskid" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, taskId, handler, subtaskName, sDate, eDate, subtaskState, subtaskProgress, subtaskHandler, 
+    id, taskId, subtaskName, sDate, eDate, subtaskState, subtaskProgress, subtaskHandler,
     subtaskLogRecordId, subtaskDevelopLogId, subtaskId
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -26,11 +25,11 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="getMyJoinProject" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="getMyJoinProject" resultType="java.lang.Integer" parameterType="java.lang.String" >
     select
     COUNT (id)
     from project_subtask
-    where handler = #{name}
+    where subtaskHandler = #{name}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -38,12 +37,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.ProjectSubtask" >
-    insert into project_subtask (id, taskId, handler, 
+    insert into project_subtask (id, taskId,
       subtaskName, sDate, eDate, 
       subtaskState, subtaskProgress, subtaskHandler, 
       subtaskLogRecordId, subtaskDevelopLogId, 
       subtaskId)
-    values (#{id,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER}, #{handler,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER},
       #{subtaskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
       #{subtaskstate,jdbcType=VARCHAR}, #{subtaskprogress,jdbcType=VARCHAR}, #{subtaskhandler,jdbcType=VARCHAR}, 
       #{subtasklogrecordid,jdbcType=INTEGER}, #{subtaskdeveloplogid,jdbcType=INTEGER}, 
@@ -57,9 +56,6 @@
       </if>
       <if test="taskid != null" >
         taskId,
-      </if>
-      <if test="handler != null" >
-        handler,
       </if>
       <if test="subtaskname != null" >
         subtaskName,
@@ -96,9 +92,6 @@
       <if test="taskid != null" >
         #{taskid,jdbcType=INTEGER},
       </if>
-      <if test="handler != null" >
-        #{handler,jdbcType=VARCHAR},
-      </if>
       <if test="subtaskname != null" >
         #{subtaskname,jdbcType=VARCHAR},
       </if>
@@ -134,9 +127,6 @@
       <if test="taskid != null" >
         taskId = #{taskid,jdbcType=INTEGER},
       </if>
-      <if test="handler != null" >
-        handler = #{handler,jdbcType=VARCHAR},
-      </if>
       <if test="subtaskname != null" >
         subtaskName = #{subtaskname,jdbcType=VARCHAR},
       </if>
@@ -170,7 +160,6 @@
   <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectSubtask" >
     update project_subtask
     set taskId = #{taskid,jdbcType=INTEGER},
-      handler = #{handler,jdbcType=VARCHAR},
       subtaskName = #{subtaskname,jdbcType=VARCHAR},
       sDate = #{sdate,jdbcType=VARCHAR},
       eDate = #{edate,jdbcType=VARCHAR},

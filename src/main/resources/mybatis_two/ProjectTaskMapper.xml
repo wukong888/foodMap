@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.marketing.system.mapper_two.ProjectTaskMapper" >
   <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProjectTask" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="taskId" property="taskId" jdbcType="INTEGER" />
     <result column="proId" property="proid" jdbcType="INTEGER" />
     <result column="squadId" property="squadid" jdbcType="INTEGER" />
     <result column="taskName" property="taskname" jdbcType="VARCHAR" />
@@ -10,25 +10,24 @@
     <result column="eDate" property="edate" jdbcType="VARCHAR" />
     <result column="taskState" property="taskstate" jdbcType="VARCHAR" />
     <result column="taskProgress" property="taskprogress" jdbcType="VARCHAR" />
-    <result column="taskId" property="taskid" jdbcType="INTEGER" />
     <result column="taskLogRecordId" property="tasklogrecordid" jdbcType="INTEGER" />
     <result column="taskDevelopLogId" property="taskdeveloplogid" jdbcType="INTEGER" />
     <result column="handler" property="handler" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, proId, squadId, taskName, sDate, eDate, taskState, taskProgress, taskId, taskLogRecordId, 
+    taskId, proId, squadId, taskName, sDate, eDate, taskState, taskProgress, taskLogRecordId,
     taskDevelopLogId,handler
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from project_task
-    where id = #{id,jdbcType=INTEGER}
+    where taskId = #{taskId,jdbcType=INTEGER}
   </select>
 
-  <select id="getMyJoinProject" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="getMyJoinProject" resultType="java.lang.Integer" parameterType="java.lang.String" >
     select
-    COUNT (id)
+    COUNT (taskId)
     from project_task
     where handler = #{name}
   </select>
@@ -36,23 +35,23 @@
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_task
-    where id = #{id,jdbcType=INTEGER}
+    where taskId = #{taskId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.ProjectTask" >
-    insert into project_task (id, proId, squadId, 
+    insert into project_task (taskId, proId, squadId,
       taskName, sDate, eDate, 
-      taskState, taskProgress, taskId, 
+      taskState, taskProgress,
       taskLogRecordId, taskDevelopLogId)
-    values (#{id,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{squadid,jdbcType=INTEGER}, 
+    values (#{taskId,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{squadid,jdbcType=INTEGER},
       #{taskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
-      #{taskstate,jdbcType=VARCHAR}, #{taskprogress,jdbcType=VARCHAR}, #{taskid,jdbcType=INTEGER}, 
+      #{taskstate,jdbcType=VARCHAR}, #{taskprogress,jdbcType=VARCHAR},
       #{tasklogrecordid,jdbcType=INTEGER}, #{taskdeveloplogid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectTask" >
     insert into project_task
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="taskId != null" >
+        taskId,
       </if>
       <if test="proid != null" >
         proId,
@@ -75,9 +74,7 @@
       <if test="taskprogress != null" >
         taskProgress,
       </if>
-      <if test="taskid != null" >
-        taskId,
-      </if>
+
       <if test="tasklogrecordid != null" >
         taskLogRecordId,
       </if>
@@ -86,8 +83,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="taskId != null" >
+        #{taskId,jdbcType=INTEGER},
       </if>
       <if test="proid != null" >
         #{proid,jdbcType=INTEGER},
@@ -110,9 +107,7 @@
       <if test="taskprogress != null" >
         #{taskprogress,jdbcType=VARCHAR},
       </if>
-      <if test="taskid != null" >
-        #{taskid,jdbcType=INTEGER},
-      </if>
+
       <if test="tasklogrecordid != null" >
         #{tasklogrecordid,jdbcType=INTEGER},
       </if>
@@ -145,9 +140,7 @@
       <if test="taskprogress != null" >
         taskProgress = #{taskprogress,jdbcType=VARCHAR},
       </if>
-      <if test="taskid != null" >
-        taskId = #{taskid,jdbcType=INTEGER},
-      </if>
+
       <if test="tasklogrecordid != null" >
         taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER},
       </if>
@@ -166,7 +159,6 @@
       eDate = #{edate,jdbcType=VARCHAR},
       taskState = #{taskstate,jdbcType=VARCHAR},
       taskProgress = #{taskprogress,jdbcType=VARCHAR},
-      taskId = #{taskid,jdbcType=INTEGER},
       taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER},
       taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}

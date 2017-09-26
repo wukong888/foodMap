@@ -35,6 +35,19 @@ public class ProjectInfo {
 
     private Integer creatersquadid;
 
+    /**
+     * 距离逾期天数
+     */
+    private long betweenDays;
+
+    public long getBetweenDays() {
+        return betweenDays;
+    }
+
+    public void setBetweenDays(long betweenDays) {
+        this.betweenDays = betweenDays;
+    }
+
     public Integer getId() {
         return id;
     }

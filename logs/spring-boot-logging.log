@@ -25598,3 +25598,50 @@ org.apache.ibatis.executor.ExecutorException: A query was run and no Result Maps
 2017/09/26-19:45 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectSubTaskListNull- ==>  Preparing: select task.id,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress from project_subtask task JOIN project_task info ON task.taskId = info.taskId 
 2017/09/26-19:45 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectSubTaskListNull- ==> Parameters: 
 2017/09/26-19:45 [http-nio-5826-exec-2] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectSubTaskListNull- <==      Total: 6
+2017/09/26-20:02 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 7512 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/26-20:02 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/26-20:02 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/26-20:02 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/26-20:02 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/26-20:02 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/26-20:02 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 4.095 seconds (JVM running for 5.472)
+2017/09/26-20:02 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============
+2017/09/26-20:15 [main] INFO  com.marketing.system.MarketingApplication- Starting MarketingApplication on PC-20170719EPFL with PID 7996 (E:\marketing\target\classes started by Administrator in E:\marketing)
+2017/09/26-20:15 [main] DEBUG com.marketing.system.MarketingApplication- Running with Spring Boot v1.5.7.RELEASE, Spring v4.3.11.RELEASE
+2017/09/26-20:15 [main] INFO  com.marketing.system.MarketingApplication- No active profile set, falling back to default profiles: default
+2017/09/26-20:15 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==>  Preparing: select id, "InterfaceUrl ", Name, PermissionInit, AddTime, Mid, AddUser from SysPerm 
+2017/09/26-20:15 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- ==> Parameters: 
+2017/09/26-20:15 [main] DEBUG com.marketing.system.mapper.SysPermMapper.selectAll- <==      Total: 7
+2017/09/26-20:15 [main] INFO  com.marketing.system.MarketingApplication- Started MarketingApplication in 4.621 seconds (JVM running for 5.215)
+2017/09/26-20:15 [main] INFO  com.marketing.system.MarketingApplication- ============= SpringBoot Start Success =============
+2017/09/26-20:15 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser where UserName = ? AND Password = ? 
+2017/09/26-20:15 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- ==> Parameters: 陈冬和(String), 5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5(String)
+2017/09/26-20:15 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByMap- <==      Total: 1
+2017/09/26-20:15 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==>  Preparing: select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser WHERE id = ? 
+2017/09/26-20:15 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- ==> Parameters: 163(Integer)
+2017/09/26-20:15 [http-nio-5826-exec-1] DEBUG com.marketing.system.mapper.SystemUserMapper.selectByPrimaryKey- <==      Total: 1
+2017/09/26-20:15 [http-nio-5826-exec-1] INFO  com.marketing.system.shiro.MyShiroRealm- 身份认证成功，登录用户：陈冬和
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getMyApplyProject- ==>  Preparing: select COUNT (creater) from project_info where creater = ? 
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getMyApplyProject- ==> Parameters: 陈冬和(String)
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getMyApplyProject- <==      Total: 1
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectTaskMapper.getMyJoinProject- ==>  Preparing: select COUNT (taskId) from project_task where handler = ? 
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectTaskMapper.getMyJoinProject- ==> Parameters: 陈冬和(String)
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectTaskMapper.getMyJoinProject- <==      Total: 1
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectSubtaskMapper.getMyJoinProject- ==>  Preparing: select COUNT (id) from project_subtask where subtaskHandler = ? 
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectSubtaskMapper.getMyJoinProject- ==> Parameters: 陈冬和(String)
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectSubtaskMapper.getMyJoinProject- <==      Total: 1
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getUpApplyProject- ==>  Preparing: select COUNT (id) from project_info WHERE proState = ? 
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getUpApplyProject- ==> Parameters: 1(String)
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getUpApplyProject- <==      Total: 1
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getUpApplyProject- ==>  Preparing: select COUNT (id) from project_info WHERE proState = ? 
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getUpApplyProject- ==> Parameters: 3(String)
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getUpApplyProject- <==      Total: 1
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectInfoListNull- ==>  Preparing: select id,proName,planSDate,creater,proProgress from project_info 
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectInfoListNull- ==> Parameters: 
+2017/09/26-20:15 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectInfoListNull- <==      Total: 3
+2017/09/26-20:16 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectTaskListNull- ==>  Preparing: select task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress from project_task task JOIN project_info info ON task.proId = info.id 
+2017/09/26-20:16 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectTaskListNull- ==> Parameters: 
+2017/09/26-20:16 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectTaskListNull- <==      Total: 6
+2017/09/26-20:16 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectSubTaskListNull- ==>  Preparing: select task.id,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress from project_subtask task JOIN project_task info ON task.taskId = info.taskId 
+2017/09/26-20:16 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectSubTaskListNull- ==> Parameters: 
+2017/09/26-20:16 [http-nio-5826-exec-3] DEBUG com.marketing.system.mapper_two.ProjectInfoMapper.getProjectSubTaskListNull- <==      Total: 6

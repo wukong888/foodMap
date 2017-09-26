@@ -9,7 +9,6 @@ import com.marketing.system.mapper_two.ProjectTaskMapper;
 import com.marketing.system.service.IndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tool.util.DateUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -88,7 +87,7 @@ public class IndexServerImpl implements IndexService {
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(plansdate);
                 //当前时间
-                Date smdate = DateUtil.getNow();
+                Date smdate = new Date();
 
                 smdate = sdf.parse(sdf.format(smdate));
                 Calendar cal = Calendar.getInstance();
@@ -131,7 +130,7 @@ public class IndexServerImpl implements IndexService {
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(edate);
                 //当前时间
-                Date smdate = DateUtil.getNow();
+                Date smdate = new Date();
 
                 smdate = sdf.parse(sdf.format(smdate));
                 Calendar cal = Calendar.getInstance();
@@ -175,7 +174,7 @@ public class IndexServerImpl implements IndexService {
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(edate);
                 //当前时间
-                Date smdate = DateUtil.getNow();
+                Date smdate = new Date();
 
                 smdate = sdf.parse(sdf.format(smdate));
                 Calendar cal = Calendar.getInstance();

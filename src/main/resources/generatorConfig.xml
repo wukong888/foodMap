@@ -6,7 +6,7 @@
 <generatorConfiguration>
 
 	<!--<classPathEntry location="D:/mysql-connector-java-5.1.29.jar" />-->
-	<classPathEntry location="D:/mssql-jdbc-6.1.0.jre7.jar" /> <!-- SQL SERVER -->
+	<!--<classPathEntry location="D:/mssql-jdbc-6.1.0.jre7.jar" />--> <!-- SQL SERVER -->
 
 	<context id="websocket" targetRuntime="MyBatis3">
 		<commentGenerator>

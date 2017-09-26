@@ -20,7 +20,7 @@ public class UpProjectController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "department", value = "项目发起部门", required = false, dataType = "String")
+            @ApiImplicitParam(paramType = "query", name = "", value = "项目发起部门", required = false, dataType = "String")
     })
 
 }

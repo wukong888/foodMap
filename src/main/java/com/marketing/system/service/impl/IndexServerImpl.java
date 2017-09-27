@@ -100,7 +100,7 @@ public class IndexServerImpl implements IndexService {
                 model.setBetweenDays(between_days);
 
                 //项目距离完成只有6天时间时即在首页提示
-                if (model.getBetweenDays() < 6 || model.getBetweenDays() == 6) {
+                if (model.getBetweenDays() < Long.valueOf("6") || model.getBetweenDays() == Long.valueOf("6")) {
                     infoList.set(i,model);
                 }
             }

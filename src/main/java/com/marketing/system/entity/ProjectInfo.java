@@ -38,13 +38,13 @@ public class ProjectInfo {
     /**
      * 距离逾期天数
      */
-    private long betweenDays;
+    private Integer betweenDays;
 
-    public long getBetweenDays() {
+    public Integer getBetweenDays() {
         return betweenDays;
     }
 
-    public void setBetweenDays(long betweenDays) {
+    public void setBetweenDays(Integer betweenDays) {
         this.betweenDays = betweenDays;
     }
 

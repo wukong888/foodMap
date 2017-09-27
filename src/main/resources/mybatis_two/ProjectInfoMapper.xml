@@ -19,6 +19,7 @@
     <result column="taskId" property="taskid" jdbcType="INTEGER" />
     <result column="proProgress" property="proprogress" jdbcType="VARCHAR" />
     <result column="createrSquadId" property="creatersquadid" jdbcType="INTEGER" />
+    <result column="betweenDays" property="betweenDays" jdbcType="INTEGER" />
   </resultMap>
 
   <resultMap type="java.util.HashMap" id="taskHashMap">

@@ -95,12 +95,12 @@ public class IndexServerImpl implements IndexService {
                 long time1 = cal.getTimeInMillis();
                 cal.setTime(calendar.getTime());
                 long time2 = cal.getTimeInMillis();
-                long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
+                String betweenDays = ((time2 - time1) / (1000 * 3600 * 24))+"";
 
-                model.setBetweenDays(betweenDays);
+                model.setBetweenDays(Integer.valueOf(betweenDays));
 
                 //项目距离完成只有6天时间时即在首页提示
-                if (model.getBetweenDays() < Long.valueOf("6") || model.getBetweenDays() == Long.valueOf("6")) {
+                if (model.getBetweenDays() < 6 || model.getBetweenDays() == 6) {
                     infoList.set(i,model);
                 }
             }

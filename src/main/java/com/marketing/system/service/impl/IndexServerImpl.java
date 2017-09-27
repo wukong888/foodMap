@@ -95,9 +95,9 @@ public class IndexServerImpl implements IndexService {
                 long time1 = cal.getTimeInMillis();
                 cal.setTime(calendar.getTime());
                 long time2 = cal.getTimeInMillis();
-                long between_days = (time2 - time1) / (1000 * 3600 * 24);
+                long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
 
-                model.setBetweenDays(between_days);
+                model.setBetweenDays(betweenDays);
 
                 //项目距离完成只有6天时间时即在首页提示
                 if (model.getBetweenDays() < Long.valueOf("6") || model.getBetweenDays() == Long.valueOf("6")) {
@@ -138,9 +138,9 @@ public class IndexServerImpl implements IndexService {
                 long time1 = cal.getTimeInMillis();
                 cal.setTime(calendar.getTime());
                 long time2 = cal.getTimeInMillis();
-                long between_days = (time2 - time1) / (1000 * 3600 * 24);
+                long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
 
-                model.put("betweenDays",between_days);
+                model.put("betweenDays",betweenDays);
 
                 //任务距离完成时间只有3天时间师即在首页提示
                 if (Integer.valueOf(String.valueOf(model.get("betweenDays"))) < 3 || Integer.valueOf(String.valueOf(model.get("betweenDays"))) == 3) {
@@ -182,9 +182,9 @@ public class IndexServerImpl implements IndexService {
                 long time1 = cal.getTimeInMillis();
                 cal.setTime(calendar.getTime());
                 long time2 = cal.getTimeInMillis();
-                long between_hours = (time2 - time1) / (1000 * 3600);
+                long betweenHours = (time2 - time1) / (1000 * 3600);
 
-                model.setBetweenHours(between_hours);
+                model.setBetweenHours(betweenHours);
 
                 //子任务距离逾期时间只有1天时间时即在首页提示
                 if (model.getBetweenHours() < 24 || model.getBetweenHours() == 24) {

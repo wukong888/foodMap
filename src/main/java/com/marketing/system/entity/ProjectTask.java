@@ -5,7 +5,7 @@ public class ProjectTask {
 
     private Integer proid;
 
-    private Integer squadid;
+    private String squadid;
 
     private String taskname;
 
@@ -22,6 +22,35 @@ public class ProjectTask {
     private Integer taskdeveloplogid;
 
     private String handler;
+    private Integer idd;
+
+    public String getWorkDate() {
+        return workDate;
+    }
+
+    public void setWorkDate(String workDate) {
+        this.workDate = workDate;
+    }
+
+    private String workDate;
+
+    public String getCreatedate() {
+        return createdate;
+    }
+
+    public void setCreatedate(String createdate) {
+        this.createdate = createdate;
+    }
+
+    private String createdate;
+
+    public Integer getIdd() {
+        return idd;
+    }
+
+    public void setIdd(Integer idd) {
+        this.idd = idd;
+    }
 
     /**
      * 距离逾期天数
@@ -52,11 +81,11 @@ public class ProjectTask {
         this.proid = proid;
     }
 
-    public Integer getSquadid() {
+    public String getSquadid() {
         return squadid;
     }
 
-    public void setSquadid(Integer squadid) {
+    public void setSquadid(String squadid) {
         this.squadid = squadid;
     }
 

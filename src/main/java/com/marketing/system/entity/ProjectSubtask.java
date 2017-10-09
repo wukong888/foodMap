@@ -25,6 +25,26 @@ public class ProjectSubtask {
 
     private Integer subtaskid;
 
+    public String getCreatedate() {
+        return createdate;
+    }
+
+    public void setCreatedate(String createdate) {
+        this.createdate = createdate;
+    }
+
+    private String  createdate;
+
+    public Integer getIdd() {
+        return idd;
+    }
+
+    public void setIdd(Integer idd) {
+        this.idd = idd;
+    }
+
+    private Integer idd;
+
     /**
      * 距离逾期天数（24小时）
      */

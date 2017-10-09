@@ -9,7 +9,7 @@ public class TaskLogRecord {
 
     private String date;
 
-    private Integer squadid;
+    private String squadid;
 
     private String emp;
 
@@ -49,11 +49,11 @@ public class TaskLogRecord {
         this.date = date == null ? null : date.trim();
     }
 
-    public Integer getSquadid() {
+    public String getSquadid() {
         return squadid;
     }
 
-    public void setSquadid(Integer squadid) {
+    public void setSquadid(String squadid) {
         this.squadid = squadid;
     }
 

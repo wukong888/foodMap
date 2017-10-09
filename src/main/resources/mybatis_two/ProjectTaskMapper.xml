@@ -72,11 +72,11 @@
     where taskId = #{taskId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.ProjectTask" >
-    insert into project_task (taskId, proId, squadId,
+    insert into project_task (proId, squadId,
       taskName, sDate, eDate, 
       taskState, taskProgress,
       taskLogRecordId, taskDevelopLogId,handler,workDate,idd,createDate)
-    values (#{taskId,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{squadId,jdbcType=VARCHAR},
+    values (#{proid,jdbcType=INTEGER}, #{squadId,jdbcType=VARCHAR},
       #{taskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
       #{taskstate,jdbcType=VARCHAR}, #{taskprogress,jdbcType=VARCHAR},
       #{tasklogrecordid,jdbcType=INTEGER}, #{taskdeveloplogid,jdbcType=INTEGER},#{handler,jdbcType=VARCHAR},
@@ -86,8 +86,6 @@
 
     insert into project_task
     <trim prefix="(" suffix=")" suffixOverrides="," >
-
-        taskId,
 
       <if test="proid != null" >
         proId,
@@ -132,9 +130,6 @@
 
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-
-        #{taskId,jdbcType=INTEGER},
-
       <if test="proid != null" >
         #{proid,jdbcType=INTEGER},
       </if>

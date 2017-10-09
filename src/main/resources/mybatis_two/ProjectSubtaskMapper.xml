@@ -73,12 +73,12 @@
   </delete>
 
   <insert id="insert" parameterType="com.marketing.system.entity.ProjectSubtask" >
-    insert into project_subtask (subtaskId, taskId,
+    insert into project_subtask (taskId,
       subtaskName, sDate, eDate, 
       subtaskState, subtaskProgress, subtaskHandler, 
       subtaskLogRecordId, subtaskDevelopLogId, 
       idd,createDate,workDate)
-    values (#{subtaskId,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER},
+    values (#{taskid,jdbcType=INTEGER},
       #{subtaskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
       #{subtaskstate,jdbcType=VARCHAR}, #{subtaskprogress,jdbcType=VARCHAR}, #{subtaskhandler,jdbcType=VARCHAR}, 
       #{subtasklogrecordid,jdbcType=INTEGER}, #{subtaskdeveloplogid,jdbcType=INTEGER}, 
@@ -87,9 +87,7 @@
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectSubtask" >
     insert into project_subtask
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="subtaskId != null" >
-        subtaskId,
-      </if>
+
       <if test="taskid != null" >
         taskId,
       </if>
@@ -122,9 +120,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="subtaskId != null" >
-        #{subtaskId,jdbcType=INTEGER},
-      </if>
+
       <if test="taskid != null" >
         #{taskid,jdbcType=INTEGER},
       </if>

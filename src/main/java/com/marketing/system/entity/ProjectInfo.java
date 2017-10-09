@@ -3,7 +3,7 @@ package com.marketing.system.entity;
 public class ProjectInfo {
     private Integer id;
 
-    private String proid;
+    private Integer proid;
 
     private String proname;
 
@@ -71,12 +71,13 @@ public class ProjectInfo {
         this.id = id;
     }
 
-    public String getProid() {
+
+    public Integer getProid() {
         return proid;
     }
 
-    public void setProid(String proid) {
-        this.proid = proid == null ? null : proid.trim();
+    public void setProid(Integer proid) {
+        this.proid = proid;
     }
 
     public String getProname() {

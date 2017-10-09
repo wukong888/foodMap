@@ -50,8 +50,10 @@ public class IndexController {
         ApiResult<List<Map<String, Object>>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-        SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-
+        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+        SystemUser user = new SystemUser();
+        user.setUserName("陈冬和");
+        user.setDuty("CEO");
         //职位，立项待审批、上线待审批暂时只有CEO有该权限
         String dutyName = user.getDuty();
 
@@ -99,9 +101,9 @@ public class IndexController {
 
         subtaskList = indexService.getProjectSubTaskList(creater);
 
-        map.put("infoList",infoList);
-        map.put("taskList",taskList);
-        map.put("subtaskList",subtaskList);
+        map.put("infoList",infoList);//项目
+        map.put("taskList",taskList);//任务
+        map.put("subtaskList",subtaskList);//子任务
 
         list.add(map);
         result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);

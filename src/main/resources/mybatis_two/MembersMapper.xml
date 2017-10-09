@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper_two.MembersMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.Members" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="squadId" property="squadid" jdbcType="VARCHAR" />
+    <result column="member" property="member" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, squadId, member
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from members
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getMembersBysquadId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from members
+    where squadId = #{squadId,jdbcType=INTEGER}
+  </select>
+
+  <select id="getMembers" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    member
+    FROM
+    members
+    WHERE
+    <foreach item="item" index="index" collection="mentIds"
+             open=" squadId IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from members
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.Members" >
+    insert into members (id, squadId, member
+      )
+    values (#{id,jdbcType=INTEGER}, #{squadid,jdbcType=VARCHAR}, #{member,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.Members" >
+    insert into members
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="squadid != null" >
+        squadId,
+      </if>
+      <if test="member != null" >
+        member,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="squadid != null" >
+        #{squadid,jdbcType=VARCHAR},
+      </if>
+      <if test="member != null" >
+        #{member,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.Members" >
+    update members
+    <set >
+      <if test="squadid != null" >
+        squadId = #{squadid,jdbcType=VARCHAR},
+      </if>
+      <if test="member != null" >
+        member = #{member,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.Members" >
+    update members
+    set squadId = #{squadid,jdbcType=VARCHAR},
+      member = #{member,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

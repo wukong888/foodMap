@@ -9,17 +9,19 @@
     <result column="planSDate" property="plansdate" jdbcType="VARCHAR" />
     <result column="planEDate" property="planedate" jdbcType="VARCHAR" />
     <result column="proDeclare" property="prodeclare" jdbcType="VARCHAR" />
-    <result column="joinId" property="joinid" jdbcType="INTEGER" />
     <result column="proFilePath" property="profilepath" jdbcType="VARCHAR" />
     <result column="createDate" property="createdate" jdbcType="VARCHAR" />
     <result column="proState" property="prostate" jdbcType="VARCHAR" />
     <result column="creater" property="creater" jdbcType="VARCHAR" />
     <result column="proLogRecordId" property="prologrecordid" jdbcType="INTEGER" />
     <result column="proDevelopLogId" property="prodeveloplogid" jdbcType="INTEGER" />
-    <result column="taskId" property="taskid" jdbcType="INTEGER" />
     <result column="proProgress" property="proprogress" jdbcType="VARCHAR" />
-    <result column="createrSquadId" property="creatersquadid" jdbcType="INTEGER" />
+    <result column="createrSquadId" property="createrSquadId" jdbcType="VARCHAR" />
     <result column="betweenDays" property="betweenDays" jdbcType="INTEGER" />
+    <result column="finishDate" property="finishDate" jdbcType="VARCHAR" />
+    <result column="onlineDate" property="onlineDate" jdbcType="VARCHAR" />
+    <result column="rejectDate" property="rejectDate" jdbcType="VARCHAR" />
+    <result column="cancelDate" property="cancelDate" jdbcType="VARCHAR" />
   </resultMap>
 
   <resultMap type="java.util.HashMap" id="taskHashMap">
@@ -37,9 +39,9 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, proId, proName, proType, planSDate, planEDate, proDeclare, joinId, proFilePath, 
-    createDate, proState, creater, proLogRecordId, proDevelopLogId, taskId, proProgress, 
-    createrSquadId
+    id, proId, proName, proType, planSDate, planEDate, proDeclare, proFilePath,
+    createDate, proState, creater, proLogRecordId, proDevelopLogId, proProgress,
+    createrSquadId,betweenDays,finishDate,onlineDate,rejectDate,cancelDate
   </sql>
 
   <!-- 基本的sql查询条件公共引用 -->
@@ -113,7 +115,7 @@
 
   <select id="getProjectSubTaskList" resultType="com.marketing.system.entity.ProjectSubtask"  parameterType="java.lang.String" >
     select
-    task.id,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress
+    task.subtaskId,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress
     from project_subtask task
     JOIN project_task info ON task.taskId = info.taskId
 
@@ -121,12 +123,103 @@
   </select>
   <select id="getProjectSubTaskListNull"  resultType="com.marketing.system.entity.ProjectSubtask" parameterType="java.lang.String" >
     select
-    task.id,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress
+    task.subtaskId,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress
     from project_subtask task
     JOIN project_task info ON task.taskId = info.taskId
 
   </select>
 
+
+  <sql id="searchByAll">
+
+
+      <if test="createrSquadId != null and createrSquadId != '' ">
+        AND createrSquadId = #{createrSquadId}
+      </if>
+
+      <if test="creater != null and creater != '' ">
+        AND creater = #{creater}
+      </if>
+      AND createDate >= #{createDateStart} AND #{createDateEnd} >=createDate
+      AND planSDate >= #{planSDateStart} AND  #{planSDateEnd} > =planSDate
+
+      <if test="proType != null and proType != '' ">
+        AND proType = #{proType}
+      </if>
+      AND proName LIKE  '%${proName}%'
+
+      <if test="proState != null and proState != '' ">
+        AND proState = #{proState}
+      </if>
+
+  </sql>
+
+  <select id="getProjectInfoListAll" resultMap="BaseResultMap"  >
+    SELECT
+    TOP ${pageSize} <include refid="Base_Column_List" />
+    from project_info
+
+    where id
+     IN(SELECT TOP (${current}*${pageSize}) id FROM project_info)
+    <if test="createrSquadId != null and createrSquadId != '' ">
+      AND createrSquadId = #{createrSquadId}
+    </if>
+
+    <if test="creater != null and creater != '' ">
+      AND creater = #{creater}
+    </if>
+    AND createDate >= #{createDateStart} AND #{createDateEnd} >=createDate
+    AND planSDate >= #{planSDateStart} AND  #{planSDateEnd} > =planSDate
+    <if test="proType != null and proType != '' ">
+      AND proType = #{proType}
+    </if>
+    AND proName LIKE  '%${proName}%'
+    <if test="proState != null and proState != '' ">
+      AND proState = #{proState}
+    </if>
+  </select>
+
+  <select id="getMyProjectInfoList" resultMap="BaseResultMap"  >
+    SELECT
+    TOP ${pageSize} <include refid="Base_Column_List" />
+    from project_info
+
+    where id
+    IN(SELECT TOP (${current}*${pageSize}) id FROM project_info)
+    <if test="createrSquadId != null and createrSquadId != '' ">
+      AND createrSquadId = #{createrSquadId}
+    </if>
+
+    <if test="creater != null and creater != '' ">
+      AND creater = #{creater}
+    </if>
+    AND createDate >= #{createDateStart} AND #{createDateEnd} >=createDate
+    AND planSDate >= #{planSDateStart} AND  #{planSDateEnd} > =planSDate
+    <if test="proType != null and proType != '' ">
+      AND proType = #{proType}
+    </if>
+    AND proName LIKE  '%${proName}%'
+    <if test="proState != null and proState != '' ">
+      AND proState = #{proState}
+    </if>
+
+
+  </select>
+
+  <!-- 查询立项待审批列表总数 测试 -->
+  <select id="sumAll" resultType="java.lang.Integer" parameterType="java.lang.String"  >
+    SELECT
+    COUNT(id)
+    from project_info
+    WHERE proState = #{proState}
+  </select>
+
+  <select id="getCreaterByName" resultType="java.lang.Integer" parameterType="java.lang.String"  >
+  SELECT
+  creater
+  from project_info
+  WHERE creater = #{creater}
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_info
@@ -135,23 +228,26 @@
   <insert id="insert" parameterType="com.marketing.system.entity.ProjectInfo" >
     insert into project_info (id, proId, proName, 
       proType, planSDate, planEDate, 
-      proDeclare, joinId, proFilePath, 
+      proDeclare, proFilePath,
       createDate, proState, creater, 
-      proLogRecordId, proDevelopLogId, taskId, 
-      proProgress, createrSquadId)
+      proLogRecordId, proDevelopLogId,
+      proProgress, createrSquadId,finishDate,onlineDate,rejectDate,cancelDate)
     values (#{id,jdbcType=INTEGER}, #{proid,jdbcType=VARCHAR}, #{proname,jdbcType=VARCHAR}, 
       #{protype,jdbcType=VARCHAR}, #{plansdate,jdbcType=VARCHAR}, #{planedate,jdbcType=VARCHAR}, 
-      #{prodeclare,jdbcType=VARCHAR}, #{joinid,jdbcType=INTEGER}, #{profilepath,jdbcType=VARCHAR}, 
+      #{prodeclare,jdbcType=VARCHAR}, #{profilepath,jdbcType=VARCHAR},
       #{createdate,jdbcType=VARCHAR}, #{prostate,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
-      #{prologrecordid,jdbcType=INTEGER}, #{prodeveloplogid,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER}, 
-      #{proprogress,jdbcType=VARCHAR}, #{creatersquadid,jdbcType=INTEGER})
+      #{prologrecordid,jdbcType=INTEGER}, #{prodeveloplogid,jdbcType=INTEGER},
+      #{proprogress,jdbcType=VARCHAR}, #{createrSquadId,jdbcType=VARCHAR},#{finishDate,jdbcType=VARCHAR},#{onlineDate,jdbcType=VARCHAR},
+      #{rejectDate,jdbcType=VARCHAR},#{cancelDate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectInfo" >
+    set identity_insert project_info ON;
     insert into project_info
+
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+
         id,
-      </if>
+
       <if test="proid != null" >
         proId,
       </if>
@@ -170,9 +266,7 @@
       <if test="prodeclare != null" >
         proDeclare,
       </if>
-      <if test="joinid != null" >
-        joinId,
-      </if>
+
       <if test="profilepath != null" >
         proFilePath,
       </if>
@@ -191,20 +285,32 @@
       <if test="prodeveloplogid != null" >
         proDevelopLogId,
       </if>
-      <if test="taskid != null" >
-        taskId,
-      </if>
+
       <if test="proprogress != null" >
         proProgress,
       </if>
-      <if test="creatersquadid != null" >
-        createrSquadId,
+
+      <if test="createrSquadId != null" >
+        createrSquad,
+      </if>
+      <if test="onlineDate != null" >
+        onlineDate,
+      </if>
+
+      <if test="finishDate != null" >
+        finishDate,
+      </if>
+      <if test="rejectDate != null" >
+        rejectDate,
+      </if>
+      <if test="cancelDate != null" >
+        cancelDate,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+
         #{id,jdbcType=INTEGER},
-      </if>
+
       <if test="proid != null" >
         #{proid,jdbcType=VARCHAR},
       </if>
@@ -223,9 +329,7 @@
       <if test="prodeclare != null" >
         #{prodeclare,jdbcType=VARCHAR},
       </if>
-      <if test="joinid != null" >
-        #{joinid,jdbcType=INTEGER},
-      </if>
+
       <if test="profilepath != null" >
         #{profilepath,jdbcType=VARCHAR},
       </if>
@@ -244,18 +348,32 @@
       <if test="prodeveloplogid != null" >
         #{prodeveloplogid,jdbcType=INTEGER},
       </if>
-      <if test="taskid != null" >
-        #{taskid,jdbcType=INTEGER},
-      </if>
+
       <if test="proprogress != null" >
         #{proprogress,jdbcType=VARCHAR},
       </if>
-      <if test="creatersquadid != null" >
-        #{creatersquadid,jdbcType=INTEGER},
+      <if test="createrSquadId != null" >
+        #{createrSquad,jdbcType=VARCHAR},
       </if>
+      <if test="onlineDate != null" >
+        #{onlineDate,jdbcType=VARCHAR},
+      </if>
+      <if test="finishDate != null" >
+        #{finishDate,jdbcType=VARCHAR},
+      </if>
+      <if test="rejectDate != null" >
+        #{rejectDate,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelDate != null" >
+        #{cancelDate,jdbcType=VARCHAR},
+      </if>
+
     </trim>
+    set identity_insert project_info OFF;
+    set identity_insert project_info ON;
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.ProjectInfo" >
+
+  <update id="setPassOrReject22" parameterType="com.marketing.system.entity.ProjectInfo" >
     update project_info
     <set >
       <if test="proid != null" >
@@ -276,9 +394,7 @@
       <if test="prodeclare != null" >
         proDeclare = #{prodeclare,jdbcType=VARCHAR},
       </if>
-      <if test="joinid != null" >
-        joinId = #{joinid,jdbcType=INTEGER},
-      </if>
+
       <if test="profilepath != null" >
         proFilePath = #{profilepath,jdbcType=VARCHAR},
       </if>
@@ -297,18 +413,28 @@
       <if test="prodeveloplogid != null" >
         proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER},
       </if>
-      <if test="taskid != null" >
-        taskId = #{taskid,jdbcType=INTEGER},
-      </if>
+
       <if test="proprogress != null" >
         proProgress = #{proprogress,jdbcType=VARCHAR},
       </if>
-      <if test="creatersquadid != null" >
-        createrSquadId = #{creatersquadid,jdbcType=INTEGER},
+      <if test="createrSquadId != null" >
+        createrSquad = #{createrSquad,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineDate != null" >
+        onlineDate = #{onlineDate,jdbcType=VARCHAR}
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <update id="setPassOrReject" parameterType="com.marketing.system.entity.ProjectInfo" >
+    update project_info
+    set
+    proState = #{proState}
+    where id = #{id} AND proState = '1'
+  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectInfo" >
     update project_info
     set proId = #{proid,jdbcType=VARCHAR},
@@ -317,16 +443,16 @@
       planSDate = #{plansdate,jdbcType=VARCHAR},
       planEDate = #{planedate,jdbcType=VARCHAR},
       proDeclare = #{prodeclare,jdbcType=VARCHAR},
-      joinId = #{joinid,jdbcType=INTEGER},
+
       proFilePath = #{profilepath,jdbcType=VARCHAR},
       createDate = #{createdate,jdbcType=VARCHAR},
       proState = #{prostate,jdbcType=VARCHAR},
       creater = #{creater,jdbcType=VARCHAR},
       proLogRecordId = #{prologrecordid,jdbcType=INTEGER},
       proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER},
-      taskId = #{taskid,jdbcType=INTEGER},
       proProgress = #{proprogress,jdbcType=VARCHAR},
-      createrSquadId = #{creatersquadid,jdbcType=INTEGER}
+      createrSquadId = #{createrSquad,jdbcType=VARCHAR}
+      onlineDate = #{onlineDate,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

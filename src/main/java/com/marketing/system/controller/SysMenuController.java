@@ -2,6 +2,7 @@ package com.marketing.system.controller;
 
 import com.marketing.system.entity.Role;
 import com.marketing.system.entity.SystemUser;
+import com.marketing.system.service.ApplyService;
 import com.marketing.system.service.RoleService;
 import com.marketing.system.service.SysMenuService;
 import com.marketing.system.util.ApiResult;
@@ -43,6 +44,9 @@ public class SysMenuController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private ApplyService applyService;
+
     /**
      * 根据角色查询菜单
      *
@@ -56,20 +60,30 @@ public class SysMenuController {
 
         ApiResult<List<Map<String, Object>>> result = null;
 
-        SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+        SystemUser user = new SystemUser();
 
+        user.setDuty("CEO");
         Map<String, Object> map = new HashMap<>();
 
         //职位，当用户申请项目成功后，该用户成为项目发起人
         String name = user.getDuty();
 
-        if (name.contains("组长") || name.contains("经理")) {
-            name = "经理/组长";
-        }else if(name.contains("CEO")){
-            name = "CEO";
+        List<String> list = applyService.getCreaterByName(user.getUserName());
+
+        if (list.size() > 0) {
+            name = "项目发起人";
         } else {
-            name = "组员";
+            if (name.contains("组长") || name.contains("经理")) {
+                name = "经理/组长";
+            }else if(name.contains("CEO")){
+                name = "CEO";
+            } else {
+                name = "组员";
+            }
         }
+
+
         map.put("Name", name);
         map.put("SystemId", SystemId);
 
@@ -77,10 +91,14 @@ public class SysMenuController {
 
         if (role != null) {
             Map<String, Object> mapMenu = new HashMap<>();
+            Map<String, Object> mapCreater = new HashMap<>();
             mapMenu.put("roleId", role.getId());
             mapMenu.put("SystemId", SystemId);
 
             List<Map<String, Object>> menus = sysMenuService.fetchRoleMenus(role.getId(), SystemId);
+
+            mapCreater.put("duty",name);
+            menus.add(mapCreater);
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, "查询成功！", menus, null);
         } else {

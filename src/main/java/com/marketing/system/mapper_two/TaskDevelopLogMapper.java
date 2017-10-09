@@ -1,6 +1,8 @@
-package com.marketing.system.mapper;
+package com.marketing.system.mapper_two;
 
 import com.marketing.system.entity.TaskDevelopLog;
+
+import java.util.List;
 
 public interface TaskDevelopLogMapper {
     int deleteByPrimaryKey(Integer taskdeveloplogid);
@@ -14,4 +16,6 @@ public interface TaskDevelopLogMapper {
     int updateByPrimaryKeySelective(TaskDevelopLog record);
 
     int updateByPrimaryKey(TaskDevelopLog record);
+
+    List<TaskDevelopLog> getTaskDeveLogList(Integer taskId);
 }

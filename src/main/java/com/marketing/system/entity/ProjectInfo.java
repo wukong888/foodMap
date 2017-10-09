@@ -15,8 +15,6 @@ public class ProjectInfo {
 
     private String prodeclare;
 
-    private Integer joinid;
-
     private String profilepath;
 
     private String createdate;
@@ -29,11 +27,20 @@ public class ProjectInfo {
 
     private Integer prodeveloplogid;
 
-    private Integer taskid;
-
     private String proprogress;
 
-    private Integer creatersquadid;
+    private String createrSquadId;
+
+    private String onlineDate;
+
+    private String workTatalDay;
+
+    private String finishDate;
+
+    private String rejectDate;
+
+    private String cancelDate;
+
 
     /**
      * 距离逾期天数
@@ -46,6 +53,14 @@ public class ProjectInfo {
 
     public void setBetweenDays(Integer betweenDays) {
         this.betweenDays = betweenDays;
+    }
+
+    public String getOnlineDate() {
+        return onlineDate;
+    }
+
+    public void setOnlineDate(String onlineDate) {
+        this.onlineDate = onlineDate;
     }
 
     public Integer getId() {
@@ -104,13 +119,6 @@ public class ProjectInfo {
         this.prodeclare = prodeclare == null ? null : prodeclare.trim();
     }
 
-    public Integer getJoinid() {
-        return joinid;
-    }
-
-    public void setJoinid(Integer joinid) {
-        this.joinid = joinid;
-    }
 
     public String getProfilepath() {
         return profilepath;
@@ -160,14 +168,6 @@ public class ProjectInfo {
         this.prodeveloplogid = prodeveloplogid;
     }
 
-    public Integer getTaskid() {
-        return taskid;
-    }
-
-    public void setTaskid(Integer taskid) {
-        this.taskid = taskid;
-    }
-
     public String getProprogress() {
         return proprogress;
     }
@@ -176,11 +176,43 @@ public class ProjectInfo {
         this.proprogress = proprogress == null ? null : proprogress.trim();
     }
 
-    public Integer getCreatersquadid() {
-        return creatersquadid;
+    public String getCreaterSquadId() {
+        return createrSquadId;
     }
 
-    public void setCreatersquadid(Integer creatersquadid) {
-        this.creatersquadid = creatersquadid;
+    public void setCreaterSquadId(String createrSquadId) {
+        this.createrSquadId = createrSquadId;
+    }
+
+    public String getWorkTatalDay() {
+        return workTatalDay;
+    }
+
+    public void setWorkTatalDay(String workTatalDay) {
+        this.workTatalDay = workTatalDay;
+    }
+
+    public String getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(String finishDate) {
+        this.finishDate = finishDate;
+    }
+
+    public String getRejectDate() {
+        return rejectDate;
+    }
+
+    public void setRejectDate(String rejectDate) {
+        this.rejectDate = rejectDate;
+    }
+
+    public String getCancelDate() {
+        return cancelDate;
+    }
+
+    public void setCancelDate(String cancelDate) {
+        this.cancelDate = cancelDate;
     }
 }

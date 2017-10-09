@@ -1,7 +1,7 @@
 package com.marketing.system.entity;
 
 public class ProjectSubtask {
-    private Integer id;
+    private Integer subtaskId;
 
     private Integer taskid;
 
@@ -25,6 +25,36 @@ public class ProjectSubtask {
 
     private Integer subtaskid;
 
+    private Integer idd;
+
+    private String workDate;
+
+    private String createDate;
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getWorkDate() {
+        return workDate;
+    }
+
+    public void setWorkDate(String workDate) {
+        this.workDate = workDate;
+    }
+
+    public Integer getIdd() {
+        return idd;
+    }
+
+    public void setIdd(Integer idd) {
+        this.idd = idd;
+    }
+
     /**
      * 距离逾期天数（24小时）
      */
@@ -39,12 +69,12 @@ public class ProjectSubtask {
         this.betweenHours = betweenHours;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getSubtaskId() {
+        return subtaskId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setSubtaskId(Integer subtaskId) {
+        this.subtaskId = subtaskId;
     }
 
     public Integer getTaskid() {

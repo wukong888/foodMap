@@ -1,6 +1,8 @@
-package com.marketing.system.mapper;
+package com.marketing.system.mapper_two;
 
 import com.marketing.system.entity.SubtaskDevelopLog;
+
+import java.util.List;
 
 public interface SubtaskDevelopLogMapper {
     int deleteByPrimaryKey(Integer subtaskdeveloplogid);
@@ -14,4 +16,6 @@ public interface SubtaskDevelopLogMapper {
     int updateByPrimaryKeySelective(SubtaskDevelopLog record);
 
     int updateByPrimaryKey(SubtaskDevelopLog record);
+
+    List<SubtaskDevelopLog> getSubTaskDevLogList(Integer subtaskId);
 }

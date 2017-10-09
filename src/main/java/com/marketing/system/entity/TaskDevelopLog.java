@@ -15,6 +15,26 @@ public class TaskDevelopLog {
 
     private String filepath;
 
+    private String progress;
+
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
     public Integer getTaskdeveloplogid() {
         return taskdeveloplogid;
     }

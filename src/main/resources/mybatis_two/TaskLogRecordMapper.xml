@@ -1,45 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.marketing.system.mapper.ProDevelopLogMapper" >
-  <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProDevelopLog" >
-    <id column="proDevelopLogId" property="prodeveloplogid" jdbcType="INTEGER" />
-    <result column="proId" property="proid" jdbcType="INTEGER" />
+<mapper namespace="com.marketing.system.mapper_two.TaskLogRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.TaskLogRecord" >
+    <id column="taskLogRecordId" property="tasklogrecordid" jdbcType="INTEGER" />
+    <result column="taskId" property="taskid" jdbcType="INTEGER" />
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="Date" property="date" jdbcType="VARCHAR" />
-    <result column="squadId" property="squadid" jdbcType="VARCHAR" />
+    <result column="squadId" property="squadid" jdbcType="INTEGER" />
     <result column="Emp" property="emp" jdbcType="VARCHAR" />
     <result column="explain" property="explain" jdbcType="VARCHAR" />
     <result column="filePath" property="filepath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    proDevelopLogId, proId, type, Date, squadId, Emp, explain, filePath
+    taskLogRecordId, taskId, type, Date, squadId, Emp, explain, filePath
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from pro_DevelopLog
-    where proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER}
+    from task_LogRecord
+    where taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER}
   </select>
+
+  <select id="getTaskLogList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from task_LogRecord
+    where taskId = #{taskId,jdbcType=INTEGER}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from pro_DevelopLog
-    where proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER}
+    delete from task_LogRecord
+    where taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.marketing.system.entity.ProDevelopLog" >
-    insert into pro_DevelopLog (proDevelopLogId, proId, type, 
+  <insert id="insert" parameterType="com.marketing.system.entity.TaskLogRecord" >
+    insert into task_LogRecord (taskLogRecordId, taskId, type, 
       Date, squadId, Emp, 
       explain, filePath)
-    values (#{prodeveloplogid,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
-      #{date,jdbcType=VARCHAR}, #{squadid,jdbcType=VARCHAR}, #{emp,jdbcType=VARCHAR}, 
+    values (#{tasklogrecordid,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{date,jdbcType=VARCHAR}, #{squadid,jdbcType=INTEGER}, #{emp,jdbcType=VARCHAR}, 
       #{explain,jdbcType=VARCHAR}, #{filepath,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.marketing.system.entity.ProDevelopLog" >
-    insert into pro_DevelopLog
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.TaskLogRecord" >
+    insert into task_LogRecord
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="prodeveloplogid != null" >
-        proDevelopLogId,
+      <if test="tasklogrecordid != null" >
+        taskLogRecordId,
       </if>
-      <if test="proid != null" >
-        proId,
+      <if test="taskid != null" >
+        taskId,
       </if>
       <if test="type != null" >
         type,
@@ -61,11 +69,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="prodeveloplogid != null" >
-        #{prodeveloplogid,jdbcType=INTEGER},
+      <if test="tasklogrecordid != null" >
+        #{tasklogrecordid,jdbcType=INTEGER},
       </if>
-      <if test="proid != null" >
-        #{proid,jdbcType=INTEGER},
+      <if test="taskid != null" >
+        #{taskid,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
         #{type,jdbcType=VARCHAR},
@@ -74,7 +82,7 @@
         #{date,jdbcType=VARCHAR},
       </if>
       <if test="squadid != null" >
-        #{squadid,jdbcType=VARCHAR},
+        #{squadid,jdbcType=INTEGER},
       </if>
       <if test="emp != null" >
         #{emp,jdbcType=VARCHAR},
@@ -87,11 +95,11 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.ProDevelopLog" >
-    update pro_DevelopLog
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.TaskLogRecord" >
+    update task_LogRecord
     <set >
-      <if test="proid != null" >
-        proId = #{proid,jdbcType=INTEGER},
+      <if test="taskid != null" >
+        taskId = #{taskid,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
         type = #{type,jdbcType=VARCHAR},
@@ -100,7 +108,7 @@
         Date = #{date,jdbcType=VARCHAR},
       </if>
       <if test="squadid != null" >
-        squadId = #{squadid,jdbcType=VARCHAR},
+        squadId = #{squadid,jdbcType=INTEGER},
       </if>
       <if test="emp != null" >
         Emp = #{emp,jdbcType=VARCHAR},
@@ -112,17 +120,17 @@
         filePath = #{filepath,jdbcType=VARCHAR},
       </if>
     </set>
-    where proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER}
+    where taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProDevelopLog" >
-    update pro_DevelopLog
-    set proId = #{proid,jdbcType=INTEGER},
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.TaskLogRecord" >
+    update task_LogRecord
+    set taskId = #{taskid,jdbcType=INTEGER},
       type = #{type,jdbcType=VARCHAR},
       Date = #{date,jdbcType=VARCHAR},
-      squadId = #{squadid,jdbcType=VARCHAR},
+      squadId = #{squadid,jdbcType=INTEGER},
       Emp = #{emp,jdbcType=VARCHAR},
       explain = #{explain,jdbcType=VARCHAR},
       filePath = #{filepath,jdbcType=VARCHAR}
-    where proDevelopLogId = #{prodeveloplogid,jdbcType=INTEGER}
+    where taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER}
   </update>
 </mapper>

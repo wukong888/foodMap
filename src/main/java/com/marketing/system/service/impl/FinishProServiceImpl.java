@@ -18,36 +18,6 @@ public class FinishProServiceImpl implements FinishProService {
 
     //模糊查询所有待审批的项目
     public Map<String, Object> selectFinishPro(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String finishdate1, String finishdate2, String onlinedate1,String onlinedate2,String protype, String param){
-        if(creatersquadid==null){
-            creatersquadid="";
-        }
-        if(creater==null){
-            creater="";
-        }
-        if(createdate1==null||createdate1==""){
-            createdate1="2010-01-01";
-        }
-        if(createdate2==null||createdate2==""){
-            createdate2="2040-01-01";
-        }
-        if(finishdate1==null||finishdate1==""){
-            finishdate1="2010-01-01";
-        }
-        if(finishdate2==null||finishdate2==""){
-            finishdate2="2040-01-01";
-        }
-        if(onlinedate1==null||onlinedate1==""){
-            onlinedate1="2010-01-01";
-        }
-        if(onlinedate2==null||onlinedate2==""){
-            onlinedate2="2040-01-01";
-        }
-        if(protype==null){
-            protype="";
-        }
-        if(param==null){
-            param="";
-        }
 
         Map<String,Object> FinProMap=new HashMap<String,Object>();
         List<ProjectInfo> FinPro=FinProDao.selectFinPro(creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,onlinedate1,onlinedate2,protype,param,current,pageSize);

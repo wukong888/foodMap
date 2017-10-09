@@ -121,6 +121,7 @@ public class MyProjectController {
 
         List<ProjectInfo> projectInfosNew = new ArrayList<>();
         //项目相关人员集合
+
         //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
         SystemUser user = new SystemUser();
         //String userName = user.getUserName();//当前登录用户

@@ -5,7 +5,7 @@ public class Group {
 
     private Integer departmentid;
 
-    private Integer squadid;
+    private String squadid;
 
     private String squad;
 
@@ -25,11 +25,11 @@ public class Group {
         this.departmentid = departmentid;
     }
 
-    public Integer getSquadid() {
+    public String getSquadid() {
         return squadid;
     }
 
-    public void setSquadid(Integer squadid) {
+    public void setSquadid(String squadid) {
         this.squadid = squadid;
     }
 

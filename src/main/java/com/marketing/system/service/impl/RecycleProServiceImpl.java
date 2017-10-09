@@ -88,9 +88,9 @@ public class RecycleProServiceImpl implements RecycleProService{
     public List<ProjectTask> selectRecTask(Integer proId){
         List<ProjectTask> RecTasks=RecProDao.selectRecTask(proId);
         for(int i=0;i<RecTasks.size();i++){
-            String squadId=RecTasks.get(i).getSquadid();
+            String squadId=RecTasks.get(i).getSquadId();
             String squad=RecProDao.selectSquadById(squadId);
-            RecTasks.get(i).setSquadid(squad);
+            RecTasks.get(i).setSquadId(squad);
         }
         return RecTasks;
     }

@@ -90,9 +90,9 @@ public class FinishProServiceImpl implements FinishProService {
     public List<ProjectTask> selectFinTask(Integer proId){
         List<ProjectTask> FinTasks=FinProDao.selectFinTask(proId);
         for(int i=0;i<FinTasks.size();i++){
-            String squadId=FinTasks.get(i).getSquadid();
+            String squadId=FinTasks.get(i).getSquadId();
             String squad=FinProDao.selectSquadById(squadId);
-            FinTasks.get(i).setSquadid(squad);
+            FinTasks.get(i).setSquadId(squad);
         }
         return FinTasks;
     }
@@ -111,9 +111,9 @@ public class FinishProServiceImpl implements FinishProService {
     //查看单条任务详细信息
     public ProjectTask selectFinTaskInfo(Integer taskId){
         ProjectTask taskInfo=FinProDao.selectFinTaskInfo(taskId);
-        String squadid=taskInfo.getSquadid();
+        String squadid=taskInfo.getSquadId();
         String squad=FinProDao.selectSquadById(squadid);
-        taskInfo.setSquadid(squad);
+        taskInfo.setSquadId(squad);
         return taskInfo;
     }
 

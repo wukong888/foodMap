@@ -89,9 +89,9 @@ public class OnilneProServiceImpl implements OnlineProService{
     public List<ProjectTask> selectOnTask(Integer proId){
         List<ProjectTask> OnTasks=OnProDao.selectOnTask(proId);
         for(int i=0;i<OnTasks.size();i++){
-            String squadId=OnTasks.get(i).getSquadid();
+            String squadId=OnTasks.get(i).getSquadId();
             String squad=OnProDao.selectSquadById(squadId);
-            OnTasks.get(i).setSquadid(squad);
+            OnTasks.get(i).setSquadId(squad);
         }
         return OnTasks;
     }
@@ -110,9 +110,9 @@ public class OnilneProServiceImpl implements OnlineProService{
     //查看单条任务详细信息
     public ProjectTask selectOnTaskInfo(Integer taskId){
         ProjectTask taskInfo=OnProDao.selectOnTaskInfo(taskId);
-        String squadid=taskInfo.getSquadid();
+        String squadid=taskInfo.getSquadId();
         String squad=OnProDao.selectSquadById(squadid);
-        taskInfo.setSquadid(squad);
+        taskInfo.setSquadId(squad);
         return taskInfo;
     }
 

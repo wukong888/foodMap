@@ -52,17 +52,15 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.Group" >
-    insert into group (id, departmentId, squadId, 
+    insert into group (departmentId, squadId,
       squad)
-    values (#{id,jdbcType=INTEGER}, #{departmentid,jdbcType=INTEGER}, #{squadid,jdbcType=INTEGER}, 
+    values (#{departmentid,jdbcType=INTEGER}, #{squadid,jdbcType=INTEGER},
       #{squad,jdbcType=NVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.Group" >
     insert into group
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
+
       <if test="departmentid != null" >
         departmentId,
       </if>
@@ -74,9 +72,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
+
       <if test="departmentid != null" >
         #{departmentid,jdbcType=INTEGER},
       </if>

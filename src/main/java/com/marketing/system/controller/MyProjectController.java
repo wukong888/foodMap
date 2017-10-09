@@ -332,7 +332,13 @@ public class MyProjectController {
             projectTask.setSdate(sDate);//任务开始时间
             projectTask.setEdate(eDate);//任务结束时间
             projectTask.setWorkDate(workDate);//任务工时
-            projectTask.setCreateDate(new Date() + "");//创建时间
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
+            projectTask.setCreateDate(str);//创建时间
             projectTask.setIdd(idd);//项目编号
             projectTask.setTaskprogress("0");//任务进度
             projectTask.setTaskstate("0");//任务状态  值待定*************************************************
@@ -340,13 +346,12 @@ public class MyProjectController {
             i = myProjectService.insertProTask(projectTask);
 
             ProLogRecord proLogRecord = new ProLogRecord();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            java.util.Date date = new java.util.Date();
-            String str = sdf.format(date);
+            java.util.Date date2 = new java.util.Date();
+            String str2 = sdf.format(date2);
 
             proLogRecord.setType("7");//类型:分配
-            proLogRecord.setDate(str);//创建时间
+            proLogRecord.setDate(str2);//创建时间
             proLogRecord.setEmp(handler);//操作人
             proLogRecord.setExplain("添加任务");//说明
             proLogRecord.setProid(proId);//项目id
@@ -370,7 +375,13 @@ public class MyProjectController {
             projectTask.setSdate(sDate);//任务开始时间
             projectTask.setEdate(eDate);//任务结束时间
             projectTask.setWorkDate(workDate);//任务工时
-            projectTask.setCreateDate(new Date() + "");//创建时间
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
+            projectTask.setCreateDate(str);//创建时间
             projectTask.setIdd(idd);//项目编号
             projectTask.setTaskprogress("0");//任务进度
             projectTask.setTaskstate("0");//任务状态  值待定*************************************************
@@ -381,13 +392,12 @@ public class MyProjectController {
             int k = myProjectService.deleteSubTaskById(taskId);
 
             ProLogRecord proLogRecord = new ProLogRecord();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            java.util.Date date = new java.util.Date();
-            String str = sdf.format(date);
+            java.util.Date date2 = new java.util.Date();
+            String str2 = sdf.format(date2);
 
             proLogRecord.setType("8");//类型:修改
-            proLogRecord.setDate(str);//创建时间
+            proLogRecord.setDate(str2);//创建时间
             proLogRecord.setEmp(handler);//操作人
             proLogRecord.setExplain("修改任务");//说明
             proLogRecord.setProid(proId);//项目id
@@ -541,6 +551,11 @@ public class MyProjectController {
         if (type == 1) {
             ProjectSubtask projectSubtask = new ProjectSubtask();
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
             projectSubtask.setEdate(eDate);//结束时间
             projectSubtask.setSdate(sDate);//开始时间
             projectSubtask.setSubtaskhandler(subtaskHandler);//处理人
@@ -550,18 +565,18 @@ public class MyProjectController {
             projectSubtask.setWorkDate(workDate);//预计工期
             projectSubtask.setSubtaskprogress(subtaskProgress);//进度
             projectSubtask.setSubtaskstate(subtaskState);//子任务状态 值待定*******************************************
-            projectSubtask.setCreateDate(new Date() + "");
+            projectSubtask.setCreateDate(str);
 
             int i = myProjectService.insertProSubTask(projectSubtask);
 
             SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            java.util.Date date = new java.util.Date();
-            String str = sdf.format(date);
+            java.util.Date date2 = new java.util.Date();
+            String str2 = sdf.format(date2);
 
             subtaskLogRecord.setType("7");//类型:分配
-            subtaskLogRecord.setDate(str);//创建时间
+            subtaskLogRecord.setDate(str2);//创建时间
             subtaskLogRecord.setEmp(subtaskName);//操作人
             subtaskLogRecord.setExplain("添加任务");//说明
             subtaskLogRecord.setSubtaskid(subtaskId);//项目id
@@ -579,6 +594,11 @@ public class MyProjectController {
         } else if (type == 2) {
             ProjectSubtask projectSubtask = new ProjectSubtask();
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
             projectSubtask.setEdate(eDate);//结束时间
             projectSubtask.setSdate(sDate);//开始时间
             projectSubtask.setSubtaskhandler(subtaskHandler);//处理人
@@ -588,19 +608,18 @@ public class MyProjectController {
             projectSubtask.setWorkDate(workDate);//预计工期
             projectSubtask.setSubtaskprogress(subtaskProgress);//进度
             projectSubtask.setSubtaskstate(subtaskState);//子任务状态 值待定*******************************************
-            projectSubtask.setCreateDate(new Date() + "");
+            projectSubtask.setCreateDate(str);
 
             int k = myProjectService.updateProSubTask(projectSubtask);
 
             SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            java.util.Date date = new java.util.Date();
-            String str = sdf.format(date);
+            java.util.Date date2 = new java.util.Date();
+            String str2 = sdf.format(date2);
 
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             subtaskLogRecord.setType("8");//类型:修改
-            subtaskLogRecord.setDate(str);//创建时间
+            subtaskLogRecord.setDate(str2);//创建时间
             subtaskLogRecord.setEmp(subtaskName);//操作人
             subtaskLogRecord.setExplain("修改子任务");//说明
             subtaskLogRecord.setSubtaskid(subtaskId);//项目id
@@ -719,7 +738,13 @@ public class MyProjectController {
         if (addType == 1) {
             ProDevelopLog proDevelopLog = new ProDevelopLog();
 
-            proDevelopLog.setDate(new Date() + "");//操作时间
+            SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
+            proDevelopLog.setDate(str);//操作时间
             proDevelopLog.setEmp(userName);//操作人
             proDevelopLog.setExplain(explain);//备注说明
             proDevelopLog.setProid(proId);//项目id
@@ -739,7 +764,12 @@ public class MyProjectController {
         } else if (addType == 2) {
             TaskDevelopLog taskDevelopLog = new TaskDevelopLog();
 
-            taskDevelopLog.setDate(new Date() + "");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
+            taskDevelopLog.setDate(str);
             taskDevelopLog.setEmp(userName);//操作人
             taskDevelopLog.setExplain(explain);//备注说明
             taskDevelopLog.setFilepath(filePath);//附件地址
@@ -758,7 +788,12 @@ public class MyProjectController {
         } else {
             SubtaskDevelopLog subtaskDevelopLog = new SubtaskDevelopLog();
 
-            subtaskDevelopLog.setDate(new Date() + "");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
+            subtaskDevelopLog.setDate(str);
             subtaskDevelopLog.setEmp(userName);
             subtaskDevelopLog.setExplain(explain);
             subtaskDevelopLog.setFilepath(filePath);

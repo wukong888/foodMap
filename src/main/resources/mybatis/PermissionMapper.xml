@@ -20,17 +20,15 @@
   </select>
 
   <insert id="insert" parameterType="com.marketing.system.entity.Permission" >
-    insert into Permission (id, Url, Name, 
+    insert into Permission (Url, Name,
       SystemId)
-    values (#{id,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+    values (#{url,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
       #{systemId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.Permission" >
     insert into Permission
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
+
       <if test="url != null" >
         Url,
       </if>
@@ -42,9 +40,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
+
       <if test="url != null" >
         #{url,jdbcType=VARCHAR},
       </if>

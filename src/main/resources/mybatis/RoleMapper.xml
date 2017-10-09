@@ -63,17 +63,14 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.Role" >
-    insert into Role (id, Name, SystemId
+    insert into Role (Name, SystemId
       )
-    values (#{id,jdbcType=INTEGER}, #{Name,jdbcType=NVARCHAR}, #{SystemId,jdbcType=INTEGER}
+    values (#{Name,jdbcType=NVARCHAR}, #{SystemId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.Role" >
     insert into Role
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="Name != null" >
         Name,
       </if>
@@ -82,9 +79,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="Name != null" >
         #{Name,jdbcType=NVARCHAR},
       </if>

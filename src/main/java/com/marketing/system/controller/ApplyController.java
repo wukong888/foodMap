@@ -123,7 +123,13 @@ public class ApplyController {
         projectInfo.setPlanedate(planEDate);//预计下线时间
         projectInfo.setProdeclare(proDeclare);//项目概况
         projectInfo.setCreater(creatName);//创建人
-        projectInfo.setCreatedate(new Date()+ "");//创建人
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        java.util.Date date = new java.util.Date();
+        String str = sdf.format(date);
+
+        projectInfo.setCreatedate(str);//创建时间
 
         Session session = SecurityUtils.getSubject().getSession();
 
@@ -143,7 +149,8 @@ public class ApplyController {
             projectTask.setSdate(task.getSdate());//任务开始时间
             projectTask.setEdate(task.getEdate());//任务结束时间
             projectTask.setWorkDate(task.getWorkDate());//任务工时
-            projectTask.setCreateDate(new Date()+"");//创建时间
+
+            projectTask.setCreateDate(str);//创建时间
             projectTask.setTaskprogress("0");//任务进度
             sum ++;
             projectTask.setIdd(sum);//项目编号
@@ -153,13 +160,12 @@ public class ApplyController {
         }
 
         ProLogRecord proLogRecord = new ProLogRecord();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        java.util.Date date = new java.util.Date();
-        String str = sdf.format(date);
+        java.util.Date date2 = new java.util.Date();
+        String str2 = sdf.format(date2);
 
         proLogRecord.setType("1");//类型 创建
-        proLogRecord.setDate(str);//创建时间
+        proLogRecord.setDate(str2);//创建时间
         proLogRecord.setEmp(creatName);//操作人
         proLogRecord.setExplain("创建项目");//说明
         proLogRecord.setProid(Integer.valueOf(code));//项目id

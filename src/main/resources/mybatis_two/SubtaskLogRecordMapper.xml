@@ -33,19 +33,17 @@
     where subtaskLogRecordId = #{subtasklogrecordid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.SubtaskLogRecord" >
-    insert into subtask_LogRecord (subtaskLogRecordId, subtaskId, type, 
+    insert into subtask_LogRecord (subtaskId, type,
       Date, squadId, Emp, 
       explain, filePath)
-    values (#{subtasklogrecordid,jdbcType=INTEGER}, #{subtaskid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+    values (#{subtaskid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR},
       #{date,jdbcType=VARCHAR}, #{squadid,jdbcType=INTEGER}, #{emp,jdbcType=VARCHAR}, 
       #{explain,jdbcType=VARCHAR}, #{filepath,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.SubtaskLogRecord" >
     insert into subtask_LogRecord
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="subtasklogrecordid != null" >
-        subtaskLogRecordId,
-      </if>
+
       <if test="subtaskid != null" >
         subtaskId,
       </if>
@@ -69,9 +67,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="subtasklogrecordid != null" >
-        #{subtasklogrecordid,jdbcType=INTEGER},
-      </if>
+
       <if test="subtaskid != null" >
         #{subtaskid,jdbcType=INTEGER},
       </if>

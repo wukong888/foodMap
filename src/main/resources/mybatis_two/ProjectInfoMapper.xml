@@ -226,13 +226,13 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.ProjectInfo" >
-    insert into project_info (id, proId, proName, 
+    insert into project_info (proId, proName,
       proType, planSDate, planEDate, 
       proDeclare, proFilePath,
       createDate, proState, creater, 
       proLogRecordId, proDevelopLogId,
       proProgress, createrSquadId,finishDate,onlineDate,rejectDate,cancelDate)
-    values (#{id,jdbcType=INTEGER}, #{proid,jdbcType=VARCHAR}, #{proname,jdbcType=VARCHAR}, 
+    values (#{proid,jdbcType=VARCHAR}, #{proname,jdbcType=VARCHAR},
       #{protype,jdbcType=VARCHAR}, #{plansdate,jdbcType=VARCHAR}, #{planedate,jdbcType=VARCHAR}, 
       #{prodeclare,jdbcType=VARCHAR}, #{profilepath,jdbcType=VARCHAR},
       #{createdate,jdbcType=VARCHAR}, #{prostate,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
@@ -245,8 +245,6 @@
     insert into project_info
 
     <trim prefix="(" suffix=")" suffixOverrides="," >
-
-        id,
 
       <if test="proid != null" >
         proId,
@@ -308,8 +306,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-
-        #{id,jdbcType=INTEGER},
 
       <if test="proid != null" >
         #{proid,jdbcType=VARCHAR},

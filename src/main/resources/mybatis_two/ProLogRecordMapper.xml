@@ -34,19 +34,17 @@
     where proLogRecordId = #{prologrecordid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.ProLogRecord" >
-    insert into pro_LogRecord (proLogRecordId, proId, type, 
+    insert into pro_LogRecord (proId, type,
       Date, squadId, Emp, 
       explain, filePath)
-    values (#{prologrecordid,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+    values (#{proid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR},
       #{date,jdbcType=VARCHAR}, #{squadid,jdbcType=INTEGER}, #{emp,jdbcType=VARCHAR}, 
       #{explain,jdbcType=VARCHAR}, #{filepath,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProLogRecord" >
     insert into pro_LogRecord
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="prologrecordid != null" >
-        proLogRecordId,
-      </if>
+
       <if test="proid != null" >
         proId,
       </if>
@@ -70,9 +68,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="prologrecordid != null" >
-        #{prologrecordid,jdbcType=INTEGER},
-      </if>
+
       <if test="proid != null" >
         #{proid,jdbcType=INTEGER},
       </if>

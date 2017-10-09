@@ -34,17 +34,15 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.Department" >
-    insert into department (id, departmentId, department
+    insert into department (departmentId, department
       )
-    values (#{id,jdbcType=INTEGER}, #{departmentid,jdbcType=INTEGER}, #{department,jdbcType=NVARCHAR}
+    values (#{departmentid,jdbcType=INTEGER}, #{department,jdbcType=NVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.Department" >
     insert into department
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
+
       <if test="departmentid != null" >
         departmentId,
       </if>
@@ -53,9 +51,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
+
       <if test="departmentid != null" >
         #{departmentid,jdbcType=INTEGER},
       </if>

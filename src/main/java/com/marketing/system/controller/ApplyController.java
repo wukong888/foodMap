@@ -116,7 +116,7 @@ public class ApplyController {
         }
 
         projectInfo.setId(1);
-        projectInfo.setProid(code);//任务id
+        projectInfo.setProid(Integer.valueOf(code));//任务id
         projectInfo.setProname(proName);//项目名称
         projectInfo.setProtype(proType);//项目类型
         projectInfo.setPlansdate(planSDate);//预计上线时间

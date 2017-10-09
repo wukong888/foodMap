@@ -451,4 +451,11 @@
       onlineDate = #{onlineDate,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.ProjectInfo" >
+    update project_info
+    set
+    proProgress = #{proprogress,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

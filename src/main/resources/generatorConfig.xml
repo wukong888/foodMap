@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>  
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration  
 	  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"  
 	  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
@@ -32,13 +32,14 @@
 		</sqlMapGenerator>
 
 		<!-- 生成DAO的包名和位置 -->
-		<javaClientGenerator type="XMLMAPPER" targetPackage="com.marketing.system.mapper" targetProject="src/main/java">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.marketing.system.mapper_two" targetProject="src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
 		<!-- 要生成哪些表 -->
 		<!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-		<table tableName="project_info" domainObjectName="ProjectInfo"
+		<!-- 错误表名称，变异通过 -->
+		<table tableName="members222" domainObjectName="Members"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false"></table>

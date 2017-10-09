@@ -446,7 +446,7 @@ public class MyProjectController {
     }
 
     /**
-     * 我的项目--任务分配详细页
+     * 我的项目--任务分配详情页
      * 基本信息+任务信息+日志记录
      *
      * @param taskId
@@ -581,10 +581,22 @@ public class MyProjectController {
             subtaskLogRecord.setExplain("添加任务");//说明
             subtaskLogRecord.setSubtaskid(subtaskId);//项目id
 
-            //插入日志
+            //插入子任务日志
             int ilog = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);
 
-            if (i > 0 && ilog > 0) {
+            TaskLogRecord taskLogRecord = new TaskLogRecord();
+
+            //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
+            taskLogRecord.setType("7");
+            taskLogRecord.setDate(str2);//创建时间
+            taskLogRecord.setEmp(subtaskName);//操作人
+            taskLogRecord.setExplain("分配子任务");//说明
+            taskLogRecord.setTaskid(taskId);
+
+            //插入任务日志
+            int sublog = myProjectService.insertTaskLogRecode(taskLogRecord);
+
+            if (i > 0 && ilog > 0 && sublog > 0) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -627,7 +639,19 @@ public class MyProjectController {
             //插入日志
             int ilog = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);
 
-            if (k > 0 && ilog > 0) {
+            TaskLogRecord taskLogRecord = new TaskLogRecord();
+
+            //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
+            taskLogRecord.setType("8");
+            taskLogRecord.setDate(str2);//创建时间
+            taskLogRecord.setEmp(subtaskName);//操作人
+            taskLogRecord.setExplain("修改子任务");//说明
+            taskLogRecord.setTaskid(taskId);
+
+            //插入任务日志
+            int sublog = myProjectService.insertTaskLogRecode(taskLogRecord);
+
+            if (k > 0 && ilog > 0 && sublog > 0) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -654,7 +678,19 @@ public class MyProjectController {
             //插入日志
             int ilog = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);
 
-            if (j > 0 && ilog > 0) {
+            TaskLogRecord taskLogRecord = new TaskLogRecord();
+
+            //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
+            taskLogRecord.setType("9");
+            taskLogRecord.setDate(str);//创建时间
+            taskLogRecord.setEmp(subtaskName);//操作人
+            taskLogRecord.setExplain("删除子任务");//说明
+            taskLogRecord.setTaskid(taskId);
+
+            //插入任务日志
+            int sublog = myProjectService.insertTaskLogRecode(taskLogRecord);
+
+            if (j > 0 && ilog > 0 && sublog > 0) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -718,7 +754,7 @@ public class MyProjectController {
             @ApiImplicitParam(paramType = "query", name = "filePath", value = "附件地址", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "userName", value = "操作人", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "subTaskId", value = "子任务id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "addType", value = "添加类型 1：项目开发日志 2：任务开发日志 3：子任务开发日志", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/addProDeveLog", method = RequestMethod.POST)
@@ -730,7 +766,7 @@ public class MyProjectController {
                                             @RequestParam(value = "filePath", required = false) String filePath,
                                             @RequestParam(value = "userName") String userName,
                                             @RequestParam(value = "taskId") int taskId,
-                                            @RequestParam(value = "subTaskId") int subTaskId,
+                                            @RequestParam(value = "subtaskId") int subtaskId,
                                             @RequestParam(value = "addType") int addType) {
 
         ApiResult<Integer> result = null;
@@ -754,13 +790,22 @@ public class MyProjectController {
 
             int i = myProjectService.insertProDeveLog(proDevelopLog);
 
-            if (i > 0) {
+            ProjectInfo projectInfo = new ProjectInfo();
+            projectInfo.setId(id);
+            projectInfo.setProid(proId);
+            projectInfo.setProprogress(progress);//进度
+            projectInfo.setCreatedate(str);
+
+            //有更新进度则同步项目更新进度
+            int k = myProjectService.updateProjectInfo(projectInfo);
+
+            if (i > 0 && k > 0) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //2：任务开发日志
+        //2：任务开发日志
         } else if (addType == 2) {
             TaskDevelopLog taskDevelopLog = new TaskDevelopLog();
 
@@ -778,13 +823,22 @@ public class MyProjectController {
             taskDevelopLog.setType(type);//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
 
             int i = myProjectService.insertTaskDevlog(taskDevelopLog);
-            if (i > 0) {
+
+            ProjectTask projectTask = new ProjectTask();
+            projectTask.setTaskId(taskId);//任务id
+            projectTask.setTaskprogress(progress);//进度
+            projectTask.setCreateDate(str);
+
+            //有更新进度则同步更新参与组开发进度
+            int k = myProjectService.updateTaskById(projectTask);
+
+            if (i > 0 && k > 0) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //2：子任务开发日志
+        //2：子任务开发日志
         } else {
             SubtaskDevelopLog subtaskDevelopLog = new SubtaskDevelopLog();
 
@@ -797,20 +851,126 @@ public class MyProjectController {
             subtaskDevelopLog.setEmp(userName);
             subtaskDevelopLog.setExplain(explain);
             subtaskDevelopLog.setFilepath(filePath);
-            subtaskDevelopLog.setSubtaskid(subTaskId);
+            subtaskDevelopLog.setSubtaskid(subtaskId);
             subtaskDevelopLog.setProgress(progress);
             subtaskDevelopLog.setType(type);
 
             int i = myProjectService.insertSubTaskDevlog(subtaskDevelopLog);
 
-            if (i > 0) {
+            ProjectSubtask projectSubtask = new ProjectSubtask();
+            projectSubtask.setSubtaskId(subtaskId);
+            projectSubtask.setSubtaskprogress(progress);//进度
+            projectSubtask.setCreateDate(str);
+
+            //
+            int k = myProjectService.updateProSubTask(projectSubtask);
+
+            if (i > 0 && k > 0) {
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
+            } else {
+                result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+            }
+        }
+
+        return result;
+
+    }
+
+    /**
+     * 我的项目详情页-提交任务
+     *
+     * @param taskId
+     * @param subtaskId
+     * @param explain
+     * @param userName
+     * @param type
+     * @return
+     */
+    @ApiOperation(value = "我的项目详情页-提交任务")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "explain", value = "说明", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "userName", value = "操作人", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "type", value = "类型1：任务 2：子任务", required = true, dataType = "Integer")
+    })
+    @RequestMapping(value = "/commitTask", method = RequestMethod.POST)
+    public ApiResult<Integer> commitTask(
+            @RequestParam(value = "taskId",required = false) int taskId,
+            @RequestParam(value = "subtaskId",required = false) int subtaskId,
+            @RequestParam(value = "explain",required = true) String explain,
+            @RequestParam(value = "userName",required = true) String userName,
+            @RequestParam(value = "type") int type ){
+
+        ApiResult<Integer> result = null;
+
+        //提交任务
+        if (type == 1) {
+            ProjectTask projectTask = new ProjectTask();
+            projectTask.setTaskprogress("100");
+            projectTask.setTaskId(taskId);
+            //任务状态 *******************************************值待定
+            projectTask.setTaskstate("预验收");
+
+            int i = myProjectService.updateTaskById(projectTask);
+
+            TaskDevelopLog taskDevelopLog = new TaskDevelopLog();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
+            taskDevelopLog.setDate(str);
+            taskDevelopLog.setEmp(userName);//操作人
+            taskDevelopLog.setExplain(explain);//备注说明
+            taskDevelopLog.setTaskid(taskId);//任务id
+            taskDevelopLog.setProgress("100");//进度
+            taskDevelopLog.setType("5");//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
+
+            //添加开发日志
+            int k = myProjectService.insertTaskDevlog(taskDevelopLog);
+
+            if (i > 0 && k > 0) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-        }
+        //提交子任务
+        } else {
+            ProjectSubtask projectSubtask = new ProjectSubtask();
 
+            projectSubtask.setSubtaskId(subtaskId);
+            projectSubtask.setSubtaskprogress("100");
+            //任务状态 *******************************************值待定
+            projectSubtask.setSubtaskstate("预验收");
+
+            int i = myProjectService.updateProSubTask(projectSubtask);
+
+            SubtaskDevelopLog subtaskDevelopLog = new SubtaskDevelopLog();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
+            subtaskDevelopLog.setDate(str);
+            subtaskDevelopLog.setEmp(userName);
+            subtaskDevelopLog.setExplain(explain);
+            subtaskDevelopLog.setSubtaskid(subtaskId);
+            subtaskDevelopLog.setProgress("100");
+            subtaskDevelopLog.setType("5");//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
+
+            //添加开发日志
+            int k = myProjectService.insertSubTaskDevlog(subtaskDevelopLog);
+
+            if (i > 0 && k > 0) {
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
+            } else {
+                result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+            }
+        }
 
         return result;
 

@@ -138,6 +138,7 @@ public class MyProjectServiceImpl implements MyProjectService {
 
     @Override
     public int updateTaskById(ProjectTask projectTask) {
+
         return projectTaskMapper.updateByPrimaryKeySelective(projectTask);
     }
 
@@ -210,6 +211,13 @@ public class MyProjectServiceImpl implements MyProjectService {
         return subtaskLogRecordMapper.insert(subtaskLogRecord);
     }
 
+    //插入日志-任务日志记录
+    @Override
+    public int insertTaskLogRecode(TaskLogRecord taskLogRecord) {
+
+        return taskLogRecordMapper.insert(taskLogRecord);
+    }
+
     //我的项目--任务分配详细页-子任务列表-删除
     @Override
     public int deleteProSubTaskById(int subtaskId) {
@@ -229,5 +237,12 @@ public class MyProjectServiceImpl implements MyProjectService {
     public List<SubtaskLogRecord> getSubtaskLogList(int subtaskId) {
 
         return subtaskLogRecordMapper.getSubtaskLogList(subtaskId);
+    }
+
+    //同步更新项目进度
+    @Override
+    public int updateProjectInfo(ProjectInfo projectInfo) {
+
+        return projectInfoMapper.updateByPrimaryKeySelective(projectInfo);
     }
 }

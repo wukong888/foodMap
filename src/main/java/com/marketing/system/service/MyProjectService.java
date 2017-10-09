@@ -59,6 +59,9 @@ public interface MyProjectService {
     //插入日志-子任务日志记录
     int insertSubTaskLogRecord(SubtaskLogRecord subtaskLogRecord);
 
+    //插入日志-任务日志记录
+    int insertTaskLogRecode(TaskLogRecord taskLogRecord);
+
     //我的项目--任务分配详细页-子任务列表-删除
     int deleteProSubTaskById(int subtaskId);
 
@@ -67,4 +70,7 @@ public interface MyProjectService {
 
     //我的项目--子任务详情页 - 日志记录
     List<SubtaskLogRecord> getSubtaskLogList(int subtaskId);
+
+    //同步更新项目进度
+    int updateProjectInfo(ProjectInfo projectInfo);
 }

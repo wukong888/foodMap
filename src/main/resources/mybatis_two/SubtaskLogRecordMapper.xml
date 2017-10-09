@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.marketing.system.mapper.SubtaskLogRecordMapper" >
+<mapper namespace="com.marketing.system.mapper_two.SubtaskLogRecordMapper" >
   <resultMap id="BaseResultMap" type="com.marketing.system.entity.SubtaskLogRecord" >
     <id column="subtaskLogRecordId" property="subtasklogrecordid" jdbcType="INTEGER" />
     <result column="subtaskId" property="subtaskid" jdbcType="INTEGER" />
@@ -20,6 +20,14 @@
     from subtask_LogRecord
     where subtaskLogRecordId = #{subtasklogrecordid,jdbcType=INTEGER}
   </select>
+
+  <select id="getSubtaskLogList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from subtask_LogRecord
+    where subtaskId = #{subtaskId,jdbcType=INTEGER}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from subtask_LogRecord
     where subtaskLogRecordId = #{subtasklogrecordid,jdbcType=INTEGER}

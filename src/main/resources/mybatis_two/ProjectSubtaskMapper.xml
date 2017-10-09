@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.marketing.system.mapper_two.ProjectSubtaskMapper" >
   <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProjectSubtask" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="subtaskId" property="subtaskId" jdbcType="INTEGER" />
     <result column="taskId" property="taskid" jdbcType="INTEGER" />
     <result column="subtaskName" property="subtaskname" jdbcType="VARCHAR" />
     <result column="sDate" property="sdate" jdbcType="VARCHAR" />
@@ -12,47 +12,83 @@
     <result column="subtaskHandler" property="subtaskhandler" jdbcType="VARCHAR" />
     <result column="subtaskLogRecordId" property="subtasklogrecordid" jdbcType="INTEGER" />
     <result column="subtaskDevelopLogId" property="subtaskdeveloplogid" jdbcType="INTEGER" />
-    <result column="subtaskId" property="subtaskid" jdbcType="INTEGER" />
+    <result column="idd" property="idd" jdbcType="INTEGER" />
+    <result column="createDate" property="createDate" jdbcType="VARCHAR" />
+    <result column="workDate" property="workDate" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, taskId, subtaskName, sDate, eDate, subtaskState, subtaskProgress, subtaskHandler,
-    subtaskLogRecordId, subtaskDevelopLogId, subtaskId
+    subtaskId, taskId, subtaskName, sDate, eDate, subtaskState, subtaskProgress, subtaskHandler,
+    subtaskLogRecordId, subtaskDevelopLogId, idd,createDate,workDate
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from project_subtask
-    where id = #{id,jdbcType=INTEGER}
+    where subtaskId = #{subtaskId,jdbcType=INTEGER}
   </select>
 
   <select id="getMyJoinProject" resultType="java.lang.Integer" parameterType="java.lang.String" >
     select
-    COUNT (id)
+    COUNT (subtaskId)
     from project_subtask
     where subtaskHandler = #{name}
   </select>
 
+  <select id="getSubTaskIdByHander" resultType="java.util.HashMap" parameterType="java.lang.String" >
+    select
+    subtaskId,taskId,subtaskHandler
+    from project_subtask
+    where subtaskHandler = #{subtaskhandler}
+  </select>
+
+  <select id="getProjectSubtaskList" resultType="java.util.HashMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    project_subtask
+    WHERE
+    taskId = #{taskId,jdbcType=INTEGER}
+  </select>
+
+  <select id="getSubTaskListMap" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    subtaskId, taskId, subtaskName
+    FROM
+    project_subtask
+    WHERE
+    <foreach item="item" index="index" collection="menuLeafIds"
+             open=" taskId IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_subtask
-    where id = #{id,jdbcType=INTEGER}
+    where subtaskId = #{subtaskId,jdbcType=INTEGER}
   </delete>
+
+  <delete id="deleteSubTaskById" parameterType="java.lang.Integer" >
+    delete from project_subtask
+    where taskId = #{taskId,jdbcType=INTEGER}
+  </delete>
+
   <insert id="insert" parameterType="com.marketing.system.entity.ProjectSubtask" >
-    insert into project_subtask (id, taskId,
+    insert into project_subtask (subtaskId, taskId,
       subtaskName, sDate, eDate, 
       subtaskState, subtaskProgress, subtaskHandler, 
       subtaskLogRecordId, subtaskDevelopLogId, 
-      subtaskId)
-    values (#{id,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER},
+      idd,createDate,workDate)
+    values (#{subtaskId,jdbcType=INTEGER}, #{taskid,jdbcType=INTEGER},
       #{subtaskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
       #{subtaskstate,jdbcType=VARCHAR}, #{subtaskprogress,jdbcType=VARCHAR}, #{subtaskhandler,jdbcType=VARCHAR}, 
       #{subtasklogrecordid,jdbcType=INTEGER}, #{subtaskdeveloplogid,jdbcType=INTEGER}, 
-      #{subtaskid,jdbcType=INTEGER})
+      #{idd,jdbcType=INTEGER},#{createDate,jdbcType=VARCHAR},#{workDate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectSubtask" >
     insert into project_subtask
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="subtaskId != null" >
+        subtaskId,
       </if>
       <if test="taskid != null" >
         taskId,
@@ -86,8 +122,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="subtaskId != null" >
+        #{subtaskId,jdbcType=INTEGER},
       </if>
       <if test="taskid != null" >
         #{taskid,jdbcType=INTEGER},
@@ -155,7 +191,7 @@
         subtaskId = #{subtaskid,jdbcType=INTEGER},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where subtaskId = #{subtaskId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectSubtask" >
     update project_subtask
@@ -169,6 +205,6 @@
       subtaskLogRecordId = #{subtasklogrecordid,jdbcType=INTEGER},
       subtaskDevelopLogId = #{subtaskdeveloplogid,jdbcType=INTEGER},
       subtaskId = #{subtaskid,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+    where subtaskId = #{subtaskId,jdbcType=INTEGER}
   </update>
 </mapper>

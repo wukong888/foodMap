@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.marketing.system.mapper.ProLogRecordMapper" >
+<mapper namespace="com.marketing.system.mapper_two.ProLogRecordMapper" >
   <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProLogRecord" >
     <id column="proLogRecordId" property="prologrecordid" jdbcType="INTEGER" />
     <result column="proId" property="proid" jdbcType="INTEGER" />
@@ -20,6 +20,15 @@
     from pro_LogRecord
     where proLogRecordId = #{prologrecordid,jdbcType=INTEGER}
   </select>
+
+  <select id="getProLogRecordList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from pro_LogRecord
+    WHERE
+    proId = #{proId}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from pro_LogRecord
     where proLogRecordId = #{prologrecordid,jdbcType=INTEGER}

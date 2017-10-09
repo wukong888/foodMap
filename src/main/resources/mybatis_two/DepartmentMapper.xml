@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper_two.DepartmentMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.Department" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="departmentId" property="departmentid" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, departmentId, department
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getDepartment" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from department
+  </select>
+
+  <select id="getDepartmentIdByMent" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    id, departmentId, department
+    from department d
+    WHERE d.department LIKE  '%${department}%'
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from department
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.Department" >
+    insert into department (id, departmentId, department
+      )
+    values (#{id,jdbcType=INTEGER}, #{departmentid,jdbcType=INTEGER}, #{department,jdbcType=NVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.Department" >
+    insert into department
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="departmentid != null" >
+        departmentId,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="departmentid != null" >
+        #{departmentid,jdbcType=INTEGER},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=NVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.Department" >
+    update department
+    <set >
+      <if test="departmentid != null" >
+        departmentId = #{departmentid,jdbcType=INTEGER},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=NVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.Department" >
+    update department
+    set departmentId = #{departmentid,jdbcType=INTEGER},
+      department = #{department,jdbcType=NVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

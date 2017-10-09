@@ -127,10 +127,11 @@ public class LoginController {
             r = new ApiResult<SystemUser>(Constant.FAIL_CODE_VALUE, "验证码错误！", null, null);
             return r;
         }*/
-
+        //username = "陈冬和";
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             SecurityUtils.getSubject().login(token);
+
             //RememberMe这个参数设置为true后，在登陆的时候就会在客户端设置remenberme的相应cookie
             token.setRememberMe(true);
 

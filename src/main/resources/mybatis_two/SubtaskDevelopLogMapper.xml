@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.marketing.system.mapper.SubtaskDevelopLogMapper" >
+<mapper namespace="com.marketing.system.mapper_two.SubtaskDevelopLogMapper" >
   <resultMap id="BaseResultMap" type="com.marketing.system.entity.SubtaskDevelopLog" >
     <id column="subtaskDevelopLogId" property="subtaskdeveloplogid" jdbcType="INTEGER" />
     <result column="subtaskId" property="subtaskid" jdbcType="INTEGER" />
@@ -9,9 +9,11 @@
     <result column="Emp" property="emp" jdbcType="VARCHAR" />
     <result column="explain" property="explain" jdbcType="VARCHAR" />
     <result column="filePath" property="filepath" jdbcType="VARCHAR" />
+    <result column="progress" property="progress" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    subtaskDevelopLogId, subtaskId, Date, squadId, Emp, explain, filePath
+    subtaskDevelopLogId, subtaskId, Date, squadId, Emp, explain, filePath,progress,type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -19,6 +21,14 @@
     from subtask_DevelopLog
     where subtaskDevelopLogId = #{subtaskdeveloplogid,jdbcType=INTEGER}
   </select>
+
+  <select id="getSubTaskDevLogList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from subtask_DevelopLog
+    where subtaskId = #{subtaskId,jdbcType=INTEGER}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from subtask_DevelopLog
     where subtaskDevelopLogId = #{subtaskdeveloplogid,jdbcType=INTEGER}
@@ -26,10 +36,10 @@
   <insert id="insert" parameterType="com.marketing.system.entity.SubtaskDevelopLog" >
     insert into subtask_DevelopLog (subtaskDevelopLogId, subtaskId, Date, 
       squadId, Emp, explain, 
-      filePath)
+      filePath,progress,type)
     values (#{subtaskdeveloplogid,jdbcType=INTEGER}, #{subtaskid,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, 
       #{squadid,jdbcType=INTEGER}, #{emp,jdbcType=VARCHAR}, #{explain,jdbcType=VARCHAR}, 
-      #{filepath,jdbcType=VARCHAR})
+      #{filepath,jdbcType=VARCHAR},#{progress,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.SubtaskDevelopLog" >
     insert into subtask_DevelopLog
@@ -55,6 +65,12 @@
       <if test="filepath != null" >
         filePath,
       </if>
+      <if test="progress != null" >
+        progress,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="subtaskdeveloplogid != null" >
@@ -77,6 +93,12 @@
       </if>
       <if test="filepath != null" >
         #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null" >
+        #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -101,6 +123,12 @@
       <if test="filepath != null" >
         filePath = #{filepath,jdbcType=VARCHAR},
       </if>
+      <if test="progress != null" >
+        progress = #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
     </set>
     where subtaskDevelopLogId = #{subtaskdeveloplogid,jdbcType=INTEGER}
   </update>
@@ -111,7 +139,9 @@
       squadId = #{squadid,jdbcType=INTEGER},
       Emp = #{emp,jdbcType=VARCHAR},
       explain = #{explain,jdbcType=VARCHAR},
-      filePath = #{filepath,jdbcType=VARCHAR}
+      filePath = #{filepath,jdbcType=VARCHAR},
+      progress = #{progress,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR}
     where subtaskDevelopLogId = #{subtaskdeveloplogid,jdbcType=INTEGER}
   </update>
 </mapper>

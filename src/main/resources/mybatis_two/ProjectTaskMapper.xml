@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.marketing.system.entity.ProjectTask" >
     <id column="taskId" property="taskId" jdbcType="INTEGER" />
     <result column="proId" property="proid" jdbcType="INTEGER" />
-    <result column="squadId" property="squadid" jdbcType="INTEGER" />
+    <result column="squadId" property="squadId" jdbcType="VARCHAR" />
     <result column="taskName" property="taskname" jdbcType="VARCHAR" />
     <result column="sDate" property="sdate" jdbcType="VARCHAR" />
     <result column="eDate" property="edate" jdbcType="VARCHAR" />
@@ -13,10 +13,13 @@
     <result column="taskLogRecordId" property="tasklogrecordid" jdbcType="INTEGER" />
     <result column="taskDevelopLogId" property="taskdeveloplogid" jdbcType="INTEGER" />
     <result column="handler" property="handler" jdbcType="VARCHAR" />
+    <result column="workDate" property="workDate" jdbcType="VARCHAR" />
+    <result column="idd" property="idd" jdbcType="INTEGER" />
+    <result column="createDate" property="createDate" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     taskId, proId, squadId, taskName, sDate, eDate, taskState, taskProgress, taskLogRecordId,
-    taskDevelopLogId,handler
+    taskDevelopLogId,handler,workDate,idd,createDate
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -32,6 +35,37 @@
     where handler = #{name}
   </select>
 
+  <select id="selectMaxProId" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select
+    MAX (proId)
+    from project_task
+  </select>
+
+  <select id="getProjectTaskList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from project_task
+    WHERE proId = #{proId}
+  </select>
+
+  <select id="getProjectTaskListMap" resultType="java.util.HashMap" parameterType="java.lang.Integer" >
+    select
+    taskId, proId,taskName,handler
+    from project_task
+    WHERE proId = #{proId}
+  </select>
+
+  <select id="getproIdByTaskId" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    proId
+    FROM
+    project_task
+    WHERE
+    <foreach item="item" index="index" collection="menuLeafIds"
+             open=" taskId IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_task
@@ -41,22 +75,24 @@
     insert into project_task (taskId, proId, squadId,
       taskName, sDate, eDate, 
       taskState, taskProgress,
-      taskLogRecordId, taskDevelopLogId)
-    values (#{taskId,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{squadid,jdbcType=INTEGER},
+      taskLogRecordId, taskDevelopLogId,handler,workDate,idd,createDate)
+    values (#{taskId,jdbcType=INTEGER}, #{proid,jdbcType=INTEGER}, #{squadId,jdbcType=VARCHAR},
       #{taskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
       #{taskstate,jdbcType=VARCHAR}, #{taskprogress,jdbcType=VARCHAR},
-      #{tasklogrecordid,jdbcType=INTEGER}, #{taskdeveloplogid,jdbcType=INTEGER})
+      #{tasklogrecordid,jdbcType=INTEGER}, #{taskdeveloplogid,jdbcType=INTEGER},#{handler,jdbcType=VARCHAR},
+      #{workDate,jdbcType=VARCHAR},#{idd,jdbcType=INTEGER},#{createDate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectTask" >
+
     insert into project_task
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="taskId != null" >
+
         taskId,
-      </if>
+
       <if test="proid != null" >
         proId,
       </if>
-      <if test="squadid != null" >
+      <if test="squadId != null" >
         squadId,
       </if>
       <if test="taskname != null" >
@@ -81,16 +117,29 @@
       <if test="taskdeveloplogid != null" >
         taskDevelopLogId,
       </if>
+      <if test="handler != null" >
+        handler,
+      </if>
+      <if test="workDate != null" >
+        workDate,
+      </if>
+      <if test="idd != null" >
+        idd,
+      </if>
+      <if test="createDate != null" >
+        createDate,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="taskId != null" >
+
         #{taskId,jdbcType=INTEGER},
-      </if>
+
       <if test="proid != null" >
         #{proid,jdbcType=INTEGER},
       </if>
-      <if test="squadid != null" >
-        #{squadid,jdbcType=INTEGER},
+      <if test="squad != null" >
+        #{squadId,jdbcType=VARCHAR},
       </if>
       <if test="taskname != null" >
         #{taskname,jdbcType=VARCHAR},
@@ -114,7 +163,22 @@
       <if test="taskdeveloplogid != null" >
         #{taskdeveloplogid,jdbcType=INTEGER},
       </if>
+      <if test="handler != null" >
+        #{handler,jdbcType=VARCHAR},
+      </if>
+
+      <if test="workDate != null" >
+        #{workDate,jdbcType=VARCHAR},
+      </if>
+      <if test="idd != null" >
+        #{idd,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+
     </trim>
+
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.ProjectTask" >
     update project_task
@@ -122,8 +186,8 @@
       <if test="proid != null" >
         proId = #{proid,jdbcType=INTEGER},
       </if>
-      <if test="squadid != null" >
-        squadId = #{squadid,jdbcType=INTEGER},
+      <if test="squad != null" >
+        squadId = #{squadId,jdbcType=VARCHAR},
       </if>
       <if test="taskname != null" >
         taskName = #{taskname,jdbcType=VARCHAR},
@@ -147,20 +211,38 @@
       <if test="taskdeveloplogid != null" >
         taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER},
       </if>
+      <if test="handler != null" >
+        handler = #{handler,jdbcType=VARCHAR},
+      </if>
+      <if test="workDate != null" >
+        workDate = #{workDate,jdbcType=VARCHAR},
+      </if>
+      <if test="idd != null" >
+        idd = #{idd,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        createDate = #{createDate,jdbcType=VARCHAR},
+      </if>
+
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where taskId = #{taskId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectTask" >
     update project_task
     set proId = #{proid,jdbcType=INTEGER},
-      squadId = #{squadid,jdbcType=INTEGER},
+      squadId = #{squadId,jdbcType=VARCHAR},
       taskName = #{taskname,jdbcType=VARCHAR},
       sDate = #{sdate,jdbcType=VARCHAR},
       eDate = #{edate,jdbcType=VARCHAR},
       taskState = #{taskstate,jdbcType=VARCHAR},
       taskProgress = #{taskprogress,jdbcType=VARCHAR},
       taskLogRecordId = #{tasklogrecordid,jdbcType=INTEGER},
-      taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+      taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER},
+      handler = #{handler,jdbcType=VARCHAR},
+      workDate = #{workDate,jdbcType=VARCHAR}
+      idd = #{idd,jdbcType=INTEGER}
+      createDate = #{createDate,jdbcType=VARCHAR}
+
+    where taskId = #{taskId,jdbcType=INTEGER}
   </update>
 </mapper>

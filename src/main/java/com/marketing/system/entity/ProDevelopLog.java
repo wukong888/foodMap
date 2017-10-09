@@ -17,6 +17,26 @@ public class ProDevelopLog {
 
     private String filepath;
 
+    private String progress;
+
+    private String proDevelopLogId;
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    public String getProDevelopLogId() {
+        return proDevelopLogId;
+    }
+
+    public void setProDevelopLogId(String proDevelopLogId) {
+        this.proDevelopLogId = proDevelopLogId;
+    }
+
     public Integer getProdeveloplogid() {
         return prodeveloplogid;
     }

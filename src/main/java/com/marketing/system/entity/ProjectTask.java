@@ -5,7 +5,7 @@ public class ProjectTask {
 
     private Integer proid;
 
-    private String squadid;
+    private String squadId;
 
     private String taskname;
 
@@ -22,27 +22,25 @@ public class ProjectTask {
     private Integer taskdeveloplogid;
 
     private String handler;
-    private Integer idd;
-
-    public String getWorkDate() {
-        return workDate;
-    }
-
-    public void setWorkDate(String workDate) {
-        this.workDate = workDate;
-    }
 
     private String workDate;
 
-    public String getCreatedate() {
-        return createdate;
+    /**
+     * 距离逾期天数
+     */
+    private long betweenDays;
+
+    private Integer idd;
+
+    private String createDate;
+
+    public String getCreateDate() {
+        return createDate;
     }
 
-    public void setCreatedate(String createdate) {
-        this.createdate = createdate;
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
     }
-
-    private String createdate;
 
     public Integer getIdd() {
         return idd;
@@ -52,17 +50,20 @@ public class ProjectTask {
         this.idd = idd;
     }
 
-    /**
-     * 距离逾期天数
-     */
-    private long betweenDays;
-
     public long getBetweenDays() {
         return betweenDays;
     }
 
     public void setBetweenDays(long betweenDays) {
         this.betweenDays = betweenDays;
+    }
+
+    public String getWorkDate() {
+        return workDate;
+    }
+
+    public void setWorkDate(String workDate) {
+        this.workDate = workDate;
     }
 
     public String getHandler() {
@@ -81,12 +82,12 @@ public class ProjectTask {
         this.proid = proid;
     }
 
-    public String getSquadid() {
-        return squadid;
+    public String getSquadId() {
+        return squadId;
     }
 
-    public void setSquadid(String squadid) {
-        this.squadid = squadid;
+    public void setSquadId(String squadId) {
+        this.squadId = squadId;
     }
 
     public String getTaskname() {

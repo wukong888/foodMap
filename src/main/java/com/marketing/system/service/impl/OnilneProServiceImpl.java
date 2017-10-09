@@ -23,30 +23,7 @@ public class OnilneProServiceImpl implements OnlineProService{
 
     //模糊查询所有待审批的项目
     public Map<String, Object> selectOnPro(Integer current,Integer pageSize,String creatersquadid,String creater,String createdate1,String createdate2,String finishdate1,String finishdate2,String protype,String param){
-        if(creatersquadid==null){
-            creatersquadid="";
-        }
-        if(creater==null){
-            creater="";
-        }
-        if(createdate1==null||createdate1==""){
-            createdate1="2010-01-01";
-        }
-        if(createdate2==null||createdate2==""){
-            createdate2="2040-01-01";
-        }
-        if(finishdate1==null||finishdate1==""){
-            finishdate1="2010-01-01";
-        }
-        if(finishdate2==null||finishdate2==""){
-            finishdate2="2040-01-01";
-        }
-        if(protype==null){
-            protype="";
-        }
-        if(param==null){
-            param="";
-        }
+
 
         Map<String,Object> onProMap=new HashMap<String,Object>();
         List<ProjectInfo> OnPro=OnProDao.selectOnPro(creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,protype,param,current,pageSize);
@@ -194,6 +171,7 @@ public class OnilneProServiceImpl implements OnlineProService{
         Date Date=new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date=sdf.format(Date);
+        System.out.println("date--"+date);
         String squadid="11";
         String emp="陈东和";
         String filepath=null;

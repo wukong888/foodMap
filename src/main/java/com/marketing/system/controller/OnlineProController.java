@@ -1,16 +1,16 @@
 package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
+import com.marketing.system.service.MyProjectService;
 import com.marketing.system.service.OnlineProService;
-import com.marketing.system.util.ApiResult;
-import com.marketing.system.util.Constant;
-import com.marketing.system.util.RdPage;
+import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.util.StopWatch;
@@ -31,6 +31,9 @@ public class OnlineProController {
 
         @Resource
         private OnlineProService OnProService;
+
+        @Resource
+        private MyProjectService myProjectService;
 
 
 
@@ -66,25 +69,129 @@ public class OnlineProController {
                 @RequestParam(value="param", required = false) String param) {
 
             ApiResult<List<ProjectInfo>> result =null;
-            Map<String,Object> OnProMap=OnProService.selectOnPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,protype,param);
+            if(creatersquadid==null){
+                creatersquadid="";
+            }
+            if(creater==null){
+                creater="";
+            }
+            if(createdate1==null||createdate1==""){
+                createdate1="2010-01-01";
+            }
+            if(createdate2==null||createdate2==""){
+                createdate2="2040-01-01";
+            }
+            if(finishdate1==null||finishdate1==""){
+                finishdate1="2010-01-01";
+            }
+            if(finishdate2==null||finishdate2==""){
+                finishdate2="2040-01-01";
+            }
+            if(protype==null){
+                protype="";
+            }
+            if(param==null){
+                param="";
+            }
+            //所有项目集合
+            Map<String,Object> OnProMapAll=OnProService.selectOnPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,protype,param);
 
-            List<ProjectInfo> OnPro=(List<ProjectInfo>)OnProMap.get("OnPro");
-            Integer sum=(Integer)OnProMap.get("OnProNum");
+            //项目相关人员集合
+            List<ProjectInfo> OnPro = new ArrayList<>();
+
+            List<ProjectInfo> OnProAll=(List<ProjectInfo>)OnProMapAll.get("OnPro");
+
+            //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+            SystemUser user = new SystemUser();
+            //String userName = user.getUserName();//当前登录用户
+            //测试用***************************************
+            String userName = "陈东和";
+            user.setUserName(userName);
+            user.setDuty("CEO");
+            //String department = user.getDepartment();
+            //department = department.substring(0,2);
+            String department = "总经";
+
+            //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
+            Department did = myProjectService.getDepartmentIdByMent(department);
+            String departmentid = did.getDepartmentid();
+            //根据部门id查找小组id
+            List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+            String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
+
+            String[] mIds = mentIds.split(",");
+            Map<String, Object> mapTid = new HashMap<>();
+
+            mapTid.put("mentIds", mIds);
+            //组长/经理其小组成员
+            List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+
+            //当前登录用户所涉及子任务
+            List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
+            Map<String, Object> objectMapNew = new HashMap<>();
+            String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(subtaskList, "taskId"));
+            String[] Ids = menuLeafIds.split(",");
+            Map<String, Object> mapT = new HashMap<>();
+            mapT.put("menuLeafIds", Ids);
+
+            //根据taskId查找proId
+            List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
+            List<Map<String, Object>> taskString = new ArrayList<>();
+            List<Map<String, Object>> taskProId = new ArrayList<>();
+            //判断项目集合中是否有对应小组成员
+            //小组集合中是否匹配子任务负责人
+            for (Map map1 : mapList1) {
+                for (Map map0 : subtaskList) {
+                    if (map0.get("subtaskHandler") == map1.get("member")) {
+                        taskString.add(map0);
+                    }
+                }
+            }
+
+            //判断是否是项目相关的人（我的项目）是则重新赋值组成新 我的项目list
+            for (ProjectInfo pro : OnProAll) {
+                for (Map map1 : taskList) {
+                    if (map1.get("proId") == (Integer.valueOf(pro.getProid()))) {
+                        OnPro.add(pro);
+                    }
+                    //通过子任务里的taskId匹配对应任务里的taskId
+                    for (Map s : taskString) {
+                        if (s.get("taskId") == map1.get("taskId")) {
+                            taskProId.add(map1);
+                        }
+                    }
+                    //通过匹配的taskId匹配对应的proId
+                    for (Map map3 : taskProId) {
+                        if (map3.get("proId") == pro.getProid()) {
+                            OnPro.add(pro);
+                        }
+                    }
+                }
+                //当前用户是创建人
+                if (pro.getCreater() == user.getUserName()) {
+                    OnPro.add(pro);
+                }
+            }
+
+            RdPage rdPage = new RdPage();
+            int sum = 0;
+            if (user.getDuty() == "CEO") {
+                sum = OnProAll.size();
+            } else {
+                sum = OnPro.size();
+            }
+
 
             //分页信息
-            RdPage rdPage = new RdPage();
             rdPage.setTotal(sum);
             rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            String msg = "";
-            if (current > rdPage.getPages()) {
-                msg = "已经超过当前所有页数！";
-                result = new ApiResult<List<ProjectInfo>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+            if (user.getDuty() == "CEO") {
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, OnProAll, rdPage);
             } else {
-                msg = "查询成功！";
-                result = new ApiResult<List<ProjectInfo>>(Constant.SUCCEED_CODE_VALUE,msg,OnPro,rdPage);
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, OnPro, rdPage);
             }
 
             return  result;
@@ -260,6 +367,29 @@ public class OnlineProController {
             result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批驳回操作失败","审批驳回操作失败",null);
         }
 
+        return result;
+    }
+
+    /**
+     * 指定回复
+     *
+     * @return
+     */
+    @ApiOperation(value = "指定回复")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "Uid", value = "员工Id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "rescontent", value = "回复内容", required = true, dataType = "String")
+    })
+    @RequestMapping(value = "/weixinPush", method = RequestMethod.POST)
+    public ApiResult<String> weixinPush(
+            @RequestParam(value = "Uid") int Uid,
+            @RequestParam(value = "rescontent") String rescontent){
+       /* String postUrl="{\"Uid\":"+Uid
+                +",\"Content\":\"今日发起工单数:"+list.get(0)+"\\n\",\"AgentId\":1000003,\"Title\":\"工单时报\",\"Url\":\"http://report.wsloan.com:8888/workorder/user/loginAuto.do?id="
+                +user.getId()+"&password="+user.getPassword().trim().toUpperCase()+"\"}";
+*/
+       // WeiXinPushUtil.httpPostWithJSON(postUrl);
+        ApiResult<String> result =null;
         return result;
     }
 

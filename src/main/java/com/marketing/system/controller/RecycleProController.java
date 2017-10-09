@@ -1,14 +1,10 @@
 package com.marketing.system.controller;
 
-import com.marketing.system.entity.ProDevelopLog;
-import com.marketing.system.entity.ProLogRecord;
-import com.marketing.system.entity.ProjectInfo;
-import com.marketing.system.entity.ProjectTask;
+import com.marketing.system.entity.*;
+import com.marketing.system.service.MyProjectService;
 import com.marketing.system.service.OnlineProService;
 import com.marketing.system.service.RecycleProService;
-import com.marketing.system.util.ApiResult;
-import com.marketing.system.util.Constant;
-import com.marketing.system.util.RdPage;
+import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,6 +33,9 @@ public class RecycleProController {
 
     @Resource
     private RecycleProService RecProService;
+
+    @Resource
+    private MyProjectService myProjectService;
 
 
 
@@ -72,25 +71,130 @@ public class RecycleProController {
             @RequestParam(value="param", required = false) String param) {
 
         ApiResult<List<ProjectInfo>> result =null;
-        Map<String,Object> RecProMap=RecProService.selectRecPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
 
-        List<ProjectInfo> RecPro=(List<ProjectInfo>)RecProMap.get("RecPro");
-        Integer sum=(Integer)RecProMap.get("RecProNum");
+        if(creatersquadid==null){
+            creatersquadid="";
+        }
+        if(creater==null){
+            creater="";
+        }
+        if(createdate1==null||createdate1==""){
+            createdate1="2010-01-01";
+        }
+        if(createdate2==null||createdate2==""){
+            createdate2="2040-01-01";
+        }
+        if(plansdate1==null||plansdate1==""){
+            plansdate1="2010-01-01";
+        }
+        if(plansdate2==null||plansdate2==""){
+            plansdate2="2040-01-01";
+        }
+        if(protype==null){
+            protype="";
+        }
+        if(param==null){
+            param="";
+        }
+        //所有项目集合
+        Map<String,Object> RecProMapAll=RecProService.selectRecPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+
+        List<ProjectInfo> RecProAll=(List<ProjectInfo>)RecProMapAll.get("RecPro");
+
+        //项目相关人员集合
+        List<ProjectInfo> RecPro = new ArrayList<>();
+
+        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+        SystemUser user = new SystemUser();
+        //String userName = user.getUserName();//当前登录用户
+        //测试用***************************************
+        String userName = "陈东和";
+        user.setUserName(userName);
+        user.setDuty("CEO");
+        //String department = user.getDepartment();
+        //department = department.substring(0,2);
+        String department = "总经";
+
+        //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
+        Department did = myProjectService.getDepartmentIdByMent(department);
+        String departmentid = did.getDepartmentid();
+        //根据部门id查找小组id
+        List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+        String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
+
+        String[] mIds = mentIds.split(",");
+        Map<String, Object> mapTid = new HashMap<>();
+
+        mapTid.put("mentIds", mIds);
+        //组长/经理其小组成员
+        List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+
+        //当前登录用户所涉及子任务
+        List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
+        Map<String, Object> objectMapNew = new HashMap<>();
+        String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(subtaskList, "taskId"));
+        String[] Ids = menuLeafIds.split(",");
+        Map<String, Object> mapT = new HashMap<>();
+        mapT.put("menuLeafIds", Ids);
+
+        //根据taskId查找proId
+        List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
+        List<Map<String, Object>> taskString = new ArrayList<>();
+        List<Map<String, Object>> taskProId = new ArrayList<>();
+        //判断项目集合中是否有对应小组成员
+        //小组集合中是否匹配子任务负责人
+        for (Map map1 : mapList1) {
+            for (Map map0 : subtaskList) {
+                if (map0.get("subtaskHandler") == map1.get("member")) {
+                    taskString.add(map0);
+                }
+            }
+        }
+
+        //判断是否是项目相关的人（我的项目）是则重新赋值组成新 我的项目list
+        for (ProjectInfo pro : RecProAll) {
+            for (Map map1 : taskList) {
+                if (map1.get("proId") == (Integer.valueOf(pro.getProid()))) {
+                    RecPro.add(pro);
+                }
+                //通过子任务里的taskId匹配对应任务里的taskId
+                for (Map s : taskString) {
+                    if (s.get("taskId") == map1.get("taskId")) {
+                        taskProId.add(map1);
+                    }
+                }
+                //通过匹配的taskId匹配对应的proId
+                for (Map map3 : taskProId) {
+                    if (map3.get("proId") == pro.getProid()) {
+                        RecPro.add(pro);
+                    }
+                }
+            }
+            //当前用户是创建人
+            if (pro.getCreater() == user.getUserName()) {
+                RecPro.add(pro);
+            }
+        }
+
+        RdPage rdPage = new RdPage();
+        int sum = 0;
+        if (user.getDuty() == "CEO") {
+            sum = RecProAll.size();
+        } else {
+            sum = RecPro.size();
+        }
+
 
         //分页信息
-        RdPage rdPage = new RdPage();
         rdPage.setTotal(sum);
         rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
         rdPage.setCurrent(current);
         rdPage.setPageSize(pageSize);
 
-        String msg = "";
-        if (current > rdPage.getPages()) {
-            msg = "已经超过当前所有页数！";
-            result = new ApiResult<List<ProjectInfo>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+        if (user.getDuty() == "CEO") {
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, RecProAll, rdPage);
         } else {
-            msg = "查询成功！";
-            result = new ApiResult<List<ProjectInfo>>(Constant.SUCCEED_CODE_VALUE,msg,RecPro,rdPage);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, RecPro, rdPage);
         }
 
         return  result;

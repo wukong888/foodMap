@@ -21,30 +21,7 @@ public class RecycleProServiceImpl implements RecycleProService{
 
     //模糊查询所有待审批的项目
     public Map<String, Object> selectRecPro(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String plansdate1, String plansdate2, String protype, String param){
-        if(creatersquadid==null){
-            creatersquadid="";
-        }
-        if(creater==null){
-            creater="";
-        }
-        if(createdate1==null||createdate1==""){
-            createdate1="2010-01-01";
-        }
-        if(createdate2==null||createdate2==""){
-            createdate2="2040-01-01";
-        }
-        if(plansdate1==null||plansdate1==""){
-            plansdate1="2010-01-01";
-        }
-        if(plansdate2==null||plansdate2==""){
-            plansdate2="2040-01-01";
-        }
-        if(protype==null){
-            protype="";
-        }
-        if(param==null){
-            param="";
-        }
+
 
         System.out.println("1-"+creatersquadid+"2-"+creater+"3-"+createdate1+"4-"+createdate2+"5-"+plansdate1+"6-"+plansdate2+"7-"+protype+"8-"+param);
         Map<String,Object> recProMap=new HashMap<String,Object>();

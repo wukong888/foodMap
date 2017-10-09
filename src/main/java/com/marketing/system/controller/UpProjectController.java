@@ -81,25 +81,25 @@ public class UpProjectController {
         map.put("pageSize", pageSize);
         map.put("createrSquadId", createrSquadId);//项目发起部门
         map.put("creater", creater);//创建人
-        if (createDateStart == "") {
+        if (createDateStart == "" || createDateStart == null) {
             map.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
         } else {
             map.put("createDateStart", createDateStart);//项目发起开始时间
         }
 
-        if (createDateEnd == "") {
+        if (createDateEnd == "" || createDateEnd == null) {
             map.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
         } else {
             map.put("createDateEnd", createDateEnd);//项目发起结束时间
         }
 
-        if (planSDateStart == "") {
+        if (planSDateStart == "" || planSDateStart == null) {
             map.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
         } else {
             map.put("planSDateStart", planSDateStart);//预计上线开始时间
         }
 
-        if (planSDateEnd == "") {
+        if (planSDateEnd == "" || planSDateEnd == null) {
             map.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
         } else {
             map.put("planSDateEnd", planSDateEnd);//预计上线结束时间

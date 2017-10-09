@@ -89,25 +89,25 @@ public class MyProjectController {
         map.put("createrSquadId", createrSquadId);//项目发起部门
         map.put("creater", creater);//创建人
         map.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
-        if (createDateStart == "") {
+        if (createDateStart == "" || createDateStart == null) {
             map.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
         } else {
             map.put("createDateStart", createDateStart);//项目发起开始时间
         }
 
-        if (createDateEnd == "") {
+        if (createDateEnd == "" || createDateEnd == null) {
             map.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
         } else {
             map.put("createDateEnd", createDateEnd);//项目发起结束时间
         }
 
-        if (planSDateStart == "") {
+        if (planSDateStart == "" || planSDateStart == null) {
             map.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
         } else {
             map.put("planSDateStart", planSDateStart);//预计上线开始时间
         }
 
-        if (planSDateEnd == "") {
+        if (planSDateEnd == "" || planSDateEnd == null) {
             map.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
         } else {
             map.put("planSDateEnd", planSDateEnd);//预计上线结束时间
@@ -298,7 +298,6 @@ public class MyProjectController {
             @ApiImplicitParam(paramType = "query", name = "taskName", value = "任务名称", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "sDate", value = "任务开始时间", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "eDate", value = "任务结束时间", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "eDate", value = "任务结束时间", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "handler", value = "操作人", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "squadId", value = "参与组id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "workDate", value = "工作时间", required = false, dataType = "String"),
@@ -332,7 +331,7 @@ public class MyProjectController {
             projectTask.setSdate(sDate);//任务开始时间
             projectTask.setEdate(eDate);//任务结束时间
             projectTask.setWorkDate(workDate);//任务工时
-
+            projectTask.setHandler(handler);//操作人
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             java.util.Date date = new java.util.Date();
@@ -365,7 +364,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //修改
+        //修改
         } else if (type == 2) {
             ProjectTask projectTask = new ProjectTask();
             projectTask.setTaskId(taskId);
@@ -375,6 +374,7 @@ public class MyProjectController {
             projectTask.setSdate(sDate);//任务开始时间
             projectTask.setEdate(eDate);//任务结束时间
             projectTask.setWorkDate(workDate);//任务工时
+            projectTask.setHandler(handler);//操作人
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -411,7 +411,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //删除 可删除当前任务，删除后该任务内容全部清零
+        //删除 可删除当前任务，删除后该任务内容全部清零
         } else {
 
             i = myProjectService.deleteTaskById(taskId);

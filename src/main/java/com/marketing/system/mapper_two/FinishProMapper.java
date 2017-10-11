@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FinishProMapper {
 
@@ -43,7 +44,7 @@ public interface FinishProMapper {
 
     //查询项目的参与组
     @Select("SELECT * FROM project_task where proId=#{proId} ORDER BY sDate asc")
-    List<ProjectTask> selectFinTask(@Param("proId")Integer proId);
+    List<Map> selectFinTask(@Param("proId")Integer proId);
 
     //查询项目中的任务详细信息
     @Select("SELECT * FROM project_task WHERE taskId=#{taskId}")
@@ -72,4 +73,8 @@ public interface FinishProMapper {
     //查看任务的日志记录
     @Select("SELECT * FROM subtask_LogRecord where subtaskId=#{subtaskId} ORDER BY Date asc")
     List<SubtaskLogRecord> selectFinSubtaskLogRecord(@Param("subtaskId")Integer subtaskId);
+
+    //根据小组id查找部门id
+    @Select("select departmentId from projectManage.dbo.[group] where squadId=#{squadId}")
+    String selectDepartmentIdBySquadId(@Param("squadId")String squadId);
 }

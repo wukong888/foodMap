@@ -218,7 +218,7 @@ public class OnlineProController {
           Map<String,Object> OnProInfo=new HashMap<String,Object>();
           ProjectInfo ProInfo=OnProService.selectOnProInfo(id,proId);
           List<ProLogRecord> ProLogRecord=OnProService.selectOnProLogRecord(proId);
-          List<ProjectTask> ProTask=OnProService.selectOnTask(proId);
+          List<Map> ProTask=OnProService.selectOnTask(proId);
           List<ProDevelopLog> ProDevRecord=OnProService.selectOnProDevRecord(proId);
 
           OnProInfo.put("ProInfo",ProInfo);

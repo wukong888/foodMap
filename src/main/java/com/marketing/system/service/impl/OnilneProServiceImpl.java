@@ -39,13 +39,12 @@ public class OnilneProServiceImpl implements OnlineProService{
     public ProjectInfo selectOnProInfo(Integer id,Integer proId){
 
         ProjectInfo OnProInfo=OnProDao.selectOnProInfo(id);
-        List<ProjectTask> OnTasks=OnProDao.selectOnTask(proId);
+        List<Map> OnTasks=OnProDao.selectOnTask(proId);
         int sum = 0;
-        for (ProjectTask OnTask:OnTasks) {
-            OnTask.getWorkDate();
-            if (OnTask.getWorkDate() !="" && OnTask.getWorkDate() != null)
-                sum +=Integer.valueOf(OnTask.getWorkDate());
-
+        for (Map<String,Object> OnTask:OnTasks) {
+            OnTask.get("workDate");
+            if (OnTask.get("workDate") !="" && OnTask.get("workDate") != null)
+                sum +=Integer.valueOf((String) OnTask.get("workDate"));
         }
         OnProInfo.setWorkTatalDay(String.valueOf(sum));//项目预计工期（任务工期之和）
         return OnProInfo;
@@ -63,12 +62,14 @@ public class OnilneProServiceImpl implements OnlineProService{
     }
 
     //查看上线待审批项目的参与组
-    public List<ProjectTask> selectOnTask(Integer proId){
-        List<ProjectTask> OnTasks=OnProDao.selectOnTask(proId);
+    public List<Map> selectOnTask(Integer proId){
+        List<Map> OnTasks=OnProDao.selectOnTask(proId);
         for(int i=0;i<OnTasks.size();i++){
-            String squadId=OnTasks.get(i).getSquadId();
+            String squadId=(String) OnTasks.get(i).get("squadId");
             String squad=OnProDao.selectSquadById(squadId);
-            OnTasks.get(i).setSquadId(squad);
+            OnTasks.get(i).put("squad",squad);
+            String departmentId=OnProDao.selectDepartmentIdBySquadId(squadId);
+            OnTasks.get(i).put("departmentId",departmentId);
         }
         return OnTasks;
     }

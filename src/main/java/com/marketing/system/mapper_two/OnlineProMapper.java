@@ -45,7 +45,7 @@ public interface OnlineProMapper {
 
     //查询项目的参与组
     @Select("SELECT * FROM project_task where proId=#{proId} ORDER BY sDate asc")
-    List<ProjectTask> selectOnTask(@Param("proId")Integer proId);
+    List<Map> selectOnTask(@Param("proId")Integer proId);
 
     //查询项目中的任务详细信息
     @Select("SELECT * FROM project_task WHERE taskId=#{taskId}")
@@ -92,6 +92,10 @@ public interface OnlineProMapper {
     //项目上线审批通过，更改项目状态
     @Update("UPDATE project_info SET proState=5 WHERE proId=#{proId}")
     boolean updateProReturnState(@Param("proId")Integer proId);
+
+    //根据小组id查找部门id
+    @Select("select departmentId from projectManage.dbo.[group] where squadId=#{squadId}")
+    String selectDepartmentIdBySquadId(@Param("squadId")String squadId);
 
 
 }

@@ -20,7 +20,7 @@ public interface FinishProService {
     List<ProDevelopLog> selectFinProDevRecord(Integer proId);
 
     //查看归档项目的参与组
-    List<ProjectTask> selectFinTask(Integer proId);
+    List<Map> selectFinTask(Integer proId);
 
     //查看单条任务详细信息
     ProjectTask selectFinTaskInfo(Integer taskId);

@@ -55,6 +55,20 @@
     WHERE proId = #{proId}
   </select>
 
+  <select id="getProjectTaskListMap1" resultType="java.util.HashMap" parameterType="java.lang.Integer" >
+    select
+    taskId, proId,taskName,handler,squadId,sDate,eDate,workDate,idd,taskState,taskProgress
+    from project_task
+    WHERE proId = #{proId}
+  </select>
+
+  <select id="selectDepartmentIdBySquadId" resultType="java.lang.String" parameterType="java.lang.Integer" >
+    select
+    departmentId
+    from projectManage.dbo.[group]
+    WHERE squadId = #{squadId}
+  </select>
+
   <select id="getproIdByTaskId" resultType="java.util.HashMap">
     SELECT DISTINCT
     proId

@@ -59,6 +59,20 @@ public class UpProjectServiceImpl implements UpProjectService {
     }
 
     @Override
+    public List<Map<String, Object>> getProjectTaskListMap1(int proId) {
+
+        List<Map<String, Object>> taskList = projectTaskMapper.getProjectTaskListMap1(proId);
+
+        return taskList;
+    }
+
+    @Override
+    public String selectDepartmentIdBySquadId(int squadId){
+        String departmentId=projectTaskMapper.selectDepartmentIdBySquadId(squadId);
+        return departmentId;
+    }
+
+    @Override
     public List<Map<String, Object>> getProjectTaskListMap(int proId) {
 
         List<Map<String, Object>> mapList = projectTaskMapper.getProjectTaskListMap(proId);

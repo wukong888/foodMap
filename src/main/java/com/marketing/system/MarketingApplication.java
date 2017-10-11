@@ -16,10 +16,12 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.Properties;
 //@MapperScan("com.marketing.system.mapper")
+@EnableScheduling
 @SpringBootApplication(exclude = {
 		DataSourceAutoConfiguration.class})
 public class MarketingApplication extends SpringBootServletInitializer {

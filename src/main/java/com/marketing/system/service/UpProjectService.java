@@ -21,6 +21,10 @@ public interface UpProjectService {
 
     List<Map<String,Object>> getProjectTaskListMap(int proId);
 
+    List<Map<String, Object>> getProjectTaskListMap1(int proId);
+
+    String selectDepartmentIdBySquadId(int squadId);
+
     int insertProLogRecord(ProLogRecord proLogRecord);
 
     List<ProLogRecord> getProLogRecordList(int proId);

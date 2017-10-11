@@ -255,17 +255,21 @@ public class MyProjectController {
 
 
         //参与组
-        List<ProjectTask> taskList = upProjectService.getProjectTaskList(proId);
+        List<Map<String,Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
 
         int sum = 0;
-        for (ProjectTask projectTask : taskList) {
-            projectTask.getWorkDate();
-            if (projectTask.getWorkDate() != "" && projectTask.getWorkDate() != null)
-                sum += Integer.valueOf(projectTask.getWorkDate());
+        for (Map<String,Object> projectTask : taskList) {
+            projectTask.get("workDate");
+            if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null)
+                sum += Integer.valueOf((String) projectTask.get("workDate"));
 
-            Group group = groupService.getGroupBySquadId(Integer.valueOf(projectTask.getSquadId()));
-
-            projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
+            Group group = groupService.getGroupBySquadId(Integer.valueOf((String)projectTask.get("squadId")));
+            String squad=group.getSquad();
+            //projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
+            projectTask.put("squad",squad);//根据id取对应小组中文名
+            String squadId=(String)projectTask.get("squadId");
+            String departmentId=upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
+            projectTask.put("departmentId",departmentId);//根据squadid取对应部门Id
 
         }
         projectInfo.setWorkTatalDay(String.valueOf(sum));//项目预计工期（任务工期之和）

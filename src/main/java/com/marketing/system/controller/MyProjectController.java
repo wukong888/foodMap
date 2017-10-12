@@ -889,16 +889,16 @@ public class MyProjectController {
      */
     @ApiOperation(value = "我的项目详情页-提交任务")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "explain", value = "说明", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "userName", value = "操作人", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "type", value = "类型1：任务 2：子任务", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/commitTask", method = RequestMethod.POST)
     public ApiResult<Integer> commitTask(
-            @RequestParam(value = "taskId",required = false) int taskId,
-            @RequestParam(value = "subtaskId",required = false) int subtaskId,
+            @RequestParam(value = "taskId",required = false) String taskId,
+            @RequestParam(value = "subtaskId",required = false) String subtaskId,
             @RequestParam(value = "explain",required = true) String explain,
             @RequestParam(value = "userName",required = true) String userName,
             @RequestParam(value = "type") int type ){
@@ -909,7 +909,7 @@ public class MyProjectController {
         if (type == 1) {
             ProjectTask projectTask = new ProjectTask();
             projectTask.setTaskprogress("100");
-            projectTask.setTaskId(taskId);
+            projectTask.setTaskId(Integer.valueOf(taskId));
             //任务状态 *******************************************值待定
             projectTask.setTaskstate("预验收");
 
@@ -925,7 +925,7 @@ public class MyProjectController {
             taskDevelopLog.setDate(str);
             taskDevelopLog.setEmp(userName);//操作人
             taskDevelopLog.setExplain(explain);//备注说明
-            taskDevelopLog.setTaskid(taskId);//任务id
+            taskDevelopLog.setTaskid(Integer.valueOf(taskId));//任务id
             taskDevelopLog.setProgress("100");//进度
             taskDevelopLog.setType("5");//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
 
@@ -942,7 +942,7 @@ public class MyProjectController {
         } else {
             ProjectSubtask projectSubtask = new ProjectSubtask();
 
-            projectSubtask.setSubtaskId(subtaskId);
+            projectSubtask.setSubtaskId(Integer.valueOf(subtaskId));
             projectSubtask.setSubtaskprogress("100");
             //任务状态 *******************************************值待定
             projectSubtask.setSubtaskstate("预验收");
@@ -959,7 +959,7 @@ public class MyProjectController {
             subtaskDevelopLog.setDate(str);
             subtaskDevelopLog.setEmp(userName);
             subtaskDevelopLog.setExplain(explain);
-            subtaskDevelopLog.setSubtaskid(subtaskId);
+            subtaskDevelopLog.setSubtaskid(Integer.valueOf(subtaskId));
             subtaskDevelopLog.setProgress("100");
             subtaskDevelopLog.setType("5");//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
 

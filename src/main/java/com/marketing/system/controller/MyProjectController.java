@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -365,7 +366,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-        //修改
+            //修改
         } else if (type == 2) {
             ProjectTask projectTask = new ProjectTask();
             projectTask.setTaskId(taskId);
@@ -412,7 +413,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-        //删除 可删除当前任务，删除后该任务内容全部清零
+            //删除 可删除当前任务，删除后该任务内容全部清零
         } else {
 
             i = myProjectService.deleteTaskById(taskId);
@@ -562,7 +563,7 @@ public class MyProjectController {
             projectSubtask.setSubtaskhandler(subtaskHandler);//处理人
             projectSubtask.setTaskid(taskId);
             projectSubtask.setSubtaskname(subtaskName);//任务名称
-            projectSubtask.setIdd(idd);//编号
+            //projectSubtask.setIdd(idd);//编号
             projectSubtask.setWorkDate(workDate);//预计工期
             projectSubtask.setSubtaskprogress(subtaskProgress);//进度
             projectSubtask.setSubtaskstate(subtaskState);//子任务状态 值待定*******************************************
@@ -590,7 +591,7 @@ public class MyProjectController {
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             taskLogRecord.setType("7");
             taskLogRecord.setDate(str2);//创建时间
-            taskLogRecord.setEmp(subtaskName);//操作人
+            taskLogRecord.setEmp(subtaskHandler);//操作人
             taskLogRecord.setExplain("分配子任务");//说明
             taskLogRecord.setTaskid(taskId);
 
@@ -617,7 +618,8 @@ public class MyProjectController {
             projectSubtask.setSubtaskhandler(subtaskHandler);//处理人
             projectSubtask.setTaskid(taskId);
             projectSubtask.setSubtaskname(subtaskName);//任务名称
-            projectSubtask.setIdd(idd);//编号
+            //projectSubtask.setIdd(idd);//编号
+            projectSubtask.setSubtaskId(subtaskId);
             projectSubtask.setWorkDate(workDate);//预计工期
             projectSubtask.setSubtaskprogress(subtaskProgress);//进度
             projectSubtask.setSubtaskstate(subtaskState);//子任务状态 值待定*******************************************
@@ -633,7 +635,7 @@ public class MyProjectController {
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             subtaskLogRecord.setType("8");//类型:修改
             subtaskLogRecord.setDate(str2);//创建时间
-            subtaskLogRecord.setEmp(subtaskName);//操作人
+            subtaskLogRecord.setEmp(subtaskHandler);//操作人
             subtaskLogRecord.setExplain("修改子任务");//说明
             subtaskLogRecord.setSubtaskid(subtaskId);//项目id
 
@@ -645,7 +647,7 @@ public class MyProjectController {
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             taskLogRecord.setType("8");
             taskLogRecord.setDate(str2);//创建时间
-            taskLogRecord.setEmp(subtaskName);//操作人
+            taskLogRecord.setEmp(subtaskHandler);//操作人
             taskLogRecord.setExplain("修改子任务");//说明
             taskLogRecord.setTaskid(taskId);
 
@@ -658,7 +660,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-        //删除
+            //删除
         } else {
 
             int j = myProjectService.deleteProSubTaskById(subtaskId);
@@ -684,7 +686,7 @@ public class MyProjectController {
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             taskLogRecord.setType("9");
             taskLogRecord.setDate(str);//创建时间
-            taskLogRecord.setEmp(subtaskName);//操作人
+            taskLogRecord.setEmp(subtaskHandler);//操作人
             taskLogRecord.setExplain("删除子任务");//说明
             taskLogRecord.setTaskid(taskId);
 
@@ -714,8 +716,8 @@ public class MyProjectController {
             @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getSubTaskDetails", method = RequestMethod.POST)
-    public ApiResult<List<Map<String,Object>>> getSubTaskDetails(
-            @RequestParam(value = "subtaskId") int subtaskId ){
+    public ApiResult<List<Map<String, Object>>> getSubTaskDetails(
+            @RequestParam(value = "subtaskId") int subtaskId) {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
@@ -724,16 +726,16 @@ public class MyProjectController {
         //基本信息+任务信息
         ProjectSubtask projectSubtask = myProjectService.getProjectSubtaskById(subtaskId);
 
-        map.put("projectSubtask",projectSubtask);
+        map.put("projectSubtask", projectSubtask);
 
         //日志记录
         List<SubtaskLogRecord> logList = myProjectService.getSubtaskLogList(subtaskId);
 
-        map.put("subtaskLog",logList);
+        map.put("subtaskLog", logList);
 
         list.add(map);
 
-        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,list,null);
+        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
 
         return result;
     }
@@ -806,7 +808,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-        //2：任务开发日志
+            //2：任务开发日志
         } else if (addType == 2) {
             TaskDevelopLog taskDevelopLog = new TaskDevelopLog();
 
@@ -839,7 +841,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-        //2：子任务开发日志
+            //2：子任务开发日志
         } else {
             SubtaskDevelopLog subtaskDevelopLog = new SubtaskDevelopLog();
 
@@ -897,11 +899,11 @@ public class MyProjectController {
     })
     @RequestMapping(value = "/commitTask", method = RequestMethod.POST)
     public ApiResult<Integer> commitTask(
-            @RequestParam(value = "taskId",required = false) String taskId,
-            @RequestParam(value = "subtaskId",required = false) String subtaskId,
-            @RequestParam(value = "explain",required = true) String explain,
-            @RequestParam(value = "userName",required = true) String userName,
-            @RequestParam(value = "type") int type ){
+            @RequestParam(value = "taskId", required = false) String taskId,
+            @RequestParam(value = "subtaskId", required = false) String subtaskId,
+            @RequestParam(value = "explain", required = true) String explain,
+            @RequestParam(value = "userName", required = true) String userName,
+            @RequestParam(value = "type") int type) {
 
         ApiResult<Integer> result = null;
 
@@ -938,7 +940,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-        //提交子任务
+            //提交子任务
         } else {
             ProjectSubtask projectSubtask = new ProjectSubtask();
 
@@ -1087,5 +1089,58 @@ public class MyProjectController {
         return result;
     }
 
+    /**
+     * 我的项目任务分配详情页子任务列表
+     * 添加（选择参与部门）
+     *
+     * @return
+     */
+    @ApiOperation(value = "我的项目任务分配详情页子任务列表-添加（选择参与部门）")
 
+    @RequestMapping(value = "/getMembersByLoginUser", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getMembersByLoginUser() {
+
+        Map<String, Object> map = new HashMap<>();
+        ApiResult<List<Map<String, Object>>> result = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+        SystemUser user = new SystemUser();
+        //String userName = user.getUserName();//当前登录用户
+        //测试用***************************************
+        String userName = "小";
+        user.setUserName(userName);
+        user.setDuty("CEO");
+        //String department = user.getDepartment();
+        //department = department.substring(0,2);
+        String department = "技术";
+        /*user.setUserName(user.getUserName());
+        user.setDuty("CEO");
+        String department = user.getDepartment();
+        department = department.substring(0,2);*/
+        //String department = "技术";
+        //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
+        Department did = myProjectService.getDepartmentIdByMent(department);
+
+        String departmentid = did.getDepartmentid();
+
+        //根据部门id查找小组id
+        List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+
+        String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
+        String[] mIds = mentIds.split(",");
+        Map<String, Object> mapTid = new HashMap<>();
+
+        mapTid.put("mentIds", mIds);
+        //组长/经理其小组成员
+        List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+
+        map.put("members", mapList1);
+
+        list.add(map);
+
+        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+
+        return result;
+    }
 }

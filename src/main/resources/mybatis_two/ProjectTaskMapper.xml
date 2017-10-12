@@ -195,7 +195,7 @@
       <if test="proid != null" >
         proId = #{proid,jdbcType=INTEGER},
       </if>
-      <if test="squad != null" >
+      <if test="squadid != null" >
         squadId = #{squadId,jdbcType=VARCHAR},
       </if>
       <if test="taskname != null" >

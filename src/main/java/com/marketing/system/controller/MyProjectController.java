@@ -312,8 +312,8 @@ public class MyProjectController {
     @RequestMapping(value = "/groupHandle", method = RequestMethod.POST)
     public ApiResult<Integer> groupHandle(
             @RequestParam(value = "id") String id,
-            @RequestParam(value = "ProId") String proId,
-            @RequestParam(value = "Type") String type,
+            @RequestParam(value = "proId") String proId,
+            @RequestParam(value = "type") String type,
             @RequestParam(value = "taskName", required = false) String taskName,
             @RequestParam(value = "sDate", required = false) String sDate,
             @RequestParam(value = "eDate", required = false) String eDate,
@@ -321,7 +321,7 @@ public class MyProjectController {
             @RequestParam(value = "squadId", required = false) String squadId,
             @RequestParam(value = "workDate", required = false) String workDate,
             @RequestParam(value = "idd", required = false) String idd,
-            @RequestParam(value = "TaskId", required = false) String taskId) {
+            @RequestParam(value = "taskId", required = false) String taskId) {
 
         System.out.println("taskId---"+taskId+"type---"+type);
         Integer Type=Integer.parseInt(type);

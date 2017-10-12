@@ -343,7 +343,7 @@ public class MyProjectController {
             String str = sdf.format(date);
 
             projectTask.setCreateDate(str);//创建时间
-            projectTask.setIdd(idd);//项目编号
+            projectTask.setTaskId(taskId);//项目编号
             projectTask.setTaskprogress("0");//任务进度
             projectTask.setTaskstate("1");//任务状态  值待定*************************************************
 
@@ -387,7 +387,7 @@ public class MyProjectController {
             String str = sdf.format(date);
 
             projectTask.setCreateDate(str);//创建时间
-            projectTask.setIdd(idd);//项目编号
+           // projectTask.setIdd(idd);//项目编号
             projectTask.setTaskprogress("0");//任务进度
             projectTask.setTaskstate("0");//任务状态  值待定*************************************************
 

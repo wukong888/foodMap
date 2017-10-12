@@ -11,7 +11,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -256,17 +255,21 @@ public class MyProjectController {
 
 
         //参与组
-        List<ProjectTask> taskList = upProjectService.getProjectTaskList(proId);
+        List<Map<String,Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
 
         int sum = 0;
-        for (ProjectTask projectTask : taskList) {
-            projectTask.getWorkDate();
-            if (projectTask.getWorkDate() != "" && projectTask.getWorkDate() != null)
-                sum += Integer.valueOf(projectTask.getWorkDate());
+        for (Map<String,Object> projectTask : taskList) {
+            projectTask.get("workDate");
+            if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null)
+                sum += Integer.valueOf((String) projectTask.get("workDate"));
 
-            Group group = groupService.getGroupBySquadId(Integer.valueOf(projectTask.getSquadId()));
-
-            projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
+            Group group = groupService.getGroupBySquadId(Integer.valueOf((String)projectTask.get("squadId")));
+            String squad=group.getSquad();
+            //projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
+            projectTask.put("squad",squad);//根据id取对应小组中文名
+            String squadId=(String)projectTask.get("squadId");
+            String departmentId=upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
+            projectTask.put("departmentId",departmentId);//根据squadid取对应部门Id
 
         }
         projectInfo.setWorkTatalDay(String.valueOf(sum));//项目预计工期（任务工期之和）
@@ -294,40 +297,44 @@ public class MyProjectController {
      */
     @ApiOperation(value = "我的项目参与组（添加+修改+删除）")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "type", value = "操作类型1添加 2修改 3删除", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "type", value = "操作类型1添加 2修改 3删除", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "taskName", value = "任务名称", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "sDate", value = "任务开始时间", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "eDate", value = "任务结束时间", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "handler", value = "操作人", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "squadId", value = "参与组id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "workDate", value = "工作时间", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "idd", value = "编号", required = false, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "修改任务id", required = false, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "idd", value = "编号", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "修改任务id", required = false, dataType = "String")
     })
     @RequestMapping(value = "/groupHandle", method = RequestMethod.POST)
     public ApiResult<Integer> groupHandle(
-            @RequestParam(value = "id") int id,
-            @RequestParam(value = "proId") int proId,
-            @RequestParam(value = "type") int type,
+            @RequestParam(value = "id") String id,
+            @RequestParam(value = "proId") String proId,
+            @RequestParam(value = "type") String type,
             @RequestParam(value = "taskName", required = false) String taskName,
             @RequestParam(value = "sDate", required = false) String sDate,
             @RequestParam(value = "eDate", required = false) String eDate,
             @RequestParam(value = "handler", required = false) String handler,
             @RequestParam(value = "squadId", required = false) String squadId,
             @RequestParam(value = "workDate", required = false) String workDate,
-            @RequestParam(value = "idd", required = false) int idd,
-            @RequestParam(value = "taskId", required = false) int taskId) {
+            @RequestParam(value = "idd", required = false) String idd,
+            @RequestParam(value = "taskId", required = false) String taskId) {
 
+        System.out.println("taskId---"+taskId+"type---"+type);
+        Integer Type=Integer.parseInt(type);
+        Integer ProId=Integer.parseInt(proId);
+        Integer TaskId=Integer.parseInt(taskId);
         Map<String, Object> map = new HashMap<>();
         ApiResult<Integer> result = null;
 
         int i = 0;
         //添加
-        if (type == 1) {
+        if (Type == 1) {
             ProjectTask projectTask = new ProjectTask();
-            projectTask.setProid(proId);//项目Id
+            projectTask.setProid(ProId);//项目Id
             projectTask.setSquadId(squadId);//参与组id
             projectTask.setTaskname(taskName);//任务名称
             projectTask.setSdate(sDate);//任务开始时间
@@ -340,9 +347,9 @@ public class MyProjectController {
             String str = sdf.format(date);
 
             projectTask.setCreateDate(str);//创建时间
-            projectTask.setIdd(idd);//项目编号
+            projectTask.setTaskId(TaskId);//项目编号
             projectTask.setTaskprogress("0");//任务进度
-            projectTask.setTaskstate("0");//任务状态  值待定*************************************************
+            projectTask.setTaskstate("1");//任务状态  值待定*************************************************
 
             i = myProjectService.insertProTask(projectTask);
 
@@ -355,7 +362,7 @@ public class MyProjectController {
             proLogRecord.setDate(str2);//创建时间
             proLogRecord.setEmp(handler);//操作人
             proLogRecord.setExplain("添加任务");//说明
-            proLogRecord.setProid(proId);//项目id
+            proLogRecord.setProid(ProId);//项目id
 
             //插入日志
             int ilog = applyService.insertProLogRecord(proLogRecord);
@@ -366,11 +373,11 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //修改
-        } else if (type == 2) {
+        //修改
+        } else if (Type == 2) {
             ProjectTask projectTask = new ProjectTask();
-            projectTask.setTaskId(taskId);
-            projectTask.setProid(proId);//项目Id
+            projectTask.setTaskId(TaskId);
+            projectTask.setProid(ProId);//项目Id
             projectTask.setSquadId(squadId);//参与组id
             projectTask.setTaskname(taskName);//任务名称
             projectTask.setSdate(sDate);//任务开始时间
@@ -384,14 +391,14 @@ public class MyProjectController {
             String str = sdf.format(date);
 
             projectTask.setCreateDate(str);//创建时间
-            projectTask.setIdd(idd);//项目编号
+           // projectTask.setIdd(idd);//项目编号
             projectTask.setTaskprogress("0");//任务进度
             projectTask.setTaskstate("0");//任务状态  值待定*************************************************
 
             i = myProjectService.updateTaskById(projectTask);
 
             //任务下的子任务全部清空
-            int k = myProjectService.deleteSubTaskById(taskId);
+            int k = myProjectService.deleteSubTaskById(TaskId);
 
             ProLogRecord proLogRecord = new ProLogRecord();
 
@@ -402,24 +409,24 @@ public class MyProjectController {
             proLogRecord.setDate(str2);//创建时间
             proLogRecord.setEmp(handler);//操作人
             proLogRecord.setExplain("修改任务");//说明
-            proLogRecord.setProid(proId);//项目id
+            proLogRecord.setProid(ProId);//项目id
 
             //插入日志
             int ilog = applyService.insertProLogRecord(proLogRecord);
 
-            if (i > 0 && ilog > 0 && k > 0) {
+            if (i > 0 && ilog > 0 ) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //删除 可删除当前任务，删除后该任务内容全部清零
+        //删除 可删除当前任务，删除后该任务内容全部清零
         } else {
 
-            i = myProjectService.deleteTaskById(taskId);
+            i = myProjectService.deleteTaskById(TaskId);
 
             //任务下的子任务全部清空
-            int k = myProjectService.deleteSubTaskById(taskId);
+            int k = myProjectService.deleteSubTaskById(TaskId);
 
             ProLogRecord proLogRecord = new ProLogRecord();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -431,12 +438,12 @@ public class MyProjectController {
             proLogRecord.setDate(str);//创建时间
             proLogRecord.setEmp(handler);//操作人
             proLogRecord.setExplain("删除任务");//说明
-            proLogRecord.setProid(proId);//项目id
+            proLogRecord.setProid(ProId);//项目id
 
             //插入日志
             int ilog = applyService.insertProLogRecord(proLogRecord);
 
-            if (i > 0 && ilog > 0 && k > 0) {
+            if (i > 0 && ilog > 0) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -563,7 +570,7 @@ public class MyProjectController {
             projectSubtask.setSubtaskhandler(subtaskHandler);//处理人
             projectSubtask.setTaskid(taskId);
             projectSubtask.setSubtaskname(subtaskName);//任务名称
-            //projectSubtask.setIdd(idd);//编号
+            projectSubtask.setIdd(idd);//编号
             projectSubtask.setWorkDate(workDate);//预计工期
             projectSubtask.setSubtaskprogress(subtaskProgress);//进度
             projectSubtask.setSubtaskstate(subtaskState);//子任务状态 值待定*******************************************
@@ -591,7 +598,7 @@ public class MyProjectController {
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             taskLogRecord.setType("7");
             taskLogRecord.setDate(str2);//创建时间
-            taskLogRecord.setEmp(subtaskHandler);//操作人
+            taskLogRecord.setEmp(subtaskName);//操作人
             taskLogRecord.setExplain("分配子任务");//说明
             taskLogRecord.setTaskid(taskId);
 
@@ -618,8 +625,7 @@ public class MyProjectController {
             projectSubtask.setSubtaskhandler(subtaskHandler);//处理人
             projectSubtask.setTaskid(taskId);
             projectSubtask.setSubtaskname(subtaskName);//任务名称
-            //projectSubtask.setIdd(idd);//编号
-            projectSubtask.setSubtaskId(subtaskId);
+            projectSubtask.setIdd(idd);//编号
             projectSubtask.setWorkDate(workDate);//预计工期
             projectSubtask.setSubtaskprogress(subtaskProgress);//进度
             projectSubtask.setSubtaskstate(subtaskState);//子任务状态 值待定*******************************************
@@ -635,7 +641,7 @@ public class MyProjectController {
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             subtaskLogRecord.setType("8");//类型:修改
             subtaskLogRecord.setDate(str2);//创建时间
-            subtaskLogRecord.setEmp(subtaskHandler);//操作人
+            subtaskLogRecord.setEmp(subtaskName);//操作人
             subtaskLogRecord.setExplain("修改子任务");//说明
             subtaskLogRecord.setSubtaskid(subtaskId);//项目id
 
@@ -647,7 +653,7 @@ public class MyProjectController {
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             taskLogRecord.setType("8");
             taskLogRecord.setDate(str2);//创建时间
-            taskLogRecord.setEmp(subtaskHandler);//操作人
+            taskLogRecord.setEmp(subtaskName);//操作人
             taskLogRecord.setExplain("修改子任务");//说明
             taskLogRecord.setTaskid(taskId);
 
@@ -660,7 +666,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //删除
+        //删除
         } else {
 
             int j = myProjectService.deleteProSubTaskById(subtaskId);
@@ -686,7 +692,7 @@ public class MyProjectController {
             //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
             taskLogRecord.setType("9");
             taskLogRecord.setDate(str);//创建时间
-            taskLogRecord.setEmp(subtaskHandler);//操作人
+            taskLogRecord.setEmp(subtaskName);//操作人
             taskLogRecord.setExplain("删除子任务");//说明
             taskLogRecord.setTaskid(taskId);
 
@@ -716,8 +722,8 @@ public class MyProjectController {
             @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getSubTaskDetails", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getSubTaskDetails(
-            @RequestParam(value = "subtaskId") int subtaskId) {
+    public ApiResult<List<Map<String,Object>>> getSubTaskDetails(
+            @RequestParam(value = "subtaskId") int subtaskId ){
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
@@ -726,16 +732,16 @@ public class MyProjectController {
         //基本信息+任务信息
         ProjectSubtask projectSubtask = myProjectService.getProjectSubtaskById(subtaskId);
 
-        map.put("projectSubtask", projectSubtask);
+        map.put("projectSubtask",projectSubtask);
 
         //日志记录
         List<SubtaskLogRecord> logList = myProjectService.getSubtaskLogList(subtaskId);
 
-        map.put("subtaskLog", logList);
+        map.put("subtaskLog",logList);
 
         list.add(map);
 
-        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,list,null);
 
         return result;
     }
@@ -808,7 +814,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //2：任务开发日志
+        //2：任务开发日志
         } else if (addType == 2) {
             TaskDevelopLog taskDevelopLog = new TaskDevelopLog();
 
@@ -841,7 +847,7 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //2：子任务开发日志
+        //2：子任务开发日志
         } else {
             SubtaskDevelopLog subtaskDevelopLog = new SubtaskDevelopLog();
 
@@ -891,19 +897,19 @@ public class MyProjectController {
      */
     @ApiOperation(value = "我的项目详情页-提交任务")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = false, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "explain", value = "说明", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "userName", value = "操作人", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "type", value = "类型1：任务 2：子任务", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/commitTask", method = RequestMethod.POST)
     public ApiResult<Integer> commitTask(
-            @RequestParam(value = "taskId", required = false) String taskId,
-            @RequestParam(value = "subtaskId", required = false) String subtaskId,
-            @RequestParam(value = "explain", required = true) String explain,
-            @RequestParam(value = "userName", required = true) String userName,
-            @RequestParam(value = "type") int type) {
+            @RequestParam(value = "taskId",required = false) int taskId,
+            @RequestParam(value = "subtaskId",required = false) int subtaskId,
+            @RequestParam(value = "explain",required = true) String explain,
+            @RequestParam(value = "userName",required = true) String userName,
+            @RequestParam(value = "type") int type ){
 
         ApiResult<Integer> result = null;
 
@@ -911,7 +917,7 @@ public class MyProjectController {
         if (type == 1) {
             ProjectTask projectTask = new ProjectTask();
             projectTask.setTaskprogress("100");
-            projectTask.setTaskId(Integer.valueOf(taskId));
+            projectTask.setTaskId(taskId);
             //任务状态 *******************************************值待定
             projectTask.setTaskstate("预验收");
 
@@ -927,7 +933,7 @@ public class MyProjectController {
             taskDevelopLog.setDate(str);
             taskDevelopLog.setEmp(userName);//操作人
             taskDevelopLog.setExplain(explain);//备注说明
-            taskDevelopLog.setTaskid(Integer.valueOf(taskId));//任务id
+            taskDevelopLog.setTaskid(taskId);//任务id
             taskDevelopLog.setProgress("100");//进度
             taskDevelopLog.setType("5");//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
 
@@ -940,11 +946,11 @@ public class MyProjectController {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
-            //提交子任务
+        //提交子任务
         } else {
             ProjectSubtask projectSubtask = new ProjectSubtask();
 
-            projectSubtask.setSubtaskId(Integer.valueOf(subtaskId));
+            projectSubtask.setSubtaskId(subtaskId);
             projectSubtask.setSubtaskprogress("100");
             //任务状态 *******************************************值待定
             projectSubtask.setSubtaskstate("预验收");
@@ -961,7 +967,7 @@ public class MyProjectController {
             subtaskDevelopLog.setDate(str);
             subtaskDevelopLog.setEmp(userName);
             subtaskDevelopLog.setExplain(explain);
-            subtaskDevelopLog.setSubtaskid(Integer.valueOf(subtaskId));
+            subtaskDevelopLog.setSubtaskid(subtaskId);
             subtaskDevelopLog.setProgress("100");
             subtaskDevelopLog.setType("5");//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
 
@@ -1089,58 +1095,5 @@ public class MyProjectController {
         return result;
     }
 
-    /**
-     * 我的项目任务分配详情页子任务列表
-     * 添加（选择参与部门）
-     *
-     * @return
-     */
-    @ApiOperation(value = "我的项目任务分配详情页子任务列表-添加（选择参与部门）")
 
-    @RequestMapping(value = "/getMembersByLoginUser", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getMembersByLoginUser() {
-
-        Map<String, Object> map = new HashMap<>();
-        ApiResult<List<Map<String, Object>>> result = null;
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-        SystemUser user = new SystemUser();
-        //String userName = user.getUserName();//当前登录用户
-        //测试用***************************************
-        String userName = "小";
-        user.setUserName(userName);
-        user.setDuty("CEO");
-        //String department = user.getDepartment();
-        //department = department.substring(0,2);
-        String department = "技术";
-        /*user.setUserName(user.getUserName());
-        user.setDuty("CEO");
-        String department = user.getDepartment();
-        department = department.substring(0,2);*/
-        //String department = "技术";
-        //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
-        Department did = myProjectService.getDepartmentIdByMent(department);
-
-        String departmentid = did.getDepartmentid();
-
-        //根据部门id查找小组id
-        List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
-
-        String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
-        String[] mIds = mentIds.split(",");
-        Map<String, Object> mapTid = new HashMap<>();
-
-        mapTid.put("mentIds", mIds);
-        //组长/经理其小组成员
-        List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
-
-        map.put("members", mapList1);
-
-        list.add(map);
-
-        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
-
-        return result;
-    }
 }

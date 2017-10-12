@@ -13,4 +13,13 @@ public interface DayReportService {
 
     //模糊查询任务日报
     Map<String,Object> selectSubtaskReport(Integer current, Integer pageSize, String Date);
+
+    //项目日报的导出
+    Map<String,Object> exportProExcel( String date);
+
+    //任务日报的定时导出
+    Map<String,Object> exportTaskExcel( String date);
+
+    //子任务日报的定时导出
+    Map<String,Object> exportSubtaskExcel( String date);
 }

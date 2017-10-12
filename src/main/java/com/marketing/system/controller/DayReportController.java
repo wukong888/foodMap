@@ -1,11 +1,8 @@
 package com.marketing.system.controller;
 
 
-import com.marketing.system.entity.ProjectInfo;
 import com.marketing.system.service.DayReportService;
-import com.marketing.system.util.ApiResult;
-import com.marketing.system.util.Constant;
-import com.marketing.system.util.RdPage;
+import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -14,12 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -158,4 +163,106 @@ public class DayReportController {
         return  result;
 
     }
+
+    /**
+     * 日报定时导出
+     *
+     * @return
+
+    @RequestMapping(value = "/exportProExcelTime", method = RequestMethod.POST)
+    @Scheduled(cron="0 0/1 * * * ?")
+    public ApiResult<List<Map>> exportExcelTime() {
+       String date= DateUtil.getYMDDate();
+
+       System.out.println("---"+new Date());
+        //项目日报的定时导出
+        Map<String,Object> Report1=DayReportService.exportProExcel(date);
+        List<Map> ProReport=(List<Map>)Report1.get("proReports");
+
+        String pathProName ="\\static\\"+date+"ProjectReport.xlsx";
+        try {
+            File file=new File(pathProName);
+            OutputStream outputStream1= new FileOutputStream(file);
+            DayReportExport.exportExcel(ProReport,outputStream1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //任务日报的定时导出
+        Map<String,Object> Report2=DayReportService.exportTaskExcel(date);
+        List<Map> TaskReport=(List<Map>)Report2.get("taskReports");
+        String pathTaskName ="\\static\\"+date+"TaskReport.xlsx";
+        try {
+            File file=new File(pathTaskName);
+            OutputStream outputStream2= new FileOutputStream(file);
+            DayReportExport.exportExcel(TaskReport,outputStream2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //子任务日报的定时导出
+        Map<String,Object> Report3=DayReportService.exportSubtaskExcel(date);
+        List<Map> SubtaskReport=(List<Map>)Report2.get("subtaskReports");
+        String pathSubtaskName ="\\static\\"+date+"SubtaskReport.xlsx";
+        try {
+            File file=new File(pathSubtaskName);
+            OutputStream outputStream3= new FileOutputStream(file);
+            DayReportExport.exportExcel(SubtaskReport,outputStream3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }*/
+
+    /**
+     * 日报导出
+     *
+     * @return
+     */
+    @ApiOperation(value = "日报导出")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "Date", value = "日期（如：2010-01-01）", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "type", value = "日报类型（1：项目，2：任务，3：子任务）", required = true, dataType = "Integer")
+
+    })
+    @RequestMapping(value = "/exportDayReport", method = RequestMethod.POST)
+    public ApiResult<List<Map>> exportDayReport(
+            @RequestParam(value = "Date") String Date,
+            @RequestParam(value = "type") int type,
+            @RequestParam(value= "response") HttpServletResponse response) {
+        ApiResult<List<Map>> result =null;
+        String date= DateUtil.getYMDDate();
+       if(type==1){
+                   String proFile="\\static\\"+Date+"ProjectReport.xlsx";
+                   try {
+                       OutputStream out = response.getOutputStream();
+                       ToolUtil.downloadFile(proFile, out);
+                   } catch (Exception e) {
+                       e.printStackTrace();
+                   }
+
+       }else if(type==2){
+               String taskFile = "\\static\\" + Date + "TaskReport.xlsx";
+               try {
+                   OutputStream out = response.getOutputStream();
+                   ToolUtil.downloadFile(taskFile, out);
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+
+      }else if(type==3){
+           try {
+               String subtaskFile="\\static\\"+Date+"SubtaskReport.xlsx";
+               OutputStream out = response.getOutputStream();
+               ToolUtil.downloadFile(subtaskFile,out);
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+
+       }
+        return null;
+    }
+
 }

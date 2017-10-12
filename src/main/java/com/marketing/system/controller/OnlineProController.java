@@ -218,7 +218,7 @@ public class OnlineProController {
           Map<String,Object> OnProInfo=new HashMap<String,Object>();
           ProjectInfo ProInfo=OnProService.selectOnProInfo(id,proId);
           List<ProLogRecord> ProLogRecord=OnProService.selectOnProLogRecord(proId);
-          List<ProjectTask> ProTask=OnProService.selectOnTask(proId);
+          List<Map> ProTask=OnProService.selectOnTask(proId);
           List<ProDevelopLog> ProDevRecord=OnProService.selectOnProDevRecord(proId);
 
           OnProInfo.put("ProInfo",ProInfo);
@@ -322,16 +322,14 @@ public class OnlineProController {
     @ApiOperation(value = "审批通过")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批通过说明", required = false, dataType = "String")
+            @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批通过说明", required = true, dataType = "String")
     })
     @RequestMapping(value = "/selectInsertProPassLog", method = RequestMethod.POST)
     public ApiResult<String> selectInsertProPassLog(
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "explain",required = false) String explain){
         ApiResult<String> result =null;
-        if(explain==null){
-            explain="";
-        }
+
         boolean success=OnProService.insertProPassLog(proId,explain);
         if(success==true){
             result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批通过","审批通过",null);
@@ -350,16 +348,14 @@ public class OnlineProController {
     @ApiOperation(value = "审批驳回")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批驳回说明", required = false, dataType = "String")
+            @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批驳回说明", required = true, dataType = "String")
     })
     @RequestMapping(value = "/selectInsertProReturnLog", method = RequestMethod.POST)
     public ApiResult<String> selectInsertProReturnLog(
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "explain",required = false) String explain){
         ApiResult<String> result =null;
-        if(explain==null){
-            explain="";
-        }
+
         boolean success=OnProService.insertProReturnLog(proId,explain);
         if(success==true){
             result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批驳回","审批驳回",null);

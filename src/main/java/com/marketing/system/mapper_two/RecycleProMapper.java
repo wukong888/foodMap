@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface RecycleProMapper {
 
-    //模糊查询回收站的项目
+    //模糊查询回收站的项目-查全部
     @Select("SELECT * FROM project_info where (proState=5 or proState=6) and createrSquadId like '%${creatersquadid}%' and creater like '%${creater}%' and createDate >= #{createdate1} " +
             " and createDate <= #{createdate2} and planSDate >= #{plansdate1} and planSDate <= #{plansdate2} and proType like '%${protype}%' and proName like '%${param}%'" +
             " ORDER BY createDate desc  OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
@@ -19,12 +19,42 @@ public interface RecycleProMapper {
                                   @Param("createdate2")String createdate2, @Param("plansdate1")String plansdate1, @Param("plansdate2")String plansdate2, @Param("protype")String protype,
                                   @Param("param")String param, @Param("current")Integer current, @Param("pageSize")Integer pageSize);
 
-    //模糊查询回收站的项目的数量
+    //模糊查询回收站的项目的数量-查全部
     @Select("SELECT count(1) FROM project_info where (proState=5 or proState=6) and createrSquadId like '%${creatersquadid}%' and creater like '%${creater}%' and createDate >= #{createdate1} " +
             " and createDate <= #{createdate2} and planSDate >= #{plansdate1} and planSDate <= #{plansdate2} and proType like '%${protype}%' and proName like '%${param}%'")
     Integer selectRecProNum(@Param("creatersquadid")String creatersquadid,@Param("creater")String creater,@Param("createdate1")String createdate1,
                            @Param("createdate2")String createdate2,@Param("plansdate1")String plansdate1,@Param("plansdate2")String plansdate2,@Param("protype")String protype,
                            @Param("param")String param);
+
+    //模糊查询回收站的项目-查驳回
+    @Select("SELECT * FROM project_info where proState=5  and createrSquadId like '%${creatersquadid}%' and creater like '%${creater}%' and createDate >= #{createdate1} " +
+            " and createDate <= #{createdate2} and planSDate >= #{plansdate1} and planSDate <= #{plansdate2} and proType like '%${protype}%' and proName like '%${param}%'" +
+            " ORDER BY createDate desc  OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
+    List<ProjectInfo> selectRecProState5(@Param("creatersquadid")String creatersquadid, @Param("creater")String creater, @Param("createdate1")String createdate1,
+                                   @Param("createdate2")String createdate2, @Param("plansdate1")String plansdate1, @Param("plansdate2")String plansdate2, @Param("protype")String protype,
+                                   @Param("param")String param, @Param("current")Integer current, @Param("pageSize")Integer pageSize);
+
+    //模糊查询回收站的项目的数量-查驳回
+    @Select("SELECT count(1) FROM project_info where proState=5  and createrSquadId like '%${creatersquadid}%' and creater like '%${creater}%' and createDate >= #{createdate1} " +
+            " and createDate <= #{createdate2} and planSDate >= #{plansdate1} and planSDate <= #{plansdate2} and proType like '%${protype}%' and proName like '%${param}%'")
+    Integer selectRecProNumState5(@Param("creatersquadid")String creatersquadid,@Param("creater")String creater,@Param("createdate1")String createdate1,
+                            @Param("createdate2")String createdate2,@Param("plansdate1")String plansdate1,@Param("plansdate2")String plansdate2,@Param("protype")String protype,
+                            @Param("param")String param);
+
+    //模糊查询回收站的项目-查作废
+    @Select("SELECT * FROM project_info where proState=6  and createrSquadId like '%${creatersquadid}%' and creater like '%${creater}%' and createDate >= #{createdate1} " +
+            " and createDate <= #{createdate2} and planSDate >= #{plansdate1} and planSDate <= #{plansdate2} and proType like '%${protype}%' and proName like '%${param}%'" +
+            " ORDER BY createDate desc  OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
+    List<ProjectInfo> selectRecProState6(@Param("creatersquadid")String creatersquadid, @Param("creater")String creater, @Param("createdate1")String createdate1,
+                                         @Param("createdate2")String createdate2, @Param("plansdate1")String plansdate1, @Param("plansdate2")String plansdate2, @Param("protype")String protype,
+                                         @Param("param")String param, @Param("current")Integer current, @Param("pageSize")Integer pageSize);
+
+    //模糊查询回收站的项目的数量-查作废
+    @Select("SELECT count(1) FROM project_info where proState=6  and createrSquadId like '%${creatersquadid}%' and creater like '%${creater}%' and createDate >= #{createdate1} " +
+            " and createDate <= #{createdate2} and planSDate >= #{plansdate1} and planSDate <= #{plansdate2} and proType like '%${protype}%' and proName like '%${param}%'")
+    Integer selectRecProNumState6(@Param("creatersquadid")String creatersquadid,@Param("creater")String creater,@Param("createdate1")String createdate1,
+                                  @Param("createdate2")String createdate2,@Param("plansdate1")String plansdate1,@Param("plansdate2")String plansdate2,@Param("protype")String protype,
+                                  @Param("param")String param);
 
     //根据部门Id查部门
     @Select("SELECT squad FROM projectManage.dbo.[group] where squadId =#{squadId}")

@@ -228,7 +228,7 @@ public class FinishProController {
         Map<String,Object> FinProInfo=new HashMap<String,Object>();
         ProjectInfo ProInfo=FinProService.selectFinProInfo(id,proId);
         List<ProLogRecord> ProLogRecord=FinProService.selectFinProLogRecord(proId);
-        List<ProjectTask> ProTask=FinProService.selectFinTask(proId);
+        List<Map> ProTask=FinProService.selectFinTask(proId);
         List<ProDevelopLog> ProDevRecord=FinProService.selectFinProDevRecord(proId);
 
         FinProInfo.put("ProInfo",ProInfo);

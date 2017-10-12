@@ -55,6 +55,7 @@ public class RecycleProController {
             @ApiImplicitParam(paramType = "query", name = "plansdate1", value = "项目预计完成时间-开始", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "plansdate2", value = "项目预计完成时间-结束", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "protype", value = "项目类型", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "prostate", value = "项目状态", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "param", value = "关键字", required = false, dataType = "String"),
     })
     @RequestMapping(value = "/selectRecPro", method = RequestMethod.POST)
@@ -68,9 +69,11 @@ public class RecycleProController {
             @RequestParam(value="plansdate1", required = false) String plansdate1,
             @RequestParam(value="plansdate2", required = false) String plansdate2,
             @RequestParam(value="protype", required = false) String protype,
+            @RequestParam(value="prostate", required = false) String prostate,
             @RequestParam(value="param", required = false) String param) {
 
         ApiResult<List<ProjectInfo>> result =null;
+        Map<String,Object> RecProMapAll=null;
 
         if(creatersquadid==null){
             creatersquadid="";
@@ -96,8 +99,16 @@ public class RecycleProController {
         if(param==null){
             param="";
         }
-        //所有项目集合
-        Map<String,Object> RecProMapAll=RecProService.selectRecPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+        if(prostate==null||prostate==""){
+            //所有项目集合
+            RecProMapAll=RecProService.selectRecPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+        }else if(prostate.equals("5")){
+            //驳回项目集合
+            RecProMapAll=RecProService.selectRecProState5(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+        }else if(prostate.equals("6")){
+            //作废项目集合
+            RecProMapAll=RecProService.selectRecProState6(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+        }
 
         List<ProjectInfo> RecProAll=(List<ProjectInfo>)RecProMapAll.get("RecPro");
 
@@ -143,6 +154,7 @@ public class RecycleProController {
         List<Map<String, Object>> taskProId = new ArrayList<>();
         //判断项目集合中是否有对应小组成员
         //小组集合中是否匹配子任务负责人
+        
         for (Map map1 : mapList1) {
             for (Map map0 : subtaskList) {
                 if (map0.get("subtaskHandler") == map1.get("member")) {

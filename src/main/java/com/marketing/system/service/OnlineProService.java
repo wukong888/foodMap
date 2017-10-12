@@ -21,7 +21,7 @@ public interface OnlineProService {
     List<ProDevelopLog> selectOnProDevRecord(Integer proId);
 
     //查看上线待审批项目的参与组
-    List<ProjectTask> selectOnTask(Integer proId);
+    List<Map> selectOnTask(Integer proId);
 
     //查看单条任务详细信息
     ProjectTask selectOnTaskInfo(Integer taskId);

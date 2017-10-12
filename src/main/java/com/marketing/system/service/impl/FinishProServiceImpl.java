@@ -32,12 +32,12 @@ public class FinishProServiceImpl implements FinishProService {
     //查看归档项目的基本信息和项目信息
     public ProjectInfo selectFinProInfo(Integer id,Integer proId){
         ProjectInfo FinProInfo=FinProDao.selectFinProInfo(id);
-        List<ProjectTask> FinTasks=FinProDao.selectFinTask(proId);
+        List<Map> FinTasks=FinProDao.selectFinTask(proId);
         int sum = 0;
-        for (ProjectTask FinTask:FinTasks) {
-            FinTask.getWorkDate();
-            if (FinTask.getWorkDate() !="" && FinTask.getWorkDate() != null)
-                sum +=Integer.valueOf(FinTask.getWorkDate());
+        for (Map<String,Object> FinTask:FinTasks) {
+            FinTask.get("workDate");
+            if (FinTask.get("workDate") !="" && FinTask.get("workDate") != null)
+                sum +=Integer.valueOf((String) FinTask.get("workDate"));
 
 
         }
@@ -57,12 +57,14 @@ public class FinishProServiceImpl implements FinishProService {
     }
 
     //查看归档项目的参与组
-    public List<ProjectTask> selectFinTask(Integer proId){
-        List<ProjectTask> FinTasks=FinProDao.selectFinTask(proId);
+    public List<Map> selectFinTask(Integer proId){
+        List<Map> FinTasks=FinProDao.selectFinTask(proId);
         for(int i=0;i<FinTasks.size();i++){
-            String squadId=FinTasks.get(i).getSquadId();
+            String squadId=(String) FinTasks.get(i).get("squadId");
             String squad=FinProDao.selectSquadById(squadId);
-            FinTasks.get(i).setSquadId(squad);
+            String departmentId=FinProDao.selectDepartmentIdBySquadId(squadId);
+            FinTasks.get(i).put("departmentId",departmentId);
+            FinTasks.get(i).put("squad",squad);
         }
         return FinTasks;
     }

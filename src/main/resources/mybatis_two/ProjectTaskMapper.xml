@@ -55,6 +55,20 @@
     WHERE proId = #{proId}
   </select>
 
+  <select id="getProjectTaskListMap1" resultType="java.util.HashMap" parameterType="java.lang.Integer" >
+    select
+    taskId, proId,taskName,handler,squadId,sDate,eDate,workDate,idd,taskState,taskProgress
+    from project_task
+    WHERE proId = #{proId}
+  </select>
+
+  <select id="selectDepartmentIdBySquadId" resultType="java.lang.String" parameterType="java.lang.Integer" >
+    select
+    departmentId
+    from projectManage.dbo.[group]
+    WHERE squadId = #{squadId}
+  </select>
+
   <select id="getproIdByTaskId" resultType="java.util.HashMap">
     SELECT DISTINCT
     proId
@@ -75,12 +89,12 @@
     insert into project_task (proId, squadId,
       taskName, sDate, eDate, 
       taskState, taskProgress,
-      taskLogRecordId, taskDevelopLogId,handler,workDate,idd,createDate)
+      taskLogRecordId, taskDevelopLogId,handler,workDate,taskId,createDate)
     values (#{proid,jdbcType=INTEGER}, #{squadId,jdbcType=VARCHAR},
       #{taskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
       #{taskstate,jdbcType=VARCHAR}, #{taskprogress,jdbcType=VARCHAR},
       #{tasklogrecordid,jdbcType=INTEGER}, #{taskdeveloplogid,jdbcType=INTEGER},#{handler,jdbcType=VARCHAR},
-      #{workDate,jdbcType=VARCHAR},#{idd,jdbcType=INTEGER},#{createDate,jdbcType=VARCHAR})
+      #{workDate,jdbcType=VARCHAR},#{taskId,jdbcType=INTEGER},#{createDate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectTask" >
 
@@ -212,9 +226,9 @@
       <if test="workDate != null" >
         workDate = #{workDate,jdbcType=VARCHAR},
       </if>
-      <if test="idd != null" >
+     <!-- <if test="idd != null" >
         idd = #{idd,jdbcType=INTEGER},
-      </if>
+      </if>-->
       <if test="createDate != null" >
         createDate = #{createDate,jdbcType=VARCHAR},
       </if>

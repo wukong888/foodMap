@@ -19,7 +19,7 @@ public class RecycleProServiceImpl implements RecycleProService{
     @Resource
     private RecycleProMapper RecProDao;
 
-    //模糊查询所有待审批的项目
+    //模糊查询所有回收站的项目
     public Map<String, Object> selectRecPro(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String plansdate1, String plansdate2, String protype, String param){
 
 
@@ -31,6 +31,33 @@ public class RecycleProServiceImpl implements RecycleProService{
         recProMap.put("RecPro",RecPro);
         recProMap.put("RecProNum",RecProNum);
 
+
+        return recProMap;
+    }
+
+    //模糊查询回收站驳回的项目
+    public Map<String, Object> selectRecProState5(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String plansdate1, String plansdate2, String protype, String param){
+
+        Map<String,Object> recProMap=new HashMap<String,Object>();
+        List<ProjectInfo> RecPro=RecProDao.selectRecProState5(creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param,current,pageSize);
+        Integer RecProNum=RecProDao.selectRecProNumState5(creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+
+        recProMap.put("RecPro",RecPro);
+        recProMap.put("RecProNum",RecProNum);
+
+
+        return recProMap;
+    }
+
+    //模糊查询回收站作废的项目
+    public Map<String, Object> selectRecProState6(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String plansdate1, String plansdate2, String protype, String param){
+
+        Map<String,Object> recProMap=new HashMap<String,Object>();
+        List<ProjectInfo> RecPro=RecProDao.selectRecProState6(creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param,current,pageSize);
+        Integer RecProNum=RecProDao.selectRecProNumState6(creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+
+        recProMap.put("RecPro",RecPro);
+        recProMap.put("RecProNum",RecProNum);
 
         return recProMap;
     }

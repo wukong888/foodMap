@@ -13,6 +13,12 @@ public interface RecycleProService {
     //模糊查询所有待审批的项目
     Map<String, Object> selectRecPro(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String plansdate1, String plansdate2, String protype, String param);
 
+    //模糊查询回收站驳回的项目
+    Map<String, Object> selectRecProState5(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String plansdate1, String plansdate2, String protype, String param);
+
+    //模糊查询回收站作废的项目
+    Map<String, Object> selectRecProState6(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String plansdate1, String plansdate2, String protype, String param);
+
     //查看上线待审批项目的基本信息和项目信息
     ProjectInfo selectRecProInfo(Integer id,Integer proId);
 
@@ -22,4 +28,6 @@ public interface RecycleProService {
 
     //查看上线待审批项目的参与组
     List<ProjectTask> selectRecTask(Integer proId);
+
+
 }

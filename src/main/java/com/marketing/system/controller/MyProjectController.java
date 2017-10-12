@@ -410,7 +410,7 @@ public class MyProjectController {
             //插入日志
             int ilog = applyService.insertProLogRecord(proLogRecord);
 
-            if (i > 0 && ilog > 0 && k > 0) {
+            if (i > 0 && ilog > 0 ) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);

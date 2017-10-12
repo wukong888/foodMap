@@ -297,32 +297,36 @@ public class MyProjectController {
      */
     @ApiOperation(value = "我的项目参与组（添加+修改+删除）")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "type", value = "操作类型1添加 2修改 3删除", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "ProId", value = "项目id", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "Type", value = "操作类型1添加 2修改 3删除", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "taskName", value = "任务名称", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "sDate", value = "任务开始时间", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "eDate", value = "任务结束时间", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "handler", value = "操作人", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "squadId", value = "参与组id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "workDate", value = "工作时间", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "idd", value = "编号", required = false, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "修改任务id", required = false, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "idd", value = "编号", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "TaskId", value = "修改任务id", required = false, dataType = "String")
     })
     @RequestMapping(value = "/groupHandle", method = RequestMethod.POST)
     public ApiResult<Integer> groupHandle(
-            @RequestParam(value = "id") int id,
-            @RequestParam(value = "proId") int proId,
-            @RequestParam(value = "type") int type,
+            @RequestParam(value = "id") String id,
+            @RequestParam(value = "ProId") String ProId,
+            @RequestParam(value = "Type") String Type,
             @RequestParam(value = "taskName", required = false) String taskName,
             @RequestParam(value = "sDate", required = false) String sDate,
             @RequestParam(value = "eDate", required = false) String eDate,
             @RequestParam(value = "handler", required = false) String handler,
             @RequestParam(value = "squadId", required = false) String squadId,
             @RequestParam(value = "workDate", required = false) String workDate,
-            @RequestParam(value = "idd", required = false) int idd,
-            @RequestParam(value = "taskId", required = false) int taskId) {
+            @RequestParam(value = "idd", required = false) String idd,
+            @RequestParam(value = "TaskId", required = false) String TaskId) {
 
+        System.out.println("taskId---"+TaskId+"type---"+Type);
+        Integer type=Integer.parseInt(Type);
+        Integer proId=Integer.parseInt(ProId);
+        Integer taskId=Integer.parseInt(TaskId);
         Map<String, Object> map = new HashMap<>();
         ApiResult<Integer> result = null;
 

@@ -70,8 +70,7 @@ public class DayReportExport {
             if(result!=null){
                 for (int j = 0; j < result.size(); j++) {
                     HSSFRow row=sheet.createRow(j+2);
-                    System.out.println("result---"+result);
-                    row.createCell(0).setCellValue((Integer)result.get(j).get("proName"));
+                    row.createCell(0).setCellValue((String)result.get(j).get("proName"));
                     row.createCell(1).setCellValue((String)result.get(j).get("creater"));
                     row.createCell(2).setCellValue((String)result.get(j).get("proState"));
                     row.createCell(3).setCellValue((String)result.get(j).get("proProgres"));

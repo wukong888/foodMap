@@ -41,7 +41,6 @@ public class DayReportServiceImpl implements DayReportService{
             String proProgres=(String)ProReport.get(i).get("proProgress");
             Integer proId=(Integer)ProReport.get(i).get("proId");
             List<Map> proLogs= DayReportDao.selectProLogByProId(proId,startDate,endDate);
-            System.out.println("proLogs======"+proLogs);
             for(int j=0;j<proLogs.size();j++){
                 proLogs.get(j).put("idd",j+1);
             }
@@ -52,7 +51,6 @@ public class DayReportServiceImpl implements DayReportService{
             proReort.put("proLogs",proLogs);
             proReports.add(proReort);
         }
-        System.out.println("proReports----"+proReports);
 
         Integer proReportsNum=DayReportDao.selectProReportNum(startDate,endDate);
         Report.put("proReports",proReports);
@@ -86,7 +84,6 @@ public class DayReportServiceImpl implements DayReportService{
             String taskProgress=(String)TaskReport.get(i).get("taskProgress");
             Integer taskId=(Integer)TaskReport.get(i).get("taskId");
             List<Map> taskLogs= DayReportDao.selectTaskLogById(taskId,startDate,endDate);
-            System.out.println("taskLogs======"+taskLogs);
             for(int j=0;j<taskLogs.size();j++){
                 taskLogs.get(j).put("idd",j+1);
             }
@@ -97,7 +94,6 @@ public class DayReportServiceImpl implements DayReportService{
             taskReport.put("taskLogs",taskLogs);
             taskReports.add(taskReport);
         }
-        System.out.println("taskReports----"+taskReports);
 
         Integer taskReportsNum=DayReportDao.selectTaskReportNum(startDate,endDate);
         Report.put("taskReports",taskReports);
@@ -131,7 +127,6 @@ public class DayReportServiceImpl implements DayReportService{
             String subtaskProgress=(String)SubtaskReport.get(i).get("subtaskProgress");
             Integer subtaskId=(Integer)SubtaskReport.get(i).get("subtaskId");
             List<Map> subtaskLogs= DayReportDao.selectSubtaskLogById(subtaskId,startDate,endDate);
-            System.out.println("subtaskLogs======"+subtaskLogs);
             for(int j=0;j<subtaskLogs.size();j++){
                 subtaskLogs.get(j).put("idd",j+1);
             }
@@ -142,7 +137,6 @@ public class DayReportServiceImpl implements DayReportService{
             subtaskReport.put("subtaskLogs",subtaskLogs);
             subtaskReports.add(subtaskReport);
         }
-        System.out.println("subtaskReports----"+subtaskReports);
         Integer subtaskReportsNum=DayReportDao.selectSubtaskReportNum(current,pageSize,startDate,endDate);
         Report.put("subtaskReports",subtaskReports);
         Report.put("subtaskReportsNum",subtaskReportsNum);
@@ -183,7 +177,6 @@ public class DayReportServiceImpl implements DayReportService{
             String proProgres=(String)ProReport.get(i).get("proProgress");
             Integer proId=(Integer)ProReport.get(i).get("proId");
             List<Map> proLogs= DayReportDao.selectProLogByProId(proId,startDate,endDate);
-            System.out.println("proLogs======"+proLogs);
             for(int j=0;j<proLogs.size();j++){
                 proLogs.get(j).put("idd",j+1);
             }
@@ -201,7 +194,6 @@ public class DayReportServiceImpl implements DayReportService{
             proReport.put("proLogs",prologs);
             proReports.add(proReport);
         }
-        System.out.println("proReports----"+proReports);
         Report.put("proReports",proReports);
         return  Report;
     }
@@ -240,7 +232,6 @@ public class DayReportServiceImpl implements DayReportService{
             String taskProgress=(String)TaskReport.get(i).get("taskProgress");
             Integer taskId=(Integer)TaskReport.get(i).get("taskId");
             List<Map> taskLogs= DayReportDao.selectTaskLogById(taskId,startDate,endDate);
-            System.out.println("taskLogs======"+taskLogs);
             for(int j=0;j<taskLogs.size();j++){
                 taskLogs.get(j).put("idd",j+1);
             }
@@ -258,7 +249,6 @@ public class DayReportServiceImpl implements DayReportService{
             taskReport.put("taskLogs",tasklogs);
             taskReports.add(taskReport);
         }
-        System.out.println("taskReports----"+taskReports);
         Report.put("taskReports",taskReports);
 
         return Report;
@@ -297,7 +287,6 @@ public class DayReportServiceImpl implements DayReportService{
             }
 
             List<Map> subtaskLogs= DayReportDao.selectSubtaskLogById(subtaskId,startDate,endDate);
-            System.out.println("taskLogs======"+subtaskLogs);
             for(int j=0;j<subtaskLogs.size();j++){
                 subtaskLogs.get(j).put("idd",j+1);
             }
@@ -315,7 +304,6 @@ public class DayReportServiceImpl implements DayReportService{
             subtaskReport.put("subtaskLogs",tasklogs);
             subtaskReports.add(subtaskReport);
         }
-        System.out.println("subtaskReports----"+subtaskReports);
         Report.put("subtaskReports",subtaskReports);
 
         return Report;

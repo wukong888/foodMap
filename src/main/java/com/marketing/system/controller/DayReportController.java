@@ -168,13 +168,13 @@ public class DayReportController {
      * 日报定时导出
      *
      * @return
-     */
 
     @RequestMapping(value = "/exportProExcelTime", method = RequestMethod.POST)
-    @Scheduled(cron="0 0/30 * * * ?")
+    @Scheduled(cron="0 0/1 * * * ?")
     public ApiResult<List<Map>> exportExcelTime() {
        String date= DateUtil.getYMDDate();
 
+       System.out.println("---"+new Date());
         //项目日报的定时导出
         Map<String,Object> Report1=DayReportService.exportProExcel(date);
         List<Map> ProReport=(List<Map>)Report1.get("proReports");
@@ -214,7 +214,7 @@ public class DayReportController {
 
 
         return null;
-    }
+    }*/
 
     /**
      * 日报导出

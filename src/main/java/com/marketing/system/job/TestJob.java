@@ -1,8 +1,11 @@
 package com.marketing.system.job;
 
 import com.marketing.system.entity.UserInfo;
+import com.marketing.system.service.DayReportService;
 import com.marketing.system.service.UserInfoService;
 import com.marketing.system.util.ApiResult;
+import com.marketing.system.util.DateUtil;
+import com.marketing.system.util.DayReportExport;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
@@ -11,6 +14,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -21,6 +31,9 @@ public class TestJob extends BatchProperties.Job {
 
     @Autowired
     private UserInfoService userInfo;
+
+    @Resource
+    private com.marketing.system.service.DayReportService DayReportService;
 
     @Scheduled(cron = "${jobs.schedule}")
     public ApiResult<UserInfo> handleOrderStatus() {
@@ -35,4 +48,64 @@ public class TestJob extends BatchProperties.Job {
         return result;
 
     }
+
+    @Scheduled(cron="0 0/1 * * * ?")
+    public ApiResult<List<Map>> exportExcelTime() {
+        String date= DateUtil.getYMDDate();
+
+        System.out.println("导出"+date+"项目日报");
+        //项目日报的定时导出
+        Map<String,Object> Report1=DayReportService.exportProExcel(date);
+        List<Map> ProReport=(List<Map>)Report1.get("proReports");
+
+        String pathProName ="static//"+date+"ProjectReport.xlsx";
+
+        try {
+            File file=new File(pathProName);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+
+             OutputStream outputStream1= new FileOutputStream(file);
+            DayReportExport.exportExcel(ProReport,outputStream1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("导出"+date+"任务日报");
+        //任务日报的定时导出
+        Map<String,Object> Report2=DayReportService.exportTaskExcel(date);
+        List<Map> TaskReport=(List<Map>)Report2.get("taskReports");
+        String pathTaskName ="static//"+date+"TaskReport.xlsx";
+        try {
+            File file=new File(pathTaskName);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            OutputStream outputStream2= new FileOutputStream(file);
+            DayReportExport.exportExcel(TaskReport,outputStream2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("导出"+date+"子任务日报");
+        //子任务日报的定时导出
+        Map<String,Object> Report3=DayReportService.exportSubtaskExcel(date);
+        List<Map> SubtaskReport=(List<Map>)Report2.get("subtaskReports");
+        String pathSubtaskName ="static//"+date+"SubtaskReport.xlsx";
+        try {
+            File file=new File(pathSubtaskName);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            OutputStream outputStream3= new FileOutputStream(file);
+            DayReportExport.exportExcel(SubtaskReport,outputStream3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+
 }

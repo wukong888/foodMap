@@ -529,9 +529,8 @@ public class MyProjectController {
     @ApiOperation(value = "我的项目开发中详情页（子任务列表添加、修改、删除）")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务主键id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务主键id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "type", value = "操作类型1添加 2修改 3删除", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "idd", value = "编号", required = false, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "subtaskHandler", value = "处理人", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "subtaskName", value = "任务名称", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "sDate", value = "开始时间", required = false, dataType = "String"),
@@ -543,9 +542,8 @@ public class MyProjectController {
     @RequestMapping(value = "/handleSubTaskList", method = RequestMethod.POST)
     public ApiResult<Integer> handleSubTaskList(
             @RequestParam(value = "taskId") int taskId,
-            @RequestParam(value = "subtaskId", required = false) int subtaskId,
+            @RequestParam(value = "subtaskId", required = false) String subtaskId,
             @RequestParam(value = "type") int type,
-            @RequestParam(value = "idd", required = false) int idd,
             @RequestParam(value = "subtaskHandler", required = false) String subtaskHandler,
             @RequestParam(value = "subtaskName", required = false) String subtaskName,
             @RequestParam(value = "sDate", required = false) String sDate,
@@ -588,7 +586,7 @@ public class MyProjectController {
             subtaskLogRecord.setDate(str2);//创建时间
             subtaskLogRecord.setEmp(subtaskHandler);//操作人
             subtaskLogRecord.setExplain("添加任务");//说明
-            subtaskLogRecord.setSubtaskid(subtaskId);//项目id
+            subtaskLogRecord.setSubtaskid(Integer.valueOf(subtaskId));//项目id
 
             //插入子任务日志
             int ilog = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);
@@ -626,7 +624,7 @@ public class MyProjectController {
             projectSubtask.setTaskid(taskId);
             projectSubtask.setSubtaskname(subtaskName);//任务名称
             //projectSubtask.setIdd(idd);//编号
-            projectSubtask.setSubtaskId(subtaskId);
+            projectSubtask.setSubtaskId(Integer.valueOf(subtaskId));
             projectSubtask.setWorkDate(workDate);//预计工期
             projectSubtask.setSubtaskprogress(subtaskProgress);//进度
             projectSubtask.setSubtaskstate(subtaskState);//子任务状态 值待定*******************************************
@@ -644,7 +642,7 @@ public class MyProjectController {
             subtaskLogRecord.setDate(str2);//创建时间
             subtaskLogRecord.setEmp(subtaskHandler);//操作人
             subtaskLogRecord.setExplain("修改子任务");//说明
-            subtaskLogRecord.setSubtaskid(subtaskId);//项目id
+            subtaskLogRecord.setSubtaskid(Integer.valueOf(subtaskId));//项目id
 
             //插入日志
             int ilog = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);
@@ -670,7 +668,7 @@ public class MyProjectController {
         //删除
         } else {
 
-            int j = myProjectService.deleteProSubTaskById(subtaskId);
+            int j = myProjectService.deleteProSubTaskById(Integer.valueOf(subtaskId));
 
             SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -683,7 +681,7 @@ public class MyProjectController {
             subtaskLogRecord.setDate(str);//创建时间
             subtaskLogRecord.setEmp(subtaskHandler);//操作人
             subtaskLogRecord.setExplain("删除子任务");//说明
-            subtaskLogRecord.setSubtaskid(subtaskId);//项目id
+            subtaskLogRecord.setSubtaskid(Integer.valueOf(subtaskId));//项目id
 
             //插入日志
             int ilog = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);

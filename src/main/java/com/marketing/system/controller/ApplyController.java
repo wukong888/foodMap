@@ -241,33 +241,22 @@ public class ApplyController {
                 //遍历list，每迭代一个FileItem对象，调用其isFormField方法判断是否是上传文件
                 while (iter.hasNext()) {
                     MultipartFile mfile = multipartRequest.getFile(iter.next().toString());
+
                     String fileName = mfile.getOriginalFilename();
+
+                    String fileOldName = mfile.getOriginalFilename();
+
                     logger.info("原文件名：" + fileName);
+                    logger.info("原文件名：" + fileOldName);
 
-                    File ff = new File("./static");
-
-                    //http://192.168.3.26:5026/uploadFile/cashloan/11.png
-                    File file = new File(ff + "/" + fileName);
-
-                    map.put(fileName, file.getAbsolutePath());
-
-                    logger.info("上传地址：" + file.getAbsolutePath());
-                    String pathFile = file.getAbsolutePath();
+                    // 新文件名（唯一）
+                    String newFileName = new Date().getTime() + fileOldName;
+                    logger.info("新文件名：" + newFileName);
 
 
-                    if (!ff.exists() && !ff.isDirectory()) {
-                        logger.info("不存在上传地址新文件夹，将创建");
+                    Files.copy(mfile.getInputStream(), Paths.get("static", newFileName));
 
-                        file.mkdir();
-                        file.setWritable(true, false);
-                    }
-                    //file = new File(newPath);
-
-                    //mfile.transferTo(file);
-
-                    Files.copy(mfile.getInputStream(), Paths.get("static", mfile.getOriginalFilename()));
-
-
+                    String pathFile = "http://192.168.3.26:5826/" + newFileName;
                     session.setAttribute("uploadPath", pathFile);
 
                     Map<String,String> objectMap = new HashMap<>();

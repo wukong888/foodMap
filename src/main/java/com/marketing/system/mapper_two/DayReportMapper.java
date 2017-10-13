@@ -32,28 +32,28 @@ public interface DayReportMapper {
 
 
     //查询任务日报记录
-    @Select("select taskName,handler,taskState,taskProgress,taskId from project_task  where sDate >=#{startDate} and sDate <=#{endDate} order by sDate asc OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
-    List<Map> selectTaskReport(@Param("current")Integer current,@Param("pageSize")Integer pageSize,@Param("startDate")String startDate,@Param("endDate")String endDate);
+    @Select("select taskName,handler,taskState,taskProgress,taskId from project_task  where proId=#{proId} order by eDate asc OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
+    List<Map> selectTaskReport(@Param("current")Integer current,@Param("pageSize")Integer pageSize,@Param("proId")Integer proId);
 
     //查询全部任务日报记录-不分页
-    @Select("select taskName,handler,taskState,taskProgress,taskId from project_task  where sDate >=#{startDate} and sDate <=#{endDate} order by sDate asc ")
-    List<Map> exportTaskExcel(@Param("startDate")String startDate,@Param("endDate")String endDate);
+    @Select("select taskName,handler,taskState,taskProgress,taskId from project_task  where proId=#{proId} order by sDate asc ")
+    List<Map> exportTaskExcel(@Param("proId")Integer proId);
 
     //查询模糊查询任务日报记录日报记录数
-    @Select("select count(1) from project_task  where sDate >=#{startDate} and sDate <=#{endDate} ")
-    Integer selectTaskReportNum(@Param("startDate")String startDate,@Param("endDate")String endDate);
+    @Select("select count(1) from project_task  where proId=#{proId} ")
+    Integer selectTaskReportNum(@Param("proId")Integer proId);
 
     //查询任务日报的动态记录
-    @Select("select * from task_DevelopLog where taskId=#{taskId} and Date >=#{startDate} and Date <=#{endDate}")
+    @Select("select * from task_DevelopLog where taskId=#{taskId} and task_DevelopLog.[Date] between #{startDate} and #{endDate}")
     List<Map> selectTaskLogById(@Param("taskId")Integer taskId,@Param("startDate")String startDate,@Param("endDate")String endDate);
 
     //查询子任务日报记录
-    @Select("select subtaskName,subtaskHandler,subtaskState,subtaskProgress,subtaskId from project_subtask where sDate >=#{startDate} and sDate <=#{endDate} order by sDate asc OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
-    List<Map> selectSubtaskReport(@Param("current")Integer current,@Param("pageSize")Integer pageSize,@Param("startDate")String startDate,@Param("endDate")String endDate);
+    @Select("select subtaskName,subtaskHandler,subtaskState,subtaskProgress,subtaskId from project_subtask where  taskId=#{taskId} order by sDate asc OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
+    List<Map> selectSubtaskReport(@Param("current")Integer current,@Param("pageSize")Integer pageSize,@Param("taskId")Integer taskId);
 
     //查询全部子任务日报记录-不分页
-    @Select("select subtaskName,subtaskHandler,subtaskState,subtaskProgress,subtaskId from project_subtask where sDate >=#{startDate} and sDate <=#{endDate} order by sDate asc ")
-    List<Map> exportSubtaskExcel(@Param("startDate")String startDate,@Param("endDate")String endDate);
+    @Select("select subtaskName,subtaskHandler,subtaskState,subtaskProgress,subtaskId from project_subtask where taskId=#{taskId} order by sDate asc ")
+    List<Map> exportSubtaskExcel(@Param("taskId")Integer taskId);
 
     //查询模糊查询子任务日报记录日报记录数
     @Select("select count(1) from project_subtask  where sDate >=#{startDate} and sDate <=#{endDate}")

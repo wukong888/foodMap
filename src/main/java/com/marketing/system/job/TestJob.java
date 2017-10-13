@@ -1,16 +1,12 @@
 package com.marketing.system.job;
 
 import com.marketing.system.entity.UserInfo;
-import com.marketing.system.service.DayReportService;
 import com.marketing.system.service.UserInfoService;
-import com.marketing.system.util.ApiResult;
-import com.marketing.system.util.DateUtil;
-import com.marketing.system.util.DayReportExport;
+import com.marketing.system.util.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +14,6 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +44,7 @@ public class TestJob extends BatchProperties.Job {
 
     }
 
-    @Scheduled(cron="0 0/1 * * * ?")
+    @Scheduled(cron="0 0/30 * * * ?")
     public ApiResult<List<Map>> exportExcelTime() {
         String date= DateUtil.getYMDDate();
 
@@ -57,9 +52,7 @@ public class TestJob extends BatchProperties.Job {
         //项目日报的定时导出
         Map<String,Object> Report1=DayReportService.exportProExcel(date);
         List<Map> ProReport=(List<Map>)Report1.get("proReports");
-
         String pathProName ="static//"+date+"ProjectReport.xlsx";
-
         try {
             File file=new File(pathProName);
             if(!file.exists()){
@@ -67,7 +60,7 @@ public class TestJob extends BatchProperties.Job {
             }
 
              OutputStream outputStream1= new FileOutputStream(file);
-            DayReportExport.exportExcel(ProReport,outputStream1);
+             DayReportExport1.exportExcel(ProReport,outputStream1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,6 +68,7 @@ public class TestJob extends BatchProperties.Job {
         System.out.println("导出"+date+"任务日报");
         //任务日报的定时导出
         Map<String,Object> Report2=DayReportService.exportTaskExcel(date);
+        System.out.println("Report2====="+Report2);
         List<Map> TaskReport=(List<Map>)Report2.get("taskReports");
         String pathTaskName ="static//"+date+"TaskReport.xlsx";
         try {
@@ -83,7 +77,7 @@ public class TestJob extends BatchProperties.Job {
                 file.createNewFile();
             }
             OutputStream outputStream2= new FileOutputStream(file);
-            DayReportExport.exportExcel(TaskReport,outputStream2);
+            DayReportExport2.exportExcel(TaskReport,outputStream2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,7 +93,7 @@ public class TestJob extends BatchProperties.Job {
                 file.createNewFile();
             }
             OutputStream outputStream3= new FileOutputStream(file);
-            DayReportExport.exportExcel(SubtaskReport,outputStream3);
+            DayReportExport3.exportExcel(SubtaskReport,outputStream3);
         } catch (Exception e) {
             e.printStackTrace();
         }

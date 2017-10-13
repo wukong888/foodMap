@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-public class DayReportExport {
+public class DayReportExport2 {
     /**
      * 导出项目日报
      * @param outputStream 参数为输出流
@@ -70,11 +70,11 @@ public class DayReportExport {
             if(result!=null){
                 for (int j = 0; j < result.size(); j++) {
                     HSSFRow row=sheet.createRow(j+2);
-                    row.createCell(0).setCellValue((String)result.get(j).get("proName"));
-                    row.createCell(1).setCellValue((String)result.get(j).get("creater"));
-                    row.createCell(2).setCellValue((String)result.get(j).get("proState"));
-                    row.createCell(3).setCellValue((String)result.get(j).get("proProgres"));
-                    row.createCell(4).setCellValue((String)result.get(j).get("proLogs"));
+                    row.createCell(0).setCellValue((String)result.get(j).get("taskName"));
+                    row.createCell(1).setCellValue((String)result.get(j).get("handler"));
+                    row.createCell(2).setCellValue((String)result.get(j).get("taskState"));
+                    row.createCell(3).setCellValue((String)result.get(j).get("taskProgress"));
+                    row.createCell(4).setCellValue((String)result.get(j).get("taskLogs"));
 
 
                 }

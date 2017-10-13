@@ -24,8 +24,8 @@ public class DayReportServiceImpl implements DayReportService{
         if(Date==null||Date==""){
            date= DateUtil.getYMDDate();
         }
-        String startDate=date+" 00:00:00";
-        String endDate=date+" 23:59:59";
+        String startDate=date+"00:00:00";
+        String endDate=date+"23:59:59";
 
         Map<String,Object> Report=new HashMap<String ,Object>();
 

@@ -6,6 +6,7 @@ import com.marketing.system.entity.SystemUser;
 import com.marketing.system.service.UserInfoService;
 import com.marketing.system.util.ApiResult;
 import com.marketing.system.util.Constant;
+import com.marketing.system.util.MyDES;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -25,6 +26,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Api(description = "用户登录接口", value = "用户登录接口")
@@ -106,12 +109,13 @@ public class LoginController {
             /*@ApiImplicitParam(paramType = "query", name = "accessCode", value = "验证码", required = true, dataType = "String")*/
     })
     @RequestMapping(value = "index",method = RequestMethod.GET)
-    public ApiResult<SystemUser> loginDeal(@RequestParam(value = "username", required = true) String username,
-                                           @RequestParam(value = "password", required = true) String password,
+    public ApiResult<Map<String,Object>> loginDeal(@RequestParam(value = "username", required = true) String username,
+                                    @RequestParam(value = "password", required = true) String password,
                                            /*@RequestParam(value = "accessCode", required = false) String accessCode,*/
                                            HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
 
-        ApiResult<SystemUser> r = null;
+        ApiResult<Map<String,Object>> r = null;
+        Map<String,Object> map = new HashMap<>();
        /* if (accessCode == null || accessCode == "") {
             r = new ApiResult<SystemUser>(Constant.FAIL_CODE_PARAM_INSUFFICIENT, "验证码不能为空！", null, null);
             return r;
@@ -132,18 +136,22 @@ public class LoginController {
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             SecurityUtils.getSubject().login(token);
 
+            //加密
+            String data = MyDES.encryptBasedDes(password);
             //RememberMe这个参数设置为true后，在登陆的时候就会在客户端设置remenberme的相应cookie
             token.setRememberMe(true);
 
             SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
 
-            r = new ApiResult<SystemUser>(Constant.SUCCEED_CODE_VALUE, "登录成功！", user, null);
+            map.put("users",user);
+            map.put("token",data);
+            r = new ApiResult<Map<String,Object>>(Constant.SUCCEED_CODE_VALUE, "登录成功！", map, null);
             //存入Session
             httpSession = request.getSession(true);
             httpSession.setAttribute("SysUser", token);
             httpSession.setAttribute("lyout", "false");
         } catch (Exception e) {
-            r = new ApiResult<SystemUser>(Constant.OTHER_CODE_VALUE, e.getMessage(), null, null);
+            r = new ApiResult<Map<String,Object>>(Constant.OTHER_CODE_VALUE, e.getMessage(), null, null);
             return r;
         }
 

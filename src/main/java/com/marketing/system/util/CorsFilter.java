@@ -1,5 +1,8 @@
 package com.marketing.system.util;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -30,7 +33,14 @@ public class CorsFilter implements Filter {
         response.setDateHeader("Expires", 0);
         response.setContentType("image/gif");
         chain.doFilter(req, res);
+
+
+
     }
-    public void init(FilterConfig filterConfig) {}
+    public void init(FilterConfig filterConfig) {
+
+    }
+
+
     public void destroy() {}
 }

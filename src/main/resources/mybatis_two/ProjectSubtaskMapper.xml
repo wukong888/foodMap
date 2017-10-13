@@ -77,12 +77,12 @@
       subtaskName, sDate, eDate, 
       subtaskState, subtaskProgress, subtaskHandler, 
       subtaskLogRecordId, subtaskDevelopLogId, 
-      idd,createDate,workDate)
+      createDate,workDate)
     values (#{taskid,jdbcType=INTEGER},
       #{subtaskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
       #{subtaskstate,jdbcType=VARCHAR}, #{subtaskprogress,jdbcType=VARCHAR}, #{subtaskhandler,jdbcType=VARCHAR}, 
       #{subtasklogrecordid,jdbcType=INTEGER}, #{subtaskdeveloplogid,jdbcType=INTEGER}, 
-      #{idd,jdbcType=INTEGER},#{createDate,jdbcType=VARCHAR},#{workDate,jdbcType=VARCHAR})
+      #{createDate,jdbcType=VARCHAR},#{workDate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectSubtask" >
     insert into project_subtask
@@ -185,6 +185,12 @@
       </if>
       <if test="subtaskid != null" >
         subtaskId = #{subtaskid,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        createDate = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="workDate != null" >
+        workDate = #{workDate,jdbcType=VARCHAR},
       </if>
     </set>
     where subtaskId = #{subtaskId,jdbcType=INTEGER}

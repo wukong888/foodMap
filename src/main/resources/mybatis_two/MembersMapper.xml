@@ -25,7 +25,7 @@
 
   <select id="getMembers" resultType="java.util.HashMap">
     SELECT DISTINCT
-    member
+    id,squadId,member
     FROM
     members
     WHERE

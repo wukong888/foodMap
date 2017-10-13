@@ -2,6 +2,9 @@ package com.marketing.system.shiro;
 
 import com.marketing.system.entity.SysPerm;
 import com.marketing.system.service.SysPermService;
+import com.marketing.system.util.MyDES;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -13,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.servlet.Filter;
 import javax.sql.DataSource;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -126,5 +130,7 @@ public class ShiroConfig {
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
     }
+
+
 }
 

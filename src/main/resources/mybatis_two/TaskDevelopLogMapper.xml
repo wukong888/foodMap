@@ -9,9 +9,11 @@
     <result column="Emp" property="emp" jdbcType="VARCHAR" />
     <result column="explain" property="explain" jdbcType="VARCHAR" />
     <result column="filePath" property="filepath" jdbcType="VARCHAR" />
+    <result column="progress" property="progress" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    taskDevelopLogId, taskId, Date, squadId, Emp, explain, filePath
+    taskDevelopLogId, taskId, Date, squadId, Emp, explain, filePath,progress,type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -34,10 +36,11 @@
   <insert id="insert" parameterType="com.marketing.system.entity.TaskDevelopLog" >
     insert into task_DevelopLog (taskId, Date,
       squadId, Emp, explain, 
-      filePath)
+      filePath,progress,type)
     values (#{taskid,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR},
       #{squadid,jdbcType=INTEGER}, #{emp,jdbcType=VARCHAR}, #{explain,jdbcType=VARCHAR}, 
-      #{filepath,jdbcType=VARCHAR})
+      #{filepath,jdbcType=VARCHAR},#{progress,jdbcType=VARCHAR},
+      #{type,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.TaskDevelopLog" >
     insert into task_DevelopLog
@@ -61,6 +64,13 @@
       <if test="filepath != null" >
         filePath,
       </if>
+      <if test="progress != null" >
+        progress,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
 
@@ -81,6 +91,12 @@
       </if>
       <if test="filepath != null" >
         #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null" >
+        #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -105,6 +121,12 @@
       <if test="filepath != null" >
         filePath = #{filepath,jdbcType=VARCHAR},
       </if>
+      <if test="progress != null" >
+        progress = #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
     </set>
     where taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
   </update>
@@ -115,7 +137,9 @@
       squadId = #{squadid,jdbcType=INTEGER},
       Emp = #{emp,jdbcType=VARCHAR},
       explain = #{explain,jdbcType=VARCHAR},
-      filePath = #{filepath,jdbcType=VARCHAR}
+      filePath = #{filepath,jdbcType=VARCHAR},
+      progress = #{progress,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR}
     where taskDevelopLogId = #{taskdeveloplogid,jdbcType=INTEGER}
   </update>
 </mapper>

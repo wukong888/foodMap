@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -242,7 +244,7 @@ public class ApplyController {
                     String fileName = mfile.getOriginalFilename();
                     logger.info("原文件名：" + fileName);
 
-                    File ff = new File("E:\\uploadTest\\test\\");
+                    File ff = new File("./static");
 
                     //http://192.168.3.26:5026/uploadFile/cashloan/11.png
                     File file = new File(ff + "/" + fileName);
@@ -261,7 +263,9 @@ public class ApplyController {
                     }
                     //file = new File(newPath);
 
-                    mfile.transferTo(file);
+                    //mfile.transferTo(file);
+
+                    Files.copy(mfile.getInputStream(), Paths.get("static", mfile.getOriginalFilename()));
 
 
                     session.setAttribute("uploadPath", pathFile);

@@ -154,8 +154,10 @@ public class LoginController {
             httpSession.setAttribute("SysUser", token);
             httpSession.setAttribute("lyout", "false");
         } catch (Exception e) {
+            logger.error("登录错误信息："+e.getMessage());
             r = new ApiResult<Map<String,Object>>(Constant.OTHER_CODE_VALUE, e.getMessage(), null, null);
             return r;
+
         }
 
         return r;

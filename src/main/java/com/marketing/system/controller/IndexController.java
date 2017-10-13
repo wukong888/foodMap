@@ -50,64 +50,69 @@ public class IndexController {
         ApiResult<List<Map<String, Object>>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-        SystemUser user = new SystemUser();
-        user.setUserName("陈冬和");
-        user.setDuty("CEO");
-        //职位，立项待审批、上线待审批暂时只有CEO有该权限
-        String dutyName = user.getDuty();
+        try {
+            //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+            SystemUser user = new SystemUser();
+            user.setUserName("陈冬和");
+            user.setDuty("CEO");
+            //职位，立项待审批、上线待审批暂时只有CEO有该权限
+            String dutyName = user.getDuty();
 
-        map.put("dutyName", dutyName);
+            map.put("dutyName", dutyName);
 
-        //项目推送
-        //我申请的项目
-        Integer i = indexService.getMyApplyProject(user.getUserName());
+            //项目推送
+            //我申请的项目
+            Integer i = indexService.getMyApplyProject(user.getUserName());
 
-        //参与的项目 j 项目任务+子任务
-        Integer j = indexService.getMyJoinProject(user.getUserName());
+            //参与的项目 j 项目任务+子任务
+            Integer j = indexService.getMyJoinProject(user.getUserName());
 
-        //立项待审批
-        String proState = "1";
-        Integer k = indexService.getUpApplyProject(proState);
+            //立项待审批
+            String proState = "1";
+            Integer k = indexService.getUpApplyProject(proState);
 
-        //上线待审批
-        String proTypeOnline = "3";
-        Integer m = indexService.getUpApplyProject(proTypeOnline);
+            //上线待审批
+            String proTypeOnline = "3";
+            Integer m = indexService.getUpApplyProject(proTypeOnline);
 
-        map.put("applyProject", i);//我申请的项目
-        map.put("joinProject", j);//参与的项目
-        map.put("upProject", k);//立项待审批
-        map.put("onlineProject", k);//上线待审批
+            map.put("applyProject", i);//我申请的项目
+            map.put("joinProject", j);//参与的项目
+            map.put("upProject", k);//立项待审批
+            map.put("onlineProject", k);//上线待审批
 
-        String creater = "";
+            String creater = "";
 
-        if ("CEO".equals(dutyName)) {
-            creater = "";
-        } else {
-            creater = user.getUserName();
+            if ("CEO".equals(dutyName)) {
+                creater = "";
+            } else {
+                creater = user.getUserName();
+            }
+            //逾期提示 1：项目
+            List<ProjectInfo> infoList = new ArrayList<>();
+
+            infoList = indexService.getProjectInfoList(creater);
+
+            //逾期提示 2：任务
+            List<Map<String, Object>> taskList = new ArrayList<>();
+
+            taskList = indexService.getProjectTaskList(creater);
+
+            //逾期提示 3：子任务
+            List<ProjectSubtask> subtaskList = new ArrayList<>();
+
+            subtaskList = indexService.getProjectSubTaskList(creater);
+
+            map.put("infoList", infoList);//项目
+            map.put("taskList", taskList);//任务
+            map.put("subtaskList", subtaskList);//子任务
+
+            list.add(map);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("用户首页错误信息：" + e);
         }
-        //逾期提示 1：项目
-        List<ProjectInfo> infoList = new ArrayList<>();
-
-        infoList = indexService.getProjectInfoList(creater);
-
-        //逾期提示 2：任务
-        List<Map<String, Object>> taskList = new ArrayList<>();
-
-        taskList = indexService.getProjectTaskList(creater);
-
-        //逾期提示 3：子任务
-        List<ProjectSubtask> subtaskList = new ArrayList<>();
-
-        subtaskList = indexService.getProjectSubTaskList(creater);
-
-        map.put("infoList",infoList);//项目
-        map.put("taskList",taskList);//任务
-        map.put("subtaskList",subtaskList);//子任务
-
-        list.add(map);
-        result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
-
         return result;
     }
 

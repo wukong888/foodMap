@@ -76,74 +76,78 @@ public class UpProjectController {
 
         ApiResult<List<ProjectInfo>> result = null;
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("current", current);
-        map.put("pageSize", pageSize);
-        map.put("createrSquadId", createrSquadId);//项目发起部门
-        map.put("creater", creater);//创建人
-        if (createDateStart == "" || createDateStart == null) {
-            map.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
-        } else {
-            map.put("createDateStart", createDateStart);//项目发起开始时间
-        }
-
-        if (createDateEnd == "" || createDateEnd == null) {
-            map.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
-        } else {
-            map.put("createDateEnd", createDateEnd);//项目发起结束时间
-        }
-
-        if (planSDateStart == "" || planSDateStart == null) {
-            map.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
-        } else {
-            map.put("planSDateStart", planSDateStart);//预计上线开始时间
-        }
-
-        if (planSDateEnd == "" || planSDateEnd == null) {
-            map.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
-        } else {
-            map.put("planSDateEnd", planSDateEnd);//预计上线结束时间
-        }
-
-        map.put("proType", proType);//项目类型
-        map.put("proName", proName);//项目名称
-        map.put("proState", "1");//项目状态(1:立项待审批
-
-        List<ProjectInfo> projectInfos = upProjectService.getProjectInfoList(map);
-
-        //增加排序序号
-        /*for (int i = 0; i < projectInfos.size(); i++) {
-            projectInfos.get(i).setIndex((current - 1) * pageSize + i + 1);
-        }*/
-
-        RdPage rdPage = new RdPage();
-
-        Map<String, Object> mapT = new HashMap<>();
-
-        mapT.put("proState", "1");//项目状态(1:立项待审批
-        int sum = upProjectService.sumAll(mapT);
-        //分页信息
-        rdPage.setTotal(sum);
-        rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
-        rdPage.setCurrent(current);
-        rdPage.setPageSize(pageSize);
-
-        String msg = "";
-        if (current > rdPage.getPages()) {
-            msg = "已经超过当前所有页数！";
-            result = new ApiResult<List<ProjectInfo>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
-        } else {
-
-            if (projectInfos.size() > 0) {
-                msg = "查询成功！";
-                result = new ApiResult<List<ProjectInfo>>(Constant.SUCCEED_CODE_VALUE, msg, projectInfos, rdPage);
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("current", current);
+            map.put("pageSize", pageSize);
+            map.put("createrSquadId", createrSquadId);//项目发起部门
+            map.put("creater", creater);//创建人
+            if (createDateStart == "" || createDateStart == null) {
+                map.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
             } else {
-                msg = "没有相关数据！";
-                result = new ApiResult<List<ProjectInfo>>(Constant.SUCCEED_CODE_VALUE, msg, projectInfos, null);
+                map.put("createDateStart", createDateStart);//项目发起开始时间
             }
 
-        }
+            if (createDateEnd == "" || createDateEnd == null) {
+                map.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
+            } else {
+                map.put("createDateEnd", createDateEnd);//项目发起结束时间
+            }
 
+            if (planSDateStart == "" || planSDateStart == null) {
+                map.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
+            } else {
+                map.put("planSDateStart", planSDateStart);//预计上线开始时间
+            }
+
+            if (planSDateEnd == "" || planSDateEnd == null) {
+                map.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
+            } else {
+                map.put("planSDateEnd", planSDateEnd);//预计上线结束时间
+            }
+
+            map.put("proType", proType);//项目类型
+            map.put("proName", proName);//项目名称
+            map.put("proState", "1");//项目状态(1:立项待审批
+
+            List<ProjectInfo> projectInfos = upProjectService.getProjectInfoList(map);
+
+            //增加排序序号
+            /*for (int i = 0; i < projectInfos.size(); i++) {
+                projectInfos.get(i).setIndex((current - 1) * pageSize + i + 1);
+            }*/
+
+            RdPage rdPage = new RdPage();
+
+            Map<String, Object> mapT = new HashMap<>();
+
+            mapT.put("proState", "1");//项目状态(1:立项待审批
+            int sum = upProjectService.sumAll(mapT);
+            //分页信息
+            rdPage.setTotal(sum);
+            rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+            rdPage.setCurrent(current);
+            rdPage.setPageSize(pageSize);
+
+            String msg = "";
+            if (current > rdPage.getPages()) {
+                msg = "已经超过当前所有页数！";
+                result = new ApiResult<List<ProjectInfo>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+            } else {
+
+                if (projectInfos.size() > 0) {
+                    msg = "查询成功！";
+                    result = new ApiResult<List<ProjectInfo>>(Constant.SUCCEED_CODE_VALUE, msg, projectInfos, rdPage);
+                } else {
+                    msg = "没有相关数据！";
+                    result = new ApiResult<List<ProjectInfo>>(Constant.SUCCEED_CODE_VALUE, msg, projectInfos, null);
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查询立项待审批列表错误信息：" + e.getMessage());
+        }
         return result;
 
     }
@@ -224,14 +228,14 @@ public class UpProjectController {
         ApiResult<List<Map<String, Object>>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-        try{
+        try {
             //基本信息+项目信息Basic Information
             ProjectInfo projectInfo = upProjectService.selectByPrimaryKey(id);
 
             //日志记录
             List<ProLogRecord> logRecordList = upProjectService.getProLogRecordList(proId);
-            for (ProLogRecord proLogRecord:logRecordList) {
-                if (proLogRecord.getType() == "创建"){
+            for (ProLogRecord proLogRecord : logRecordList) {
+                if (proLogRecord.getType() == "创建") {
                     proLogRecord.setFilepath(projectInfo.getProfilepath());//申请创建项目附件路径
                 }
             }
@@ -239,10 +243,10 @@ public class UpProjectController {
             List<ProjectTask> taskList = upProjectService.getProjectTaskList(proId);
 
             int sum = 0;
-            for (ProjectTask projectTask:taskList) {
+            for (ProjectTask projectTask : taskList) {
                 projectTask.getWorkDate();
-                if (projectTask.getWorkDate() !="" && projectTask.getWorkDate() != null)
-                sum +=Integer.valueOf(projectTask.getWorkDate());
+                if (projectTask.getWorkDate() != "" && projectTask.getWorkDate() != null)
+                    sum += Integer.valueOf(projectTask.getWorkDate());
 
                 Group group = groupService.getGroupBySquadId(Integer.valueOf(projectTask.getSquadId()));
 
@@ -251,15 +255,15 @@ public class UpProjectController {
             }
             projectInfo.setWorkTatalDay(String.valueOf(sum));//项目预计工期（任务工期之和）
 
-            map.put("projectInfo",projectInfo); //基本信息+项目信息
-            map.put("logRecordList",logRecordList);//日志记录
-            map.put("taskList",taskList);//参与组
+            map.put("projectInfo", projectInfo); //基本信息+项目信息
+            map.put("logRecordList", logRecordList);//日志记录
+            map.put("taskList", taskList);//参与组
 
             list.add(map);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,list,null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -269,6 +273,7 @@ public class UpProjectController {
 
     /**
      * 根据部门id查找项目发起人
+     *
      * @param squadId
      * @return
      */
@@ -282,10 +287,12 @@ public class UpProjectController {
         try {
             List<Members> list = membersService.getMembersById(String.valueOf(squadId));
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,list,null);
-        }catch (Exception e){
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+            logger.info("结果list：" + list);
+        } catch (Exception e) {
 
             e.printStackTrace();
+            logger.error("错误信息：" + e);
         }
         return result;
 

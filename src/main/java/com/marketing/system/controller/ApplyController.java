@@ -98,6 +98,7 @@ public class ApplyController {
             }
         } catch (Exception e) {
             a = 1;
+            logger.error("错误信息："+e);
         }
 
         String code = "";
@@ -187,7 +188,6 @@ public class ApplyController {
             r = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
         }
 
-
         return r;
     }
 
@@ -198,9 +198,14 @@ public class ApplyController {
 
         ApiResult<List<Department>> r = null;
 
-        List<Department> department = departmentService.getDepartment();
+        try {
+            List<Department> department = departmentService.getDepartment();
 
-        r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
+            r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("错误信息："+e);
+        }
 
         return r;
 
@@ -215,12 +220,16 @@ public class ApplyController {
 
         ApiResult<List<Group>> r = null;
         List<Group> group = new ArrayList<>();
-        if (id == null) {
-            group = groupService.getGroupNo();
-        } else {
-            group = groupService.getGroup(id);
+        try {
+            if (id == null) {
+                group = groupService.getGroupNo();
+            } else {
+                group = groupService.getGroup(id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("错误信息："+e);
         }
-
 
         r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, group, null);
 
@@ -273,6 +282,7 @@ public class ApplyController {
             } catch (Exception e) {
                 e.printStackTrace();
                 r = new ApiResult<Map<String, String>>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+                logger.error("上传文件错误信息："+e);
             }
 
         }
@@ -379,6 +389,7 @@ public class ApplyController {
         } catch (Exception e) {
             e.printStackTrace();
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.OPERATION_FAIL,null,null);
+            logger.error("消息推送错误信息："+e.getMessage());
         }
 
 

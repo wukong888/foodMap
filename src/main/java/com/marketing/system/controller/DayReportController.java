@@ -106,7 +106,10 @@ public class DayReportController {
 
         ApiResult<List<Map>> result =null;
         String Date=null;
+
+
         Map<String,Object> Report=DayReportService.selectTaskReport(current,pageSize,Date);
+        System.out.println("Report-----"+Report);
         List<Map> TaskReport=(List<Map>)Report.get("taskReports");
         Integer sum=(Integer)Report.get("taskReportsNum");
 
@@ -191,7 +194,7 @@ public class DayReportController {
         try {
             File file=new File(pathProName);
             OutputStream outputStream1= new FileOutputStream(file);
-            DayReportExport.exportExcel(ProReport,outputStream1);
+            DayReportExport1.exportExcel(ProReport,outputStream1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -203,7 +206,7 @@ public class DayReportController {
         try {
             File file=new File(pathTaskName);
             OutputStream outputStream2= new FileOutputStream(file);
-            DayReportExport.exportExcel(TaskReport,outputStream2);
+            DayReportExport1.exportExcel(TaskReport,outputStream2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -215,7 +218,7 @@ public class DayReportController {
         try {
             File file=new File(pathSubtaskName);
             OutputStream outputStream3= new FileOutputStream(file);
-            DayReportExport.exportExcel(SubtaskReport,outputStream3);
+            DayReportExport1.exportExcel(SubtaskReport,outputStream3);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -88,6 +88,13 @@ public class DateUtil {
         return sdf.format(Date);
     }
 
+    //获取yyyy-MM-dd hh:mm:ss格式的当前时间
+    public static String getYMDHMSDate(){
+        Date Date=new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return sdf.format(Date);
+    }
+
     //获取yyyy格式的当前时间
     public static String getYDate(){
         Date Date=new Date();

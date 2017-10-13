@@ -248,7 +248,8 @@ public class DayReportController {
 
 
        if(type==1){
-           String proFile="static//"+Date+" ProjectReport.xlsx";
+          // String proFile="static//"+Date+" ProjectReport.xlsx";
+           String proFile="http://192.168.3.26:5826//static//"+Date+" ProjectReport.xlsx";
            File file=new File(proFile);
            response.setContentType("application/force-download");// 设置强制下载不打开
            response.addHeader("Content-Disposition",
@@ -276,7 +277,8 @@ public class DayReportController {
                }
 
       }else if(type==3){
-           String subtaskFile="static//"+Date+" SubtaskReport.xlsx";
+          // String subtaskFile="static//"+Date+" SubtaskReport.xlsx";
+          String subtaskFile="E://工作空间projectManage//static//"+Date+" SubtaskReport.xlsx";
            File file=new File(subtaskFile);
            response.setContentType("application/force-download");// 设置强制下载不打开
            response.addHeader("Content-Disposition","attachment;fileName="+Date+" SubtaskReport.xlsx");// 设置文件名

@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +40,12 @@ public class DayReportController {
 
     @Resource
     private DayReportService DayReportService;
+
+    @Resource
+    private HttpServletResponse response;
+
+
+
 
     /**
      * 模糊查询项目日报
@@ -231,32 +239,47 @@ public class DayReportController {
     public ApiResult<List<Map>> exportDayReport(
             @RequestParam(value = "Date") String Date,
             @RequestParam(value = "type") int type,
-            @RequestParam(value= "response") HttpServletResponse response) {
+            org.apache.catalina.servlet4preview.http.HttpServletRequest request, HttpServletResponse response){
         ApiResult<List<Map>> result =null;
-        String date= DateUtil.getYMDDate();
+
+
+
        if(type==1){
-                   String proFile="\\static\\"+Date+"ProjectReport.xlsx";
-                   try {
+           String proFile="static//"+Date+" ProjectReport.xlsx";
+           File file=new File(proFile);
+           response.setContentType("application/force-download");// 设置强制下载不打开
+           response.addHeader("Content-Disposition",
+                   "attachment;fileName="+Date+" ProjectReport.xlsx");// 设置文件名
+
+           try {
                        OutputStream out = response.getOutputStream();
-                       ToolUtil.downloadFile(proFile, out);
+                       ToolUtil.downloadFile(file, out);
                    } catch (Exception e) {
                        e.printStackTrace();
                    }
 
        }else if(type==2){
-               String taskFile = "\\static\\" + Date + "TaskReport.xlsx";
-               try {
+           String taskFile="static//"+Date+" TaskReport.xlsx";
+           File file=new File(taskFile);
+           response.setContentType("application/force-download");// 设置强制下载不打开
+           response.addHeader("Content-Disposition",
+                   "attachment;fileName="+Date+" TaskReport.xlsx");// 设置文件名
+
+           try {
                    OutputStream out = response.getOutputStream();
-                   ToolUtil.downloadFile(taskFile, out);
+                   ToolUtil.downloadFile(file, out);
                } catch (Exception e) {
                    e.printStackTrace();
                }
 
       }else if(type==3){
+           String subtaskFile="static//"+Date+" SubtaskReport.xlsx";
+           File file=new File(subtaskFile);
+           response.setContentType("application/force-download");// 设置强制下载不打开
+           response.addHeader("Content-Disposition","attachment;fileName="+Date+" SubtaskReport.xlsx");// 设置文件名
            try {
-               String subtaskFile="\\static\\"+Date+"SubtaskReport.xlsx";
                OutputStream out = response.getOutputStream();
-               ToolUtil.downloadFile(subtaskFile,out);
+               ToolUtil.downloadFile(file,out);
            } catch (Exception e) {
                e.printStackTrace();
            }

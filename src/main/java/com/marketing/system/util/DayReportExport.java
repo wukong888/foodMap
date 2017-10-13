@@ -25,12 +25,12 @@ public class DayReportExport {
             sheet.addMergedRegion(cellRangeAddress);
             //自适应列宽度：
             sheet.autoSizeColumn(1, true);
-            /*//设置列宽
-            sheet.setColumnWidth(0, 15*256);
-            sheet.setColumnWidth(1, 15*350);
-            sheet.setColumnWidth(2, 15*256);
-            sheet.setColumnWidth(3, 15*256);
-            sheet.setColumnWidth(4, 15*256);*/
+            //设置列宽
+            sheet.setColumnWidth(0, 20*300);
+            sheet.setColumnWidth(1, 20*300);
+            sheet.setColumnWidth(2, 20*300);
+            sheet.setColumnWidth(3, 20*300);
+            sheet.setColumnWidth(4, 20*300);
 
 
 

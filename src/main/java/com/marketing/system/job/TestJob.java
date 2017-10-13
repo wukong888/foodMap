@@ -91,7 +91,7 @@ public class TestJob extends BatchProperties.Job {
         System.out.println("导出"+date+"子任务日报");
         //子任务日报的定时导出
         Map<String,Object> Report3=DayReportService.exportSubtaskExcel(date);
-        List<Map> SubtaskReport=(List<Map>)Report2.get("subtaskReports");
+        List<Map> SubtaskReport=(List<Map>)Report3.get("subtaskReports");
         String pathSubtaskName ="static//"+date+"SubtaskReport.xlsx";
         try {
             File file=new File(pathSubtaskName);

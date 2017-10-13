@@ -11,6 +11,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.rmi.MarshalledObject;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -349,7 +352,7 @@ public class MyProjectController {
             projectTask.setCreateDate(str);//创建时间
             projectTask.setTaskId(TaskId);//项目编号
             projectTask.setTaskprogress("0");//任务进度
-            projectTask.setTaskstate("1");//任务状态  值待定*************************************************
+            projectTask.setTaskstate("1");//任务状态 1:未开始  2:开发中 3:预验收  4:完成
 
             i = myProjectService.insertProTask(projectTask);
 
@@ -393,7 +396,7 @@ public class MyProjectController {
             projectTask.setCreateDate(str);//创建时间
            // projectTask.setIdd(idd);//项目编号
             projectTask.setTaskprogress("0");//任务进度
-            projectTask.setTaskstate("0");//任务状态  值待定*************************************************
+            projectTask.setTaskstate("1");//任务状态 1:未开始  2:开发中 3:预验收  4:完成
 
             i = myProjectService.updateTaskById(projectTask);
 
@@ -917,8 +920,9 @@ public class MyProjectController {
             ProjectTask projectTask = new ProjectTask();
             projectTask.setTaskprogress("100");
             projectTask.setTaskId(Integer.valueOf(taskId));
-            //任务状态 *******************************************值待定
-            projectTask.setTaskstate("预验收");
+            //任务状态
+            //1:未开始  2:开发中 3:预验收  4:完成
+            projectTask.setTaskstate("3");
 
             int i = myProjectService.updateTaskById(projectTask);
 
@@ -951,8 +955,9 @@ public class MyProjectController {
 
             projectSubtask.setSubtaskId(Integer.valueOf(subtaskId));
             projectSubtask.setSubtaskprogress("100");
-            //任务状态 *******************************************值待定
-            projectSubtask.setSubtaskstate("预验收");
+            //任务状态
+            //1:未开始  2:开发中 3:预验收  4:完成，5：逾期
+            projectSubtask.setSubtaskstate("3");
 
             int i = myProjectService.updateProSubTask(projectSubtask);
 
@@ -1103,7 +1108,7 @@ public class MyProjectController {
     @ApiOperation(value = "我的项目任务分配详情页子任务列表-添加（选择参与部门）")
 
     @RequestMapping(value = "/getMembersByLoginUser", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getMembersByLoginUser() {
+    public ApiResult<List<Map<String, Object>>> getMembersByLoginUser(HttpServletRequest request) {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
@@ -1111,9 +1116,16 @@ public class MyProjectController {
 
         //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
         SystemUser user = new SystemUser();
+
+        //String tokenjm = String.valueOf(request.getAttribute("token"));
+        String tokenjm = "w60uMlACoOI=";
+        String password = MyDES.decryptBasedDes(tokenjm);
+
         //String userName = user.getUserName();//当前登录用户
         //测试用***************************************
         String userName = "小";
+        UsernamePasswordToken token = new UsernamePasswordToken("陈冬和", password);
+        SecurityUtils.getSubject().login(token);
         user.setUserName(userName);
         user.setDuty("CEO");
         //String department = user.getDepartment();

@@ -242,7 +242,7 @@ public class ApplyController {
                     String fileName = mfile.getOriginalFilename();
                     logger.info("原文件名：" + fileName);
 
-                    File ff = new File("E:\\uploadTest\\test\\");
+                    File ff = new File("./static");
 
                     //http://192.168.3.26:5026/uploadFile/cashloan/11.png
                     File file = new File(ff + "/" + fileName);

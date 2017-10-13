@@ -127,7 +127,7 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         List<SubtaskDevelopLog> logList = subtaskDevelopLogMapper.getSubTaskDevLogList(secondLevelId);
 
-        return null;
+        return logList;
     }
 
     @Override

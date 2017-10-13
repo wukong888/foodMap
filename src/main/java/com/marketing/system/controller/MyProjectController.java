@@ -465,7 +465,7 @@ public class MyProjectController {
      * @param proId
      * @return
      */
-    @ApiOperation(value = "我的项目开发中详情页（基本信息+项目信息+参与组）")
+    @ApiOperation(value = "我的项目开发中详情页（基本信息+项目信息+日志记录）")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer")
@@ -757,27 +757,27 @@ public class MyProjectController {
      */
     @ApiOperation(value = "添加开发日志")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "type", value = "类型1：开始:2：需求调整:3：会议 4：更新 5：预验收", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "progress", value = "进度", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "explain", value = "备注说明", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "filePath", value = "附件地址", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "userName", value = "操作人", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "addType", value = "添加类型 1：项目开发日志 2：任务开发日志 3：子任务开发日志", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/addProDeveLog", method = RequestMethod.POST)
-    public ApiResult<Integer> addProDeveLog(@RequestParam(value = "id") int id,
-                                            @RequestParam(value = "proId") int proId,
+    public ApiResult<Integer> addProDeveLog(@RequestParam(value = "id",required = false) String id,
+                                            @RequestParam(value = "proId",required = false) String proId,
                                             @RequestParam(value = "type") String type,
                                             @RequestParam(value = "progress", required = false) String progress,
                                             @RequestParam(value = "explain") String explain,
                                             @RequestParam(value = "filePath", required = false) String filePath,
                                             @RequestParam(value = "userName") String userName,
-                                            @RequestParam(value = "taskId") int taskId,
-                                            @RequestParam(value = "subtaskId") int subtaskId,
+                                            @RequestParam(value = "taskId",required = false) String taskId,
+                                            @RequestParam(value = "subtaskId",required = false) String subtaskId,
                                             @RequestParam(value = "addType") int addType) {
 
         ApiResult<Integer> result = null;
@@ -794,7 +794,7 @@ public class MyProjectController {
             proDevelopLog.setDate(str);//操作时间
             proDevelopLog.setEmp(userName);//操作人
             proDevelopLog.setExplain(explain);//备注说明
-            proDevelopLog.setProid(proId);//项目id
+            proDevelopLog.setProid(Integer.valueOf(proId));//项目id
             proDevelopLog.setType(type);//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
             proDevelopLog.setProgress(progress);//进度
             proDevelopLog.setFilepath(filePath);//附件地址
@@ -802,8 +802,8 @@ public class MyProjectController {
             int i = myProjectService.insertProDeveLog(proDevelopLog);
 
             ProjectInfo projectInfo = new ProjectInfo();
-            projectInfo.setId(id);
-            projectInfo.setProid(proId);
+            projectInfo.setId(Integer.valueOf(id));
+            projectInfo.setProid(Integer.valueOf(proId));
             projectInfo.setProprogress(progress);//进度
             projectInfo.setCreatedate(str);
 
@@ -829,14 +829,14 @@ public class MyProjectController {
             taskDevelopLog.setEmp(userName);//操作人
             taskDevelopLog.setExplain(explain);//备注说明
             taskDevelopLog.setFilepath(filePath);//附件地址
-            taskDevelopLog.setTaskid(taskId);//任务id
+            taskDevelopLog.setTaskid(Integer.valueOf(taskId));//任务id
             taskDevelopLog.setProgress(progress);//进度
             taskDevelopLog.setType(type);//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
 
             int i = myProjectService.insertTaskDevlog(taskDevelopLog);
 
             ProjectTask projectTask = new ProjectTask();
-            projectTask.setTaskId(taskId);//任务id
+            projectTask.setTaskId(Integer.valueOf(taskId));//任务id
             projectTask.setTaskprogress(progress);//进度
             projectTask.setCreateDate(str);
 
@@ -862,14 +862,14 @@ public class MyProjectController {
             subtaskDevelopLog.setEmp(userName);
             subtaskDevelopLog.setExplain(explain);
             subtaskDevelopLog.setFilepath(filePath);
-            subtaskDevelopLog.setSubtaskid(subtaskId);
+            subtaskDevelopLog.setSubtaskid(Integer.valueOf(subtaskId));
             subtaskDevelopLog.setProgress(progress);
             subtaskDevelopLog.setType(type);
 
             int i = myProjectService.insertSubTaskDevlog(subtaskDevelopLog);
 
             ProjectSubtask projectSubtask = new ProjectSubtask();
-            projectSubtask.setSubtaskId(subtaskId);
+            projectSubtask.setSubtaskId(Integer.valueOf(subtaskId));
             projectSubtask.setSubtaskprogress(progress);//进度
             projectSubtask.setCreateDate(str);
 

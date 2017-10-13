@@ -1,8 +1,6 @@
 package com.marketing.system.util;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.SecurityManager;
+
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -26,7 +24,7 @@ public class CorsFilter implements Filter {
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+        response.setHeader("Access-Control-Allow-Headers", "X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,SessionToken");
 
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "no-cache");

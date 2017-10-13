@@ -6,6 +6,7 @@ import com.marketing.system.entity.*;
 import com.marketing.system.service.ApplyService;
 import com.marketing.system.service.DepartmentService;
 import com.marketing.system.service.GroupService;
+import com.marketing.system.service.MyProjectService;
 import com.marketing.system.util.ApiResult;
 import com.marketing.system.util.Constant;
 import io.swagger.annotations.*;
@@ -24,12 +25,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.marketing.system.util.WeiXinPushUtil.httpPostWithJSON;
 
 @Api(description = "申请接口", value = "申请接口")
 @Scope("prototype")
@@ -47,6 +49,9 @@ public class ApplyController {
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    private MyProjectService myProjectService;
 
 
     @ApiOperation(value = "项目申请")
@@ -275,5 +280,110 @@ public class ApplyController {
         return r;
     }
 
+    /**
+     * 消息推送-回复
+     * @param id
+     * @param userName
+     * @param content
+     * @param type
+     * @return
+     */
+    @ApiOperation(value = "消息推送-回复")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "id", value = "选择回复人id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "userName", value = "创建人", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "content", value = "回复内容", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "filePath", value = "上传附件路径", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "type", value = "类型1：项目 2：任务 3：子任务", required = true, dataType = "Integer")
+    })
+    @RequestMapping(value = "/messagePush", method = RequestMethod.POST)
+    public ApiResult<String> messagePush(
+            @RequestParam(value = "id", required = true) int id,
+            @RequestParam(value = "proId", required = false) String proId,
+            @RequestParam(value = "taskId", required = false) String taskId,
+            @RequestParam(value = "subtaskId", required = false) String subtaskId,
+            @RequestParam(value = "userName", required = true) String userName,
+            @RequestParam(value = "content", required = true) String content,
+            @RequestParam(value = "filePath", required = false) String filePath,
+            @RequestParam(value = "type", required = true) int type){
+
+        ApiResult<String> result = null;
+
+        String postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
+                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"http://192.168.3.26:5826/index?username=王东&password=5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5\"}";
+        try {
+            //消息推送-回复
+            httpPostWithJSON(postUrl);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            java.util.Date date2 = new java.util.Date();
+            String str2 = sdf.format(date2);
+
+            int i = 0;
+            //项目-插入日志记录
+            if (type == 1) {
+                ProLogRecord proLogRecord = new ProLogRecord();
+
+                //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
+                proLogRecord.setType("10");//类型 回复
+                proLogRecord.setDate(str2);//创建时间
+                proLogRecord.setEmp(userName);//操作人
+                proLogRecord.setExplain(content);//说明
+                proLogRecord.setProid(Integer.valueOf(proId));//项目id
+                proLogRecord.setFilepath(filePath);//文件上传路径
+
+                i = applyService.insertProLogRecord(proLogRecord);
+
+            //任务-插入日志记录
+            } else if (type == 2) {
+                TaskLogRecord taskLogRecord = new TaskLogRecord();
+
+                //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
+                taskLogRecord.setType("10");
+                taskLogRecord.setDate(str2);//创建时间
+                taskLogRecord.setEmp(userName);//操作人
+                taskLogRecord.setExplain(content);//说明
+                taskLogRecord.setTaskid(Integer.valueOf(taskId));
+                taskLogRecord.setFilepath(filePath);//文件上传路径
+
+                //插入任务日志
+                i = myProjectService.insertTaskLogRecode(taskLogRecord);
+
+            //子任务-插入日志记录
+            } else {
+                SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
+
+                //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
+                subtaskLogRecord.setType("10");//类型:修改
+                subtaskLogRecord.setDate(str2);//创建时间
+                subtaskLogRecord.setEmp(userName);//操作人
+                subtaskLogRecord.setExplain(content);//说明
+                subtaskLogRecord.setSubtaskid(Integer.valueOf(subtaskId));//项目id
+                subtaskLogRecord.setFilepath(filePath);//文件上传路径
+
+                //插入日志
+                i = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);
+
+            }
+
+            if (i > 0) {
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,null,null);
+            } else {
+                result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.OPERATION_FAIL,null,null);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.OPERATION_FAIL,null,null);
+        }
+
+
+        return result;
+
+    }
 
 }

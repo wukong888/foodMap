@@ -133,8 +133,11 @@ public class LoginController {
         }*/
         //username = "陈冬和";
         try {
+            Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             SecurityUtils.getSubject().login(token);
+
+
 
             //加密
             String data = MyDES.encryptBasedDes(password);
@@ -144,7 +147,7 @@ public class LoginController {
             SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
 
             map.put("users",user);
-            map.put("token",data);
+            map.put("token",subject.getSession().getId());
             r = new ApiResult<Map<String,Object>>(Constant.SUCCEED_CODE_VALUE, "登录成功！", map, null);
             //存入Session
             httpSession = request.getSession(true);

@@ -18,7 +18,7 @@ public interface MembersMapper {
 
     int updateByPrimaryKey(Members record);
 
-    List<Members> getMembersBysquadId(Integer squadId);
+    List<Members> getMembersBysquadId(String squadId);
 
     List<Map<String,Object>> getMembers(Map<String,Object> map);
 }

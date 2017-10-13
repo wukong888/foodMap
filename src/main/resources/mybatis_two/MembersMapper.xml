@@ -16,11 +16,11 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="getMembersBysquadId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="getMembersBysquadId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from members
-    where squadId = #{squadId,jdbcType=INTEGER}
+    where squadId = #{squadId}
   </select>
 
   <select id="getMembers" resultType="java.util.HashMap">

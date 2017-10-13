@@ -15,7 +15,7 @@ public class MembersServiceImpl implements MembersService {
     private MembersMapper membersMapper;
 
     @Override
-    public List<Members> getMembersById(int squadId) {
+    public List<Members> getMembersById(String squadId) {
 
         List<Members> list = membersMapper.getMembersBysquadId(squadId);
 

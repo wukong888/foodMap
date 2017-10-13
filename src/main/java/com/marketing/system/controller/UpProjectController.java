@@ -280,7 +280,7 @@ public class UpProjectController {
         ApiResult<List<Members>> result = null;
 
         try {
-            List<Members> list = membersService.getMembersById(squadId);
+            List<Members> list = membersService.getMembersById(String.valueOf(squadId));
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,list,null);
         }catch (Exception e){

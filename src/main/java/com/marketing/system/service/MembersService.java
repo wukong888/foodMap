@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MembersService {
 
-    List<Members> getMembersById(int squadId);
+    List<Members> getMembersById(String squadId);
 }

@@ -58,7 +58,7 @@ public class DayReportController {
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer")
 
     })
-    @RequestMapping(value = "proReports", method = RequestMethod.POST)
+    @RequestMapping(value = "selectProReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectProReport(
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {

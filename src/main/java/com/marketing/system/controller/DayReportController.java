@@ -109,7 +109,6 @@ public class DayReportController {
 
 
         Map<String,Object> Report=DayReportService.selectTaskReport(current,pageSize,Date);
-        System.out.println("Report-----"+Report);
         List<Map> TaskReport=(List<Map>)Report.get("taskReports");
         Integer sum=(Integer)Report.get("taskReportsNum");
 

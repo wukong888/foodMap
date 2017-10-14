@@ -60,10 +60,10 @@ public class SysMenuController {
 
         ApiResult<List<Map<String, Object>>> result = null;
 
-        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-        SystemUser user = new SystemUser();
+        SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+        //SystemUser user = new SystemUser();
 
-        user.setDuty("CEO");
+        //user.setDuty("CEO");
         Map<String, Object> map = new HashMap<>();
 
         //职位，当用户申请项目成功后，该用户成为项目发起人

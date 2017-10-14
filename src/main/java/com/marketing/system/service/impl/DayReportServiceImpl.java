@@ -311,7 +311,6 @@ public class DayReportServiceImpl implements DayReportService{
             taskReports.add(taskReport);
         }
         Report.put("taskReports",taskReports);
-        System.out.println("taskReports-----"+taskReports);
 
         return Report;
     }

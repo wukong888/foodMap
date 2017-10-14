@@ -45,7 +45,7 @@ public class TestJob extends BatchProperties.Job {
         return null;
     }*/
 
-    @Scheduled(cron="0 0/30 * * * ?")
+    @Scheduled(cron="0 0/1 * * * ?")
     public ApiResult<List<Map>> exportExcelTime() {
         String date= DateUtil.getYMDDate();
 
@@ -69,7 +69,6 @@ public class TestJob extends BatchProperties.Job {
         System.out.println("导出"+date+"任务日报");
         //任务日报的定时导出
         Map<String,Object> Report2=DayReportService.exportTaskExcel(date);
-        System.out.println("Report2====="+Report2);
         List<Map> TaskReport=(List<Map>)Report2.get("taskReports");
         String pathTaskName ="static//"+date+"TaskReport.xlsx";
         try {

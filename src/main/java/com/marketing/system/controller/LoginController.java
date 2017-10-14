@@ -170,14 +170,14 @@ public class LoginController {
      */
     @ApiOperation(value = "用户注销处理")
     @RequestMapping(value = "/boot/logout", method = RequestMethod.GET)
-    public ApiResult<String> logout(HttpServletRequest reques, HttpSession httpSession) {
+    public ApiResult<String> logout(HttpServletRequest request, HttpSession httpSession) {
         ApiResult<String> r = null;
         Session session = SecurityUtils.getSubject().getSession();
         try {
             //退出
             SecurityUtils.getSubject().logout();
             r = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "退出成功！", null, null);
-            httpSession = reques.getSession(true);
+            httpSession = request.getSession(true);
             httpSession.setAttribute("lyout", "true");
         } catch (Exception e) {
             logger.error("退出："+e.getMessage());

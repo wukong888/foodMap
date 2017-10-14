@@ -58,7 +58,7 @@ public class DayReportController {
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer")
 
     })
-    @RequestMapping(value = "proReports", method = RequestMethod.POST)
+    @RequestMapping(value = "selectProReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectProReport(
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
@@ -109,7 +109,6 @@ public class DayReportController {
 
 
         Map<String,Object> Report=DayReportService.selectTaskReport(current,pageSize,Date);
-        System.out.println("Report-----"+Report);
         List<Map> TaskReport=(List<Map>)Report.get("taskReports");
         Integer sum=(Integer)Report.get("taskReportsNum");
 
@@ -239,16 +238,16 @@ public class DayReportController {
 
     })
     @RequestMapping(value = "/exportDayReport", method = RequestMethod.POST)
-    public ApiResult<List<Map>> exportDayReport(
+    public ApiResult<String> exportDayReport(
             @RequestParam(value = "Date") String Date,
             @RequestParam(value = "type") int type,
             org.apache.catalina.servlet4preview.http.HttpServletRequest request, HttpServletResponse response){
-        ApiResult<List<Map>> result =null;
+        ApiResult<String> result =null;
 
 
 
        if(type==1){
-          // String proFile="static//"+Date+" ProjectReport.xlsx";
+       /*   // String proFile="static//"+Date+" ProjectReport.xlsx";
            String proFile="http://192.168.3.26:5826//static//"+Date+" ProjectReport.xlsx";
            File file=new File(proFile);
            response.setContentType("application/force-download");// 设置强制下载不打开
@@ -260,10 +259,11 @@ public class DayReportController {
                        ToolUtil.downloadFile(file, out);
                    } catch (Exception e) {
                        e.printStackTrace();
-                   }
+                   }*/
+       return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" ProjectReport.xlsx",null);
 
        }else if(type==2){
-           String taskFile="static//"+Date+" TaskReport.xlsx";
+          /* String taskFile="static//"+Date+" TaskReport.xlsx";
            File file=new File(taskFile);
            response.setContentType("application/force-download");// 设置强制下载不打开
            response.addHeader("Content-Disposition",
@@ -275,9 +275,10 @@ public class DayReportController {
                } catch (Exception e) {
                    e.printStackTrace();
                }
-
+*/
+           return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" TaskReport.xlsx",null);
       }else if(type==3){
-          // String subtaskFile="static//"+Date+" SubtaskReport.xlsx";
+         /* // String subtaskFile="static//"+Date+" SubtaskReport.xlsx";
           String subtaskFile="E://工作空间projectManage//static//"+Date+" SubtaskReport.xlsx";
            File file=new File(subtaskFile);
            response.setContentType("application/force-download");// 设置强制下载不打开
@@ -287,7 +288,8 @@ public class DayReportController {
                ToolUtil.downloadFile(file,out);
            } catch (Exception e) {
                e.printStackTrace();
-           }
+           }*/
+           return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" SubtaskReport.xlsx",null);
 
        }
         return null;

@@ -1,5 +1,6 @@
 package com.marketing.system.util;
 
+import com.marketing.system.entity.ProjectInfo;
 import org.apache.http.HttpResponse;
 
 import java.io.File;
@@ -33,6 +34,30 @@ public class ToolUtil {
     public static List<Map> listSplit(int page, int limit, List<Map> list){
 
         List<Map> result = new ArrayList<Map>();
+        if(list != null && list.size() > 0){
+            int allCount = list.size();
+            int pageCount = (allCount + limit-1) / limit;
+            if(page >= pageCount){
+                page = pageCount;
+            }
+            int start = (page-1) * limit;
+            int end = page * limit;
+            if(end >= allCount){
+                end = allCount;
+            }
+            for(int i = start; i < end; i ++){
+                result.add(list.get(i));
+            }
+        }
+
+        return (result != null && result.size() > 0) ? result : new ArrayList<>();
+
+    }
+
+    //集合分页
+    public static List<ProjectInfo> listSplit2(int page, int limit, List<ProjectInfo> list){
+
+        List<ProjectInfo> result = new ArrayList<ProjectInfo>();
         if(list != null && list.size() > 0){
             int allCount = list.size();
             int pageCount = (allCount + limit-1) / limit;

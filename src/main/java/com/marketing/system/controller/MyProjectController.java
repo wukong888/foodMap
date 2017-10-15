@@ -89,7 +89,7 @@ public class MyProjectController {
 
         try {
             map.put("current", current);
-            map.put("pageSize", pageSize);
+            map.put("pageSize", 1000);
             map.put("createrSquadId", createrSquadId);//项目发起部门
             map.put("creater", creater);//创建人
             map.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
@@ -206,9 +206,13 @@ public class MyProjectController {
 
             if (user.getDuty() == "CEO") {
                 sum = projectInfos.size();
+                projectInfos = ToolUtil.listSplit2(current,pageSize,projectInfos);
             } else {
                 sum = projectInfosNew.size();
+                projectInfosNew = ToolUtil.listSplit2(current,pageSize,projectInfosNew);
             }
+
+
 
             //分页信息
             rdPage.setTotal(sum);

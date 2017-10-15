@@ -133,6 +133,7 @@ public class ApplyController {
         projectInfo.setProdeclare(proDeclare);//项目概况
         projectInfo.setCreater(creatName);//创建人
         projectInfo.setProprogress("0");//项目进度
+        projectInfo.setProstate("1");//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废,7:逾期)
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

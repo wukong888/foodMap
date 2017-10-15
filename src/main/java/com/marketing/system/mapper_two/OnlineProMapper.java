@@ -81,16 +81,16 @@ public interface OnlineProMapper {
                              @Param("explain")String explain,@Param("filepath")String filepath);
 
     //项目上线审批通过，更改项目状态
-    @Update("UPDATE project_info SET proState=4 WHERE proId=#{proId}")
-    boolean updateProPassState(@Param("proId")Integer proId);
+    @Update("UPDATE project_info SET proState=4,onlineDate=#{onlineDate} WHERE proId=#{proId}")
+    boolean updateProPassState(@Param("proId")Integer proId,@Param("onlineDate")String onlineDate);
 
     //项目驳回功能，项目日志记录增加一条日志记录
     @Insert("INSERT INTO pro_LogRecord (proId,type,Date,squadId,Emp,explain,filePath) values (#{proid},#{type},#{date},#{squadid},#{emp},#{explain},#{filepath})")
     boolean insertProReturnLog(@Param("proid")Integer proid,@Param("type")String type,@Param("date")String date,@Param("squadid")String squadid,@Param("emp")String emp,
                              @Param("explain")String explain,@Param("filepath")String filepath);
 
-    //项目上线审批通过，更改项目状态
-    @Update("UPDATE project_info SET proState=5 WHERE proId=#{proId}")
+    //项目上线审批驳回，更改项目状态
+    @Update("UPDATE project_info SET proState=2 WHERE proId=#{proId}")
     boolean updateProReturnState(@Param("proId")Integer proId);
 
     //根据小组id查找部门id

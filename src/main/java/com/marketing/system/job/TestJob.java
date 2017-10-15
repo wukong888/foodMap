@@ -45,7 +45,7 @@ public class TestJob extends BatchProperties.Job {
         return null;
     }*/
 
-    @Scheduled(cron="0 0/30 * * * ?")
+    @Scheduled(cron="0 0/1 * * * ?")
     public ApiResult<List<Map>> exportExcelTime() {
         String date= DateUtil.getYMDDate();
 

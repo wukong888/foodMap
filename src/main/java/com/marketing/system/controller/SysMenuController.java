@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,16 +102,21 @@ public class SysMenuController {
 
         if (role != null) {
             Map<String, Object> mapMenu = new HashMap<>();
+            Map<String, Object> mapMenu2 = new HashMap<>();
             Map<String, Object> mapCreater = new HashMap<>();
+
+            List<Map<String, Object>> listNew = new ArrayList<Map<String, Object>>();
+
             mapMenu.put("roleId", role.getId());
             mapMenu.put("SystemId", SystemId);
 
             List<Map<String, Object>> menus = sysMenuService.fetchRoleMenus(role.getId(), SystemId);
 
             mapCreater.put("duty",name);
-            menus.add(mapCreater);
+            mapCreater.put("menus",menus);
+            listNew.add(mapCreater);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, "查询成功！", menus, null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, "查询成功！", listNew, null);
         } else {
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE, "数据出错,未找到对应角色！", null, null);
         }

@@ -124,6 +124,36 @@ public class MyProjectController {
             //所有项目list
             List<ProjectInfo> projectInfos = myProjectService.getMyProjectInfoList(map);
 
+            ProjectInfo projectInfoNew = new ProjectInfo();
+
+            for (ProjectInfo projectInfo: projectInfos) {
+
+                //判断是否逾期，是则更新状态为逾期
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date edate = sdf.parse(projectInfo.getPlanedate());//预计完成时间
+
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(edate);
+                //当前时间
+                Date smdate = new Date();
+
+                smdate = sdf.parse(sdf.format(smdate));
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(smdate);
+                long time1 = cal.getTimeInMillis();
+                cal.setTime(calendar.getTime());
+                long time2 = cal.getTimeInMillis();
+                long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
+
+                //则更新状态为逾期
+                if (betweenDays < 0) {
+                    projectInfoNew.setProstate("7");//逾期
+                    projectInfoNew.setId(projectInfo.getId());
+                    int i = myProjectService.updateProjectInfo(projectInfoNew);
+                }
+            }
+
+
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
             //项目相关人员集合
 

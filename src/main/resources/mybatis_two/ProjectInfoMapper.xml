@@ -202,8 +202,11 @@
     <if test="proState != null and proState != '' ">
       AND proState = #{proState}
     </if>
-
-
+    ORDER BY
+    case proState
+    when 7 then 1
+    end
+    DESC,createDate DESC
   </select>
 
   <!-- 查询立项待审批列表总数 测试 -->

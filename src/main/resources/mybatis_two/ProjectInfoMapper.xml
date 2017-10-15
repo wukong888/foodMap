@@ -450,4 +450,11 @@
     proProgress = #{proprogress,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <update id="updateByPrimaryKeySelectiveState" parameterType="com.marketing.system.entity.ProjectInfo" >
+    update project_info
+    set
+    proState = #{prostate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

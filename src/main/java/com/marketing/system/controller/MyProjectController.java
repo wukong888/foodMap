@@ -130,7 +130,7 @@ public class MyProjectController {
 
                 //判断是否逾期，是则更新状态为逾期
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date edate = sdf.parse(projectInfo.getPlanedate());//预计完成时间
+                Date edate = sdf.parse(projectInfo.getPlansdate());//预计完成时间
 
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(edate);
@@ -145,14 +145,19 @@ public class MyProjectController {
                 long time2 = cal.getTimeInMillis();
                 long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
 
-                //则更新状态为逾期
-                if (betweenDays < 0) {
-                    projectInfoNew.setProstate("7");//逾期
-                    projectInfoNew.setId(projectInfo.getId());
-                    int i = myProjectService.updateProjectInfo(projectInfoNew);
-                }
-            }
+                //如果是完成状态则不更新
+                if (projectInfo.getProstate().equals("4")) {
 
+                } else {
+                    //则更新状态为逾期
+                    if (betweenDays < 0) {
+                        projectInfoNew.setProstate("7");//逾期
+                        projectInfoNew.setId(projectInfo.getId());
+                        int i = myProjectService.updateProjectInfo(projectInfoNew);
+                    }
+                }
+
+            }
 
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
             //项目相关人员集合
@@ -325,12 +330,18 @@ public class MyProjectController {
                 long time2 = cal.getTimeInMillis();
                 long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
 
-                //则更新状态为逾期
-                if (betweenDays < 0) {
-                    projectTaskNew.setTaskstate("5");//逾期
-                    projectTaskNew.setTaskId(Integer.valueOf(String.valueOf(projectTask.get("taskId"))));
-                    int i = myProjectService.updateTaskById(projectTaskNew);
+                //完成
+                if (String.valueOf(projectTask.get("taskState")).equals("4")) {
+
+                } else {
+                    //则更新状态为逾期
+                    if (betweenDays < 0) {
+                        projectTaskNew.setTaskstate("5");//逾期
+                        projectTaskNew.setTaskId(Integer.valueOf(String.valueOf(projectTask.get("taskId"))));
+                        int i = myProjectService.updateTaskById(projectTaskNew);
+                    }
                 }
+
             }
             projectInfo.setWorkTatalDay(String.valueOf(sum));//项目预计工期（任务工期之和）
 
@@ -602,11 +613,16 @@ public class MyProjectController {
                 long time2 = cal.getTimeInMillis();
                 long between = (time2 - time1) / (1000 * 3600*24);
 
-                if (between < 0) {
-                    projectSubtask1.setSubtaskstate("5");
-                    projectSubtask1.setSubtaskId(projectSubtask.getSubtaskId());
-                    int i = myProjectService.updateProSubTask(projectSubtask1);
+                if (projectSubtask.getSubtaskstate().equals("4")) {
+
+                } else{
+                    if (between < 0) {
+                        projectSubtask1.setSubtaskstate("5");
+                        projectSubtask1.setSubtaskId(projectSubtask.getSubtaskId());
+                        int i = myProjectService.updateProSubTask(projectSubtask1);
+                    }
                 }
+
             }
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);

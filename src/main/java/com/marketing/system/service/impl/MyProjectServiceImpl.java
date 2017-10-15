@@ -243,6 +243,6 @@ public class MyProjectServiceImpl implements MyProjectService {
     @Override
     public int updateProjectInfo(ProjectInfo projectInfo) {
 
-        return projectInfoMapper.updateByPrimaryKeySelective(projectInfo);
+        return projectInfoMapper.updateByPrimaryKeySelectiveState(projectInfo);
     }
 }

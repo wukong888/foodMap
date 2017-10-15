@@ -419,7 +419,7 @@
   <update id="setPassOrReject" parameterType="com.marketing.system.entity.ProjectInfo" >
     update project_info
     set
-    proState = #{proState}
+    proState = #{proState},finishDate = #{finishDate}
     where id = #{id}
   </update>
 

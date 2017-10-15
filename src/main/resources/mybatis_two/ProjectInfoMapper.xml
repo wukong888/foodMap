@@ -420,7 +420,7 @@
     update project_info
     set
     proState = #{proState}
-    where id = #{id} AND proState = '1'
+    where id = #{id}
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectInfo" >

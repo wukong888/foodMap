@@ -97,19 +97,16 @@ public class IndexController {
                 creater = user.getUserName();
             }
             //逾期提示 1：项目
-            List<ProjectInfo> infoList = new ArrayList<>();
 
-            infoList = indexService.getProjectInfoList(creater);
+            List<ProjectInfo> infoList = indexService.getProjectInfoList(creater);
 
             //逾期提示 2：任务
-            List<Map<String, Object>> taskList = new ArrayList<>();
 
-            taskList = indexService.getProjectTaskList(creater);
+            List<Map<String, Object>> taskList = indexService.getProjectTaskList(creater);
 
             //逾期提示 3：子任务
-            List<ProjectSubtask> subtaskList = new ArrayList<>();
 
-            subtaskList = indexService.getProjectSubTaskList(creater);
+            List<ProjectSubtask> subtaskList = indexService.getProjectSubTaskList(creater);
 
             map.put("infoList", infoList);//项目
             map.put("taskList", taskList);//任务

@@ -128,21 +128,20 @@ public class MyProjectController {
 
             ProjectInfo projectInfoNewss = new ProjectInfo();
             //4：完成，5：驳回，6：作废不在我的项目里显示
-            for (int m =0; m < projectInfos.size(); m++) {
-                projectInfoNewss =projectInfos.get(m);
+            for (int m = 0; m < projectInfos.size(); m++) {
+                projectInfoNewss = projectInfos.get(m);
                 if (projectInfoNewss.getProstate().equals("1") || projectInfoNewss.getProstate().equals("2") || projectInfoNewss.getProstate().equals("3") || projectInfoNewss.getProstate().equals("7")) {
 
                 } else {
                     projectInfos.remove(projectInfoNewss);
                     //projectInfos.remove(m);
-                    m--;
                 }
             }
 
 
             ProjectInfo projectInfoNew = new ProjectInfo();
 
-            for (ProjectInfo projectInfo: projectInfos) {
+            for (ProjectInfo projectInfo : projectInfos) {
 
                 //判断是否逾期，是则更新状态为逾期
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -185,7 +184,7 @@ public class MyProjectController {
             String userName = user.getUserName();//当前登录用户
 
             String department = user.getDepartment();
-            department = department.substring(0,2);
+            department = department.substring(0, 2);
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
             Department did = myProjectService.getDepartmentIdByMent(department);
             String departmentid = did.getDepartmentid();
@@ -259,14 +258,13 @@ public class MyProjectController {
 
             int sum = 0;
 
-            if (user.getDuty() == "CEO") {
+            if (user.getDuty().equals("CEO")) {
                 sum = projectInfos.size();
-                projectInfos = ToolUtil.listSplit2(current,pageSize,projectInfos);
+                projectInfos = ToolUtil.listSplit2(current, pageSize, projectInfos);
             } else {
                 sum = projectInfosNew.size();
-                projectInfosNew = ToolUtil.listSplit2(current,pageSize,projectInfosNew);
+                projectInfosNew = ToolUtil.listSplit2(current, pageSize, projectInfosNew);
             }
-
 
 
             //分页信息
@@ -275,7 +273,7 @@ public class MyProjectController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            if (user.getDuty() == "CEO") {
+            if (user.getDuty().equals("CEO")) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, projectInfos, rdPage);
             } else {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, projectInfosNew, rdPage);
@@ -613,7 +611,7 @@ public class MyProjectController {
         try {
             List<ProjectSubtask> list = myProjectService.getProjectSubtaskList(taskId);
             ProjectSubtask projectSubtask1 = new ProjectSubtask();
-            for (ProjectSubtask projectSubtask:list) {
+            for (ProjectSubtask projectSubtask : list) {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date edate = sdf.parse(projectSubtask.getEdate());//预计完成时间
@@ -629,11 +627,11 @@ public class MyProjectController {
                 long time1 = cal.getTimeInMillis();
                 cal.setTime(calendar.getTime());
                 long time2 = cal.getTimeInMillis();
-                long between = (time2 - time1) / (1000 * 3600*24);
+                long between = (time2 - time1) / (1000 * 3600 * 24);
 
                 if (projectSubtask.getSubtaskstate().equals("4")) {
 
-                } else{
+                } else {
                     if (between < 0) {
                         projectSubtask1.setSubtaskstate("5");
                         projectSubtask1.setSubtaskId(projectSubtask.getSubtaskId());
@@ -1021,10 +1019,9 @@ public class MyProjectController {
                 projectSubtask.setCreateDate(str);
                 if (Integer.valueOf(type) == 5) {
                     projectSubtask.setSubtaskstate("4");
-                } else{
+                } else {
                     projectSubtask.setSubtaskstate("2");//开发中
                 }
-
 
 
                 //
@@ -1291,7 +1288,7 @@ public class MyProjectController {
             //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
             SystemUser user = systemUserService.selectByPrimaryKey(id);
             String department = user.getDepartment();
-            department = department.substring(0,2);
+            department = department.substring(0, 2);
 
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
             Department did = myProjectService.getDepartmentIdByMent(department);

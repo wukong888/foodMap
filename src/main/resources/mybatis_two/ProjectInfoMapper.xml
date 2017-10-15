@@ -55,7 +55,7 @@
 
   <sql id="searchByTask">
     <trim prefix="where" prefixOverrides="and|or">
-        task.handler = #{creater}
+      info.creater = #{creater}
     </trim>
   </sql>
 
@@ -88,13 +88,13 @@
 
   <select id="getProjectInfoList" resultMap="BaseResultMap"  parameterType="java.lang.String" >
     select
-    id,proName,planSDate,creater,proProgress
+    id,proId,proName,planSDate,creater,proProgress
     from project_info
     <include refid="searchBy"/>
   </select>
   <select id="getProjectInfoListNull" resultMap="BaseResultMap"  parameterType="java.lang.String" >
     select
-    id,proName,planSDate,creater,proProgress
+    id,proId,proName,planSDate,creater,proProgress
     from project_info
 
   </select>

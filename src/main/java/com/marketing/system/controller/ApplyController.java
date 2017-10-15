@@ -62,6 +62,7 @@ public class ApplyController {
             @ApiImplicitParam(paramType = "query", name = "planEDate", value = "下线时间", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "proDeclare", value = "项目概况", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "creatName", value = "用户名", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "filePath", value = "附件地址", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "myDomain", value = "参与部门", required = true, dataType = "String")
     })
     @RequestMapping(value = "/applyProject", method = RequestMethod.POST)
@@ -72,9 +73,10 @@ public class ApplyController {
                                            @RequestParam(value = "planEDate", required = true) String planEDate,
                                            @RequestParam(value = "proDeclare", required = true) String proDeclare,
                                            @RequestParam(value = "creatName", required = true) String creatName,
+                                           @RequestParam(value = "filePath", required = false) String filePath,
                                            //@RequestParam(value = "myDomain", required = false) List<ProjectTask> myDomain
                                            @RequestParam(value = "myDomain",required = true)  String myDomain,
-                                           HttpServletRequest request
+                                           HttpServletRequest request,HttpSession session2
                                            ) throws IOException {
 
         ApiResult<Integer> r = null;
@@ -130,6 +132,7 @@ public class ApplyController {
         projectInfo.setPlanedate(planEDate);//预计下线时间
         projectInfo.setProdeclare(proDeclare);//项目概况
         projectInfo.setCreater(creatName);//创建人
+        projectInfo.setProprogress("0");//项目进度
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -137,10 +140,6 @@ public class ApplyController {
         String str = sdf.format(date);
 
         projectInfo.setCreatedate(str);//创建时间
-
-        Session session = SecurityUtils.getSubject().getSession();
-
-        String filePath = String.valueOf(session.getAttribute("uploadPath"));
 
         projectInfo.setProfilepath(filePath);
 
@@ -176,7 +175,7 @@ public class ApplyController {
         proLogRecord.setEmp(creatName);//操作人
         proLogRecord.setExplain("创建项目");//说明
         proLogRecord.setProid(Integer.valueOf(code));//项目id
-
+        proLogRecord.setFilepath(filePath);
         //插入日志
         int ilog = applyService.insertProLogRecord(proLogRecord);
 

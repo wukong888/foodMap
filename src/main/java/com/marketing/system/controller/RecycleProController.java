@@ -4,13 +4,16 @@ import com.marketing.system.entity.*;
 import com.marketing.system.service.MyProjectService;
 import com.marketing.system.service.OnlineProService;
 import com.marketing.system.service.RecycleProService;
+import com.marketing.system.service.SystemUserService;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +41,9 @@ public class RecycleProController {
     @Resource
     private MyProjectService myProjectService;
 
+    @Autowired
+    private SystemUserService systemUserService;
+
 
 
     /**
@@ -51,6 +57,7 @@ public class RecycleProController {
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "creatersquadid", value = "项目发起部门", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "creater", value = "项目发起人", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "createdate1", value = "项目发起时间-开始", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "createdate2", value = "项目发起时间-结束", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "plansdate1", value = "项目预计完成时间-开始", required = false, dataType = "String"),
@@ -65,6 +72,7 @@ public class RecycleProController {
             @RequestParam(value = "pageSize") int pageSize,
             @RequestParam(value="creatersquadid", required = false) String creatersquadid,
             @RequestParam(value="creater", required = false) String creater,
+            @RequestParam(value = "id", required = true) int id,
             @RequestParam(value="createdate1", required = false) String createdate1,
             @RequestParam(value="createdate2", required = false) String createdate2,
             @RequestParam(value="plansdate1", required = false) String plansdate1,
@@ -117,16 +125,12 @@ public class RecycleProController {
         //项目相关人员集合
         List<ProjectInfo> RecPro = new ArrayList<>();
 
-        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-        SystemUser user = new SystemUser();
-        //String userName = user.getUserName();//当前登录用户
-        //测试用***************************************
-        String userName = "陈东和";
-        user.setUserName(userName);
-        user.setDuty("CEO");
-        //String department = user.getDepartment();
-        //department = department.substring(0,2);
-        String department = "总经";
+        SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            String userName = user.getUserName();//当前登录用户
+            String department = user.getDepartment();
+            department = department.substring(0, 2);
 
         //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
         Department did = myProjectService.getDepartmentIdByMent(department);

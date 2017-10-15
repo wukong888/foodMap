@@ -46,6 +46,17 @@
     departmentId = #{departmentid}
   </select>
 
+  <select id="getSquadList" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    id,departmentId,squadId,squad
+    FROM
+    projectManage.dbo.[group]
+    WHERE
+    <foreach item="item" index="index" collection="mentIds"
+             open=" squadId IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from group

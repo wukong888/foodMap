@@ -35,6 +35,27 @@
     </foreach>
   </select>
 
+  <select id="getSquadIdList" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    id,squadId,member
+    FROM
+    members
+    WHERE
+    <foreach item="item" index="index" collection="mentIds"
+             open=" member IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="selectSquadIdByMember" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    id,squadId,member
+    FROM
+    members
+    WHERE
+    member = #{member}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from members
     where id = #{id,jdbcType=INTEGER}

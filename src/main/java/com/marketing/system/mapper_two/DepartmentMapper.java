@@ -4,6 +4,7 @@ import com.marketing.system.entity.Department;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DepartmentMapper {
     int deleteByPrimaryKey(Integer id);
@@ -21,4 +22,6 @@ public interface DepartmentMapper {
     List<Department> getDepartment();
 
     Department getDepartmentIdByMent(@Param("department")String department);
+
+    List<Map<String,Object>> getDepartmentList(Map<String,Object> map);
 }

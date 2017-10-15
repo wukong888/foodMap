@@ -3,6 +3,8 @@ package com.marketing.system.controller;
 import com.marketing.system.accessCode.Captcha;
 import com.marketing.system.accessCode.GifCaptcha;
 import com.marketing.system.entity.SystemUser;
+import com.marketing.system.entity.TokenRecord;
+import com.marketing.system.mapper_two.TokenRecordMapper;
 import com.marketing.system.service.UserInfoService;
 import com.marketing.system.util.ApiResult;
 import com.marketing.system.util.Constant;
@@ -18,6 +20,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,11 +43,15 @@ public class LoginController {
 
     private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    @Resource
+    @Autowired
     UserInfoService userInfoService;
 
+    @Autowired
+    TokenRecordMapper tokenRecordMapper;
+
+
     //权限测试用
-    @RequestMapping(value="add", method = RequestMethod.POST)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     public String add() {
         return "add";
     }
@@ -69,7 +77,7 @@ public class LoginController {
 
     @ApiOperation(value = "用户打开登录页面")
     @RequestMapping(value = "loginOld", method = RequestMethod.POST)
-    public ApiResult<String> login(HttpServletRequest request,HttpSession httpSession) {
+    public ApiResult<String> login(HttpServletRequest request, HttpSession httpSession) {
         Session session = SecurityUtils.getSubject().getSession();
         ApiResult<String> result = null;
         if (session.getAttribute("lyout") == "" || session.getAttribute("lyout") == null) {
@@ -108,14 +116,14 @@ public class LoginController {
             @ApiImplicitParam(paramType = "query", name = "password", value = "密码", required = true, dataType = "String"),
             /*@ApiImplicitParam(paramType = "query", name = "accessCode", value = "验证码", required = true, dataType = "String")*/
     })
-    @RequestMapping(value = "index",method = RequestMethod.GET)
-    public ApiResult<Map<String,Object>> loginDeal(@RequestParam(value = "username", required = true) String username,
-                                    @RequestParam(value = "password", required = true) String password,
+    @RequestMapping(value = "index", method = RequestMethod.GET)
+    public ApiResult<Map<String, Object>> loginDeal(@RequestParam(value = "username", required = true) String username,
+                                                    @RequestParam(value = "password", required = true) String password,
                                            /*@RequestParam(value = "accessCode", required = false) String accessCode,*/
-                                           HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
+                                                    HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
 
-        ApiResult<Map<String,Object>> r = null;
-        Map<String,Object> map = new HashMap<>();
+        ApiResult<Map<String, Object>> r = null;
+        Map<String, Object> map = new HashMap<>();
        /* if (accessCode == null || accessCode == "") {
             r = new ApiResult<SystemUser>(Constant.FAIL_CODE_PARAM_INSUFFICIENT, "验证码不能为空！", null, null);
             return r;
@@ -135,9 +143,7 @@ public class LoginController {
         try {
             Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-            SecurityUtils.getSubject().login(token);
-
-
+            subject.login(token);
 
             //加密
             String data = MyDES.encryptBasedDes(password);
@@ -146,16 +152,29 @@ public class LoginController {
 
             SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
 
-            map.put("users",user);
-            map.put("token",subject.getSession().getId());
-            r = new ApiResult<Map<String,Object>>(Constant.SUCCEED_CODE_VALUE, "登录成功！", map, null);
+            map.put("users", user);
+            map.put("token", subject.getSession().getId());
+            r = new ApiResult<Map<String, Object>>(Constant.SUCCEED_CODE_VALUE, "登录成功！", map, null);
             //存入Session
             httpSession = request.getSession(true);
             httpSession.setAttribute("SysUser", token);
+
+            TokenRecord tokenRecord = new TokenRecord();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
+
+            tokenRecord.setCreateTime(str);
+            tokenRecord.setToken(String.valueOf(subject.getSession().getId()));
+
+            int i = tokenRecordMapper.insert(tokenRecord);
+
+            httpSession.setAttribute("token", subject.getSession().getId());
             httpSession.setAttribute("lyout", "false");
         } catch (Exception e) {
-            logger.error("登录错误信息："+e.getMessage());
-            r = new ApiResult<Map<String,Object>>(Constant.OTHER_CODE_VALUE, e.getMessage(), null, null);
+            logger.error("登录错误信息：" + e.getMessage());
+            r = new ApiResult<Map<String, Object>>(Constant.OTHER_CODE_VALUE, e.getMessage(), null, null);
             return r;
 
         }
@@ -180,7 +199,7 @@ public class LoginController {
             httpSession = request.getSession(true);
             httpSession.setAttribute("lyout", "true");
         } catch (Exception e) {
-            logger.error("退出："+e.getMessage());
+            logger.error("退出：" + e.getMessage());
         }
         return r;
     }
@@ -214,26 +233,29 @@ public class LoginController {
 
     /**
      * 用户添加;
+     *
      * @return
      */
     @RequestMapping(value = "/userAdd", method = RequestMethod.POST)
-    public ApiResult<String> userInfoAdd(){
-        ApiResult<String> r = new ApiResult<>(200,"用户添加！",null,null);;
+    public ApiResult<String> userInfoAdd() {
+        ApiResult<String> r = new ApiResult<>(200, "用户添加！", null, null);
+        ;
         return r;
     }
 
     /**
      * 用户添加;
+     *
      * @return
      */
     @RequestMapping(value = "/403", method = RequestMethod.POST)
-    public ApiResult<String> noPeimission(){
-        ApiResult<String> r = new ApiResult<>(403,"当前用户没有权限访问！",null,null);
+    public ApiResult<String> noPeimission() {
+        ApiResult<String> r = new ApiResult<>(403, "当前用户没有权限访问！", null, null);
         return r;
     }
 
     @RequestMapping(value = "/403403", method = RequestMethod.POST)
-    public String noPeimission22(){
+    public String noPeimission22() {
         ApiResult<String> r = null;
         return "没权限2222";
     }

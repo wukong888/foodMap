@@ -1,16 +1,13 @@
 package com.marketing.system.service.impl;
 
-import com.marketing.system.entity.ProLogRecord;
-import com.marketing.system.entity.ProjectInfo;
-import com.marketing.system.entity.ProjectTask;
-import com.marketing.system.mapper_two.ProLogRecordMapper;
-import com.marketing.system.mapper_two.ProjectInfoMapper;
-import com.marketing.system.mapper_two.ProjectTaskMapper;
+import com.marketing.system.entity.*;
+import com.marketing.system.mapper_two.*;
 import com.marketing.system.service.ApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ApplyServiceImpl implements ApplyService{
@@ -24,6 +21,17 @@ public class ApplyServiceImpl implements ApplyService{
     @Autowired
     private ProLogRecordMapper proLogRecordMapper;
 
+    @Autowired
+    private ProjectSubtaskMapper projectSubtaskMapper;
+
+    @Autowired
+    private MembersMapper membersMapper;
+
+    @Autowired
+    private GroupMapper groupMapper;
+
+    @Autowired
+    private DepartmentMapper departmentMapper;
 
     @Override
     public int insertApplyProject(ProjectInfo projectInfo) {
@@ -55,5 +63,43 @@ public class ApplyServiceImpl implements ApplyService{
         List<String> list = projectInfoMapper.getCreaterByName(creater);
 
         return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> selectProSubtaskByProId(int proId) {
+
+        List<Map<String, Object>> list = projectSubtaskMapper.selectProSubtaskByProId(proId);
+
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getSquadIdList(Map<String, Object> map) {
+
+        List<Map<String, Object>> list = membersMapper.getSquadIdList(map);
+
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getSquadList(Map<String, Object> map) {
+
+        List<Map<String, Object>> list = groupMapper.getSquadList(map);
+
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getDepartmentList(Map<String, Object> map) {
+
+        List<Map<String, Object>> list = departmentMapper.getDepartmentList(map);
+
+        return list;
+    }
+
+    @Override
+    public Members selectSquadIdByMember(String member) {
+
+        return membersMapper.selectSquadIdByMember(member);
     }
 }

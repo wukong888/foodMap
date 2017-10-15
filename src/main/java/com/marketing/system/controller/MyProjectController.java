@@ -2,10 +2,7 @@ package com.marketing.system.controller;
 
 
 import com.marketing.system.entity.*;
-import com.marketing.system.service.ApplyService;
-import com.marketing.system.service.GroupService;
-import com.marketing.system.service.MyProjectService;
-import com.marketing.system.service.UpProjectService;
+import com.marketing.system.service.*;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -48,6 +45,8 @@ public class MyProjectController {
     @Autowired
     private ApplyService applyService;
 
+    @Autowired
+    private SystemUserService systemUserService;
 
     /**
      * 查询我的项目列表
@@ -61,6 +60,7 @@ public class MyProjectController {
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "createrSquadId", value = "项目发起部门", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "creater", value = "创建人", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "proState", value = "项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废)", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "createDateStart", value = "项目发起开始时间", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "createDateEnd", value = "项目发起结束时间", required = false, dataType = "String"),
@@ -74,6 +74,7 @@ public class MyProjectController {
             @RequestParam(value = "current") int current,
             @RequestParam(value = "createrSquadId", required = false) String createrSquadId,
             @RequestParam(value = "creater", required = false) String creater,
+            @RequestParam(value = "id", required = true) int id,
             @RequestParam(value = "proState", required = false) String proState,
             @RequestParam(value = "createDateStart", required = false) String createDateStart,
             @RequestParam(value = "createDateEnd", required = false) String createDateEnd,
@@ -126,7 +127,10 @@ public class MyProjectController {
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
             //项目相关人员集合
 
-            SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+            SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
+
             String userName = user.getUserName();//当前登录用户
 
             String department = user.getDepartment();
@@ -1151,17 +1155,20 @@ public class MyProjectController {
      * @return
      */
     @ApiOperation(value = "我的项目任务分配详情页子任务列表-添加（选择参与部门）")
-
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "int")
+    })
     @RequestMapping(value = "/getMembersByLoginUser", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getMembersByLoginUser(HttpServletRequest request) {
+    public ApiResult<List<Map<String, Object>>> getMembersByLoginUser(HttpServletRequest request,
+                                                                      @RequestParam(value = "id", required = true) int id) {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-            SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-
+            //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
             String department = user.getDepartment();
             department = department.substring(0,2);
 

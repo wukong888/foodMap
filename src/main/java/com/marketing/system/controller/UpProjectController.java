@@ -177,33 +177,38 @@ public class UpProjectController {
 
         ApiResult<String> result = null;
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("proState", proState);
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", id);
+            map.put("proState", proState);
 
-        int i = upProjectService.setPassOrReject(map);
+            int i = upProjectService.setPassOrReject(map);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        java.util.Date date = new java.util.Date();
-        String str = sdf.format(date);
+            java.util.Date date = new java.util.Date();
+            String str = sdf.format(date);
 
-        ProLogRecord proLogRecord = new ProLogRecord();
-        proLogRecord.setDate(str);//时间
-        proLogRecord.setExplain(explain);//说明
-        proLogRecord.setEmp(creatName);//操作人
-        proLogRecord.setType(proState);//类型
-        proLogRecord.setProid(proId);//项目id
+            ProLogRecord proLogRecord = new ProLogRecord();
+            proLogRecord.setDate(str);//时间
+            proLogRecord.setExplain(explain);//说明
+            proLogRecord.setEmp(creatName);//操作人
+            proLogRecord.setType(proState);//类型
+            proLogRecord.setProid(proId);//项目id
 
-        //插入日志
-        int ilog = upProjectService.insertProLogRecord(proLogRecord);
+            //插入日志
+            int ilog = upProjectService.insertProLogRecord(proLogRecord);
 
-        if (i > 0 && ilog > 0) {
-            result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "操作成功！", null, null);
-        } else {
-            result = new ApiResult<String>(Constant.FAIL_CODE_VALUE, "操作失败,请检查是否是立项待审批项目！", null, null);
+            if (i > 0 && ilog > 0) {
+                result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "操作成功！", null, null);
+            } else {
+                result = new ApiResult<String>(Constant.FAIL_CODE_VALUE, "操作失败,请检查是否是立项待审批项目！", null, null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("项目操作错误信息：" + e.getMessage());
+
         }
-
         return result;
 
     }
@@ -265,6 +270,7 @@ public class UpProjectController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("立项待审批详情页错误信息：" + e.getMessage());
         }
 
         return result;

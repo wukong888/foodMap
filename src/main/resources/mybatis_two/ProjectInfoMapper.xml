@@ -55,13 +55,13 @@
 
   <sql id="searchByTask">
     <trim prefix="where" prefixOverrides="and|or">
-        task.creater = #{creater}
+        task.handler = #{creater}
     </trim>
   </sql>
 
   <sql id="searchBySubTask">
     <trim prefix="where" prefixOverrides="and|or">
-        task.creater = #{creater}
+        task.subtaskHandler = #{creater}
     </trim>
   </sql>
 

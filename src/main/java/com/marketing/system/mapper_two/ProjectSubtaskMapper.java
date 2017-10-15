@@ -28,4 +28,6 @@ public interface ProjectSubtaskMapper {
 
     List<ProjectSubtask> getProjectSubtaskList(Integer taskId);
 
+    List<Map<String, Object>> selectProSubtaskByProId(Integer proId);
+
 }

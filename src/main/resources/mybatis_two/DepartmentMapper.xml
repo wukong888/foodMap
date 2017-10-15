@@ -29,6 +29,18 @@
     WHERE d.department LIKE  '%${department}%'
   </select>
 
+  <select id="getDepartmentList" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    id, departmentId, department
+    FROM
+    department
+    WHERE
+    <foreach item="item" index="index" collection="mentIds"
+             open=" departmentId IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from department
     where id = #{id,jdbcType=INTEGER}

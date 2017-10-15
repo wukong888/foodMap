@@ -25,4 +25,6 @@ public interface GroupMapper {
     Group getGroupBySquadId(Integer SquadId);
 
     List<Map<String,Object>> getSquadId(String departmentid);
+
+    List<Map<String,Object>> getSquadList(Map<String,Object> map);
 }

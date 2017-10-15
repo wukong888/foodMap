@@ -62,6 +62,13 @@
     </foreach>
   </select>
 
+  <select id="selectProSubtaskByProId" resultType="java.util.HashMap" >
+    SELECT <include refid="Base_Column_List" />
+    from project_subtask
+    where taskId in
+    (SELECT taskId from project_task where proId = (select proId from project_info WHERE proId = #{proId}))
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_subtask
     where subtaskId = #{subtaskId,jdbcType=INTEGER}

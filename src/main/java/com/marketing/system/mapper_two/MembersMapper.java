@@ -21,4 +21,9 @@ public interface MembersMapper {
     List<Members> getMembersBysquadId(String squadId);
 
     List<Map<String,Object>> getMembers(Map<String,Object> map);
+
+    List<Map<String,Object>> getSquadIdList(Map<String,Object> map);
+
+    Members selectSquadIdByMember(String member);
+
 }

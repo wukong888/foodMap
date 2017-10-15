@@ -9,6 +9,8 @@ import com.marketing.system.service.GroupService;
 import com.marketing.system.service.MyProjectService;
 import com.marketing.system.util.ApiResult;
 import com.marketing.system.util.Constant;
+import com.marketing.system.util.MapUtil;
+import com.marketing.system.util.StringUtil;
 import io.swagger.annotations.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -125,6 +127,8 @@ public class ApplyController {
             }
         }
 
+        Members members = applyService.selectSquadIdByMember(creatName);
+
         projectInfo.setProid(Integer.valueOf(code));//任务id
         projectInfo.setProname(proName);//项目名称
         projectInfo.setProtype(proType);//项目类型
@@ -134,6 +138,8 @@ public class ApplyController {
         projectInfo.setCreater(creatName);//创建人
         projectInfo.setProprogress("0");//项目进度
         projectInfo.setProstate("1");//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废,7:逾期)
+
+        projectInfo.setCreaterSquadId(members.getSquadid());//小组id
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -243,19 +249,50 @@ public class ApplyController {
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getMsgPushDepartment", method = RequestMethod.POST)
-    public ApiResult<List<Department>> getMsgPushDepartment(@RequestParam(value = "proId", required = true) Integer proId) {
+    public ApiResult<List<Map<String, Object>>> getMsgPushDepartment(@RequestParam(value = "proId", required = true) Integer proId) {
 
-        ApiResult<List<Department>> r = null;
+        ApiResult<List<Map<String, Object>>> r = null;
 
         try {
-            //所有部门
-            List<Department> department = departmentService.getDepartment();
+            //根据项目id查询子任务负责人
+            List<Map<String, Object>> projectSubtaskList = applyService.selectProSubtaskByProId(proId);
 
-            //根据项目id查询任务、子任务负责人
+            //子任务负责人
+            String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(projectSubtaskList, "subtaskHandler"));
 
+            String[] Ids = menuLeafIds.split(",");
 
+            Map<String, Object> mapT = new HashMap<>();
 
-            r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
+            mapT.put("mentIds", Ids);
+
+            //根据负责人查找squadId(小组id)
+            List<Map<String, Object>> squadIdList = applyService.getSquadIdList(mapT);
+
+            //小组id
+            String menuLeafIdsTwo = StringUtil.toString(MapUtil.collectProperty(squadIdList, "squadId"));
+
+            String[] IdsT = menuLeafIdsTwo.split(",");
+
+            Map<String, Object> mapS = new HashMap<>();
+
+            mapS.put("mentIds", IdsT);
+
+            //根据squadId(小组id)查找小组所属部门id
+            List<Map<String, Object>> squadList = applyService.getSquadList(mapS);
+
+            String menuLeafIdsThree = StringUtil.toString(MapUtil.collectProperty(squadList, "departmentId"));
+
+            String[] IdsTh = menuLeafIdsThree.split(",");
+
+            Map<String, Object> mapThree = new HashMap<>();
+
+            mapThree.put("mentIds", IdsTh);
+
+            //根据部门id查找部门名称
+            List<Map<String, Object>> departmentList = applyService.getDepartmentList(mapThree);
+
+            r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, departmentList, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取项目相关部门："+e.getMessage());

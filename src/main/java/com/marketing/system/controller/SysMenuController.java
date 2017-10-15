@@ -5,6 +5,7 @@ import com.marketing.system.entity.SystemUser;
 import com.marketing.system.service.ApplyService;
 import com.marketing.system.service.RoleService;
 import com.marketing.system.service.SysMenuService;
+import com.marketing.system.service.SystemUserService;
 import com.marketing.system.util.ApiResult;
 import com.marketing.system.util.Constant;
 import com.marketing.system.util.ListUtil;
@@ -47,20 +48,29 @@ public class SysMenuController {
     @Autowired
     private ApplyService applyService;
 
+    @Autowired
+    private SystemUserService systemUserService;
+
     /**
      * 根据角色查询菜单
      *
      * @return
      */
     @ApiOperation(value = "根据角色查询菜单")
-    @ApiImplicitParam(paramType = "query", name = "SystemId", value = "系统Id,3:项目管理系统", required = true, dataType = "int")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "SystemId", value = "系统Id,3:项目管理系统", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "int")
+    })
     @RequestMapping(value = "/findRoleMenu", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> fetchRoleMenu(
-            @RequestParam(value = "SystemId", required = true) int SystemId) {
+            @RequestParam(value = "SystemId", required = true) int SystemId,
+            @RequestParam(value = "id", required = true) int id) {
 
         ApiResult<List<Map<String, Object>>> result = null;
 
-        SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+
+        SystemUser user = systemUserService.selectByPrimaryKey(id);
         //SystemUser user = new SystemUser();
 
         //user.setDuty("CEO");

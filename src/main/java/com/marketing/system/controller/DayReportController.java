@@ -62,8 +62,10 @@ public class DayReportController {
     public ApiResult<List<Map>> selectProReport(
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
-        String Date=null;
         ApiResult<List<Map>> result =null;
+        try {
+        String Date=null;
+
         Map<String,Object> Report=DayReportService.selectProReport(current,pageSize,Date);
         List<Map> ProReport=(List<Map>)Report.get("proReports");
         Integer sum=(Integer)Report.get("proReportsNum");
@@ -82,6 +84,10 @@ public class DayReportController {
         } else {
             msg = "查询成功！";
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,ProReport,rdPage);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("模糊查询项目日报 错误信息：" + e.getMessage());
         }
 
         return  result;
@@ -105,9 +111,8 @@ public class DayReportController {
             @RequestParam(value = "pageSize") int pageSize) {
 
         ApiResult<List<Map>> result =null;
+        try {
         String Date=null;
-
-
         Map<String,Object> Report=DayReportService.selectTaskReport(current,pageSize,Date);
         List<Map> TaskReport=(List<Map>)Report.get("taskReports");
         Integer sum=(Integer)Report.get("taskReportsNum");
@@ -126,6 +131,10 @@ public class DayReportController {
         } else {
             msg = "查询成功！";
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,TaskReport,rdPage);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("模糊查询任务日报 错误信息：" + e.getMessage());
         }
 
         return  result;
@@ -149,6 +158,8 @@ public class DayReportController {
             @RequestParam(value = "pageSize") int pageSize) {
 
         ApiResult<List<Map>> result =null;
+
+        try {
         String Date=null;
         Map<String,Object> Report=DayReportService.selectSubtaskReport(current,pageSize,Date);
         List<Map> SubtaskReport=(List<Map>)Report.get("subtaskReports");
@@ -168,6 +179,10 @@ public class DayReportController {
         } else {
             msg = "查询成功！";
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,SubtaskReport,rdPage);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("模糊查询子任务日报 错误信息：" + e.getMessage());
         }
 
         return  result;
@@ -244,8 +259,7 @@ public class DayReportController {
             org.apache.catalina.servlet4preview.http.HttpServletRequest request, HttpServletResponse response){
         ApiResult<String> result =null;
 
-
-
+        try {
        if(type==1){
        /*   // String proFile="static//"+Date+" ProjectReport.xlsx";
            String proFile="http://192.168.3.26:5826//static//"+Date+" ProjectReport.xlsx";
@@ -292,6 +306,10 @@ public class DayReportController {
            return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" SubtaskReport.xlsx",null);
 
        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("日报导出 错误信息：" + e.getMessage());
+        }
         return null;
     }
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +74,7 @@ public class RecycleProController {
             @RequestParam(value="param", required = false) String param) {
 
         ApiResult<List<ProjectInfo>> result =null;
+        try {
         Map<String,Object> RecProMapAll=null;
 
         if(creatersquadid==null){
@@ -101,7 +103,7 @@ public class RecycleProController {
         }
         if(prostate==null||prostate==""){
             //所有项目集合
-            RecProMapAll=RecProService.selectRecPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+            RecProMapAll=RecProService.selectRecPro(current,1000,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
         }else if(prostate.equals("5")){
             //驳回项目集合
             RecProMapAll=RecProService.selectRecProState5(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
@@ -183,7 +185,7 @@ public class RecycleProController {
                 }
             }
             //当前用户是创建人
-            if (pro.getCreater() == user.getUserName()) {
+            if (pro.getCreater().equals(user.getUserName()) ) {
                 RecPro.add(pro);
             }
         }
@@ -192,8 +194,10 @@ public class RecycleProController {
         int sum = 0;
         if (user.getDuty() == "CEO") {
             sum = RecProAll.size();
+            RecProAll=ToolUtil.listSplit2(current,pageSize,RecProAll);
         } else {
             sum = RecPro.size();
+            RecPro=ToolUtil.listSplit2(current,pageSize,RecPro);
         }
 
 
@@ -208,7 +212,10 @@ public class RecycleProController {
         } else {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, RecPro, rdPage);
         }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查询回收列表 错误信息：" + e.getMessage());
+        }
         return  result;
 
     }
@@ -228,7 +235,7 @@ public class RecycleProController {
             @RequestParam(value = "id") int id,
             @RequestParam(value = "proId") int proId){
         ApiResult<List<Map>> result =null;
-
+        try {
         List<Map> RecProInfos=new ArrayList<Map>();
         Map<String,Object> RecProInfo=new HashMap<String,Object>();
         ProjectInfo ProInfo=RecProService.selectRecProInfo(id,proId);
@@ -242,6 +249,10 @@ public class RecycleProController {
         String msg = "查询成功！";
 
         result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,RecProInfos,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看项目的基本信息 错误信息：" + e.getMessage());
+        }
         return result;
     }
 

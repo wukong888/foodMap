@@ -69,6 +69,7 @@ public class OnlineProController {
                 @RequestParam(value="param", required = false) String param) {
 
             ApiResult<List<ProjectInfo>> result =null;
+            try {
             if(creatersquadid==null){
                 creatersquadid="";
             }
@@ -94,7 +95,7 @@ public class OnlineProController {
                 param="";
             }
             //所有项目集合
-            Map<String,Object> OnProMapAll=OnProService.selectOnPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,protype,param);
+            Map<String,Object> OnProMapAll=OnProService.selectOnPro(current,1000,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,protype,param);
 
             //项目相关人员集合
             List<ProjectInfo> OnPro = new ArrayList<>();
@@ -168,7 +169,7 @@ public class OnlineProController {
                     }
                 }
                 //当前用户是创建人
-                if (pro.getCreater() == user.getUserName()) {
+                if (pro.getCreater().equals( user.getUserName())) {
                     OnPro.add(pro);
                 }
             }
@@ -177,8 +178,10 @@ public class OnlineProController {
             int sum = 0;
             if (user.getDuty() == "CEO") {
                 sum = OnProAll.size();
+                OnProAll=ToolUtil.listSplit2(current,pageSize,OnProAll);
             } else {
                 sum = OnPro.size();
+                OnPro=ToolUtil.listSplit2(current,pageSize,OnPro);
             }
 
 
@@ -193,7 +196,10 @@ public class OnlineProController {
             } else {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, OnPro, rdPage);
             }
-
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("查询上线待审批列表 错误信息：" + e.getMessage());
+            }
             return  result;
 
         }
@@ -213,7 +219,7 @@ public class OnlineProController {
             @RequestParam(value = "id") int id,
             @RequestParam(value = "proId") int proId){
           ApiResult<List<Map>> result =null;
-
+        try {
           List<Map> OnProInfos=new ArrayList<Map>();
           Map<String,Object> OnProInfo=new HashMap<String,Object>();
           ProjectInfo ProInfo=OnProService.selectOnProInfo(id,proId);
@@ -229,6 +235,10 @@ public class OnlineProController {
           String msg = "查询成功！";
 
           result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,OnProInfos,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看项目的详细信息 错误信息：" + e.getMessage());
+        }
           return result;
     }
 
@@ -245,7 +255,7 @@ public class OnlineProController {
     public ApiResult<List<Map>> selectOnTaskInfo(
             @RequestParam(value = "taskId") int taskId){
         ApiResult<List<Map>> result =null;
-
+        try {
         List<Map> OnTaskInfos=new ArrayList<Map>();
         Map<String,Object> OnTaskInfo=new HashMap<String,Object>();
         ProjectTask TaskInfo=OnProService.selectOnTaskInfo(taskId);
@@ -261,6 +271,10 @@ public class OnlineProController {
         String msg = "查询成功！";
 
         result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,OnTaskInfos,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看任务的详细信息 错误信息：" + e.getMessage());
+        }
         return result;
     }
 
@@ -277,11 +291,15 @@ public class OnlineProController {
     public ApiResult<List<SubtaskDevelopLog>> selectOnSubtaskDevRecord(
             @RequestParam(value = "subtaskId") int subtaskId){
         ApiResult<List<SubtaskDevelopLog>> result =null;
-
+        try {
         List<SubtaskDevelopLog> SubDevRecords=OnProService.selectOnSubTaskDevRecord(subtaskId);
         String msg = "查询成功！";
 
         result = new ApiResult<List<SubtaskDevelopLog>>(Constant.SUCCEED_CODE_VALUE,msg,SubDevRecords,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看子任务的开发日志 错误信息：" + e.getMessage());
+        }
         return result;
     }
 
@@ -298,6 +316,7 @@ public class OnlineProController {
     public ApiResult<List<Map>> selectOnSubtaskInfo(
             @RequestParam(value = "subtaskId") int subtaskId){
         ApiResult<List<Map>> result =null;
+        try {
         List<Map> OnSubtaskInfos=new ArrayList<Map>();
         Map<String,Object> OnSubtaskInfo=new HashMap<String,Object>();
         ProjectSubtask SubTaskInfo=OnProService.selectOnSubtaskInfo(subtaskId);
@@ -310,6 +329,10 @@ public class OnlineProController {
         String msg = "查询成功！";
 
         result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,OnSubtaskInfos,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看子任务详细信息 错误信息：" + e.getMessage());
+        }
         return result;
     }
 
@@ -329,14 +352,17 @@ public class OnlineProController {
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "explain",required = false) String explain){
         ApiResult<String> result =null;
-
+        try {
         boolean success=OnProService.insertProPassLog(proId,explain);
         if(success==true){
             result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批通过","审批通过",null);
         }else{
             result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批通过操作失败","审批通过操作失败",null);
         }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("审批通过 错误信息：" + e.getMessage());
+        }
         return result;
     }
 
@@ -355,39 +381,21 @@ public class OnlineProController {
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "explain",required = false) String explain){
         ApiResult<String> result =null;
-
+        try {
         boolean success=OnProService.insertProReturnLog(proId,explain);
         if(success==true){
             result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批驳回","审批驳回",null);
         }else{
             result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批驳回操作失败","审批驳回操作失败",null);
         }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("审批驳回 错误信息：" + e.getMessage());
+        }
         return result;
     }
 
-    /**
-     * 指定回复
-     *
-     * @return
-     */
-    @ApiOperation(value = "指定回复")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "Uid", value = "员工Id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "rescontent", value = "回复内容", required = true, dataType = "String")
-    })
-    @RequestMapping(value = "/weixinPush", method = RequestMethod.POST)
-    public ApiResult<String> weixinPush(
-            @RequestParam(value = "Uid") int Uid,
-            @RequestParam(value = "rescontent") String rescontent){
-       /* String postUrl="{\"Uid\":"+Uid
-                +",\"Content\":\"今日发起工单数:"+list.get(0)+"\\n\",\"AgentId\":1000003,\"Title\":\"工单时报\",\"Url\":\"http://report.wsloan.com:8888/workorder/user/loginAuto.do?id="
-                +user.getId()+"&password="+user.getPassword().trim().toUpperCase()+"\"}";
-*/
-       // WeiXinPushUtil.httpPostWithJSON(postUrl);
-        ApiResult<String> result =null;
-        return result;
-    }
+
 
     }
 

@@ -217,7 +217,7 @@
     WHERE proState = #{proState}
   </select>
 
-  <select id="getCreaterByName" resultType="java.lang.Integer" parameterType="java.lang.String"  >
+  <select id="getCreaterByName" resultType="java.lang.String" parameterType="java.lang.String"  >
   SELECT
   creater
   from project_info

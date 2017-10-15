@@ -194,7 +194,7 @@ public class MyProjectController {
                     }
                 }
                 //当前用户是创建人
-                if (pro.getCreater() == user.getUserName()) {
+                if (pro.getCreater().equals(user.getUserName())) {
                     projectInfosNew.add(pro);
                 }
 

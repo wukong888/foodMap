@@ -3,11 +3,13 @@ package com.marketing.system.controller;
 import com.marketing.system.entity.*;
 import com.marketing.system.service.MyProjectService;
 import com.marketing.system.service.OnlineProService;
+import com.marketing.system.service.SystemUserService;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,91 +30,91 @@ import java.util.Map;
 @EnableAutoConfiguration
 public class OnlineProController {
 
-        private Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-        @Resource
-        private OnlineProService OnProService;
+    @Autowired
+    private OnlineProService OnProService;
 
-        @Resource
-        private MyProjectService myProjectService;
+    @Autowired
+    private MyProjectService myProjectService;
+
+    @Autowired
+    private SystemUserService systemUserService;
 
 
+    /**
+     * 查询上线审批列表
+     *
+     * @return
+     */
+    @ApiOperation(value = "查询上线待审批列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "creatersquadid", value = "项目发起部门名称", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "creater", value = "项目发起人", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "createdate1", value = "项目发起时间-开始", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "createdate2", value = "项目发起时间-结束", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "finishdate1", value = "项目完成时间-开始", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "finishdate2", value = "项目完成时间-结束", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "protype", value = "项目类型", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "param", value = "关键字", required = false, dataType = "String"),
+    })
+    @RequestMapping(value = "/selectOnPro", method = RequestMethod.POST)
+    public ApiResult<List<ProjectInfo>> selectOnPro(
+            @RequestParam(value = "current") int current,
+            @RequestParam(value = "pageSize") int pageSize,
+            @RequestParam(value = "creatersquadid", required = false) String creatersquadid,
+            @RequestParam(value = "creater", required = false) String creater,
+            @RequestParam(value = "id", required = true) int id,
+            @RequestParam(value = "createdate1", required = false) String createdate1,
+            @RequestParam(value = "createdate2", required = false) String createdate2,
+            @RequestParam(value = "finishdate1", required = false) String finishdate1,
+            @RequestParam(value = "finishdate2", required = false) String finishdate2,
+            @RequestParam(value = "protype", required = false) String protype,
+            @RequestParam(value = "param", required = false) String param) {
 
-        /**
-         * 查询上线审批列表
-         *
-         * @return
-         */
-        @ApiOperation(value = "查询上线待审批列表")
-        @ApiImplicitParams({
-                @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
-                @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer"),
-                @ApiImplicitParam(paramType = "query", name = "creatersquadid", value = "项目发起部门名称", required = false, dataType = "String"),
-                @ApiImplicitParam(paramType = "query", name = "creater", value = "项目发起人", required = false, dataType = "String"),
-                @ApiImplicitParam(paramType = "query", name = "createdate1", value = "项目发起时间-开始", required = false, dataType = "String"),
-                @ApiImplicitParam(paramType = "query", name = "createdate2", value = "项目发起时间-结束", required = false, dataType = "String"),
-                @ApiImplicitParam(paramType = "query", name = "finishdate1", value = "项目完成时间-开始", required = false, dataType = "String"),
-                @ApiImplicitParam(paramType = "query", name = "finishdate2", value = "项目完成时间-结束", required = false, dataType = "String"),
-                @ApiImplicitParam(paramType = "query", name = "protype", value = "项目类型", required = false, dataType = "String"),
-                @ApiImplicitParam(paramType = "query", name = "param", value = "关键字", required = false, dataType = "String"),
-        })
-        @RequestMapping(value = "/selectOnPro", method = RequestMethod.POST)
-        public ApiResult<List<ProjectInfo>> selectOnPro(
-                @RequestParam(value = "current") int current,
-                @RequestParam(value = "pageSize") int pageSize,
-                @RequestParam(value="creatersquadid", required = false) String creatersquadid,
-                @RequestParam(value="creater", required = false) String creater,
-                @RequestParam(value="createdate1", required = false) String createdate1,
-                @RequestParam(value="createdate2", required = false) String createdate2,
-                @RequestParam(value="finishdate1", required = false) String finishdate1,
-                @RequestParam(value="finishdate2", required = false) String finishdate2,
-                @RequestParam(value="protype", required = false) String protype,
-                @RequestParam(value="param", required = false) String param) {
-
-            ApiResult<List<ProjectInfo>> result =null;
-            try {
-            if(creatersquadid==null){
-                creatersquadid="";
+        ApiResult<List<ProjectInfo>> result = null;
+        try {
+            if (creatersquadid == null) {
+                creatersquadid = "";
             }
-            if(creater==null){
-                creater="";
+            if (creater == null) {
+                creater = "";
             }
-            if(createdate1==null||createdate1==""){
-                createdate1="2010-01-01";
+            if (createdate1 == null || createdate1 == "") {
+                createdate1 = "2010-01-01";
             }
-            if(createdate2==null||createdate2==""){
-                createdate2="2040-01-01";
+            if (createdate2 == null || createdate2 == "") {
+                createdate2 = "2040-01-01";
             }
-            if(finishdate1==null||finishdate1==""){
-                finishdate1="2010-01-01";
+            if (finishdate1 == null || finishdate1 == "") {
+                finishdate1 = "2010-01-01";
             }
-            if(finishdate2==null||finishdate2==""){
-                finishdate2="2040-01-01";
+            if (finishdate2 == null || finishdate2 == "") {
+                finishdate2 = "2040-01-01";
             }
-            if(protype==null){
-                protype="";
+            if (protype == null) {
+                protype = "";
             }
-            if(param==null){
-                param="";
+            if (param == null) {
+                param = "";
             }
             //所有项目集合
-            Map<String,Object> OnProMapAll=OnProService.selectOnPro(current,1000,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,protype,param);
+            Map<String, Object> OnProMapAll = OnProService.selectOnPro(current, 1000, creatersquadid, creater, createdate1, createdate2, finishdate1, finishdate2, protype, param);
 
             //项目相关人员集合
             List<ProjectInfo> OnPro = new ArrayList<>();
 
-            List<ProjectInfo> OnProAll=(List<ProjectInfo>)OnProMapAll.get("OnPro");
+            List<ProjectInfo> OnProAll = (List<ProjectInfo>) OnProMapAll.get("OnPro");
 
-            //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-            SystemUser user = new SystemUser();
-            //String userName = user.getUserName();//当前登录用户
-            //测试用***************************************
-            String userName = "陈东和";
-            user.setUserName(userName);
-            user.setDuty("CEO");
-            //String department = user.getDepartment();
-            //department = department.substring(0,2);
-            String department = "总经";
+            SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            String userName = user.getUserName();//当前登录用户
+            String department = user.getDepartment();
+            department = department.substring(0, 2);
 
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
             Department did = myProjectService.getDepartmentIdByMent(department);
@@ -169,7 +172,7 @@ public class OnlineProController {
                     }
                 }
                 //当前用户是创建人
-                if (pro.getCreater().equals( user.getUserName())) {
+                if (pro.getCreater().equals(user.getUserName())) {
                     OnPro.add(pro);
                 }
             }
@@ -178,10 +181,10 @@ public class OnlineProController {
             int sum = 0;
             if (user.getDuty() == "CEO") {
                 sum = OnProAll.size();
-                OnProAll=ToolUtil.listSplit2(current,pageSize,OnProAll);
+                OnProAll = ToolUtil.listSplit2(current, pageSize, OnProAll);
             } else {
                 sum = OnPro.size();
-                OnPro=ToolUtil.listSplit2(current,pageSize,OnPro);
+                OnPro = ToolUtil.listSplit2(current, pageSize, OnPro);
             }
 
 
@@ -196,13 +199,13 @@ public class OnlineProController {
             } else {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, OnPro, rdPage);
             }
-            } catch (Exception e) {
-                e.printStackTrace();
-                logger.error("查询上线待审批列表 错误信息：" + e.getMessage());
-            }
-            return  result;
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查询上线待审批列表 错误信息：" + e.getMessage());
         }
+        return result;
+
+    }
 
     /**
      * 项目详细信息
@@ -217,29 +220,29 @@ public class OnlineProController {
     @RequestMapping(value = "/selectOnProInfo", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectOnProInfo(
             @RequestParam(value = "id") int id,
-            @RequestParam(value = "proId") int proId){
-          ApiResult<List<Map>> result =null;
+            @RequestParam(value = "proId") int proId) {
+        ApiResult<List<Map>> result = null;
         try {
-          List<Map> OnProInfos=new ArrayList<Map>();
-          Map<String,Object> OnProInfo=new HashMap<String,Object>();
-          ProjectInfo ProInfo=OnProService.selectOnProInfo(id,proId);
-          List<ProLogRecord> ProLogRecord=OnProService.selectOnProLogRecord(proId);
-          List<Map> ProTask=OnProService.selectOnTask(proId);
-          List<ProDevelopLog> ProDevRecord=OnProService.selectOnProDevRecord(proId);
+            List<Map> OnProInfos = new ArrayList<Map>();
+            Map<String, Object> OnProInfo = new HashMap<String, Object>();
+            ProjectInfo ProInfo = OnProService.selectOnProInfo(id, proId);
+            List<ProLogRecord> ProLogRecord = OnProService.selectOnProLogRecord(proId);
+            List<Map> ProTask = OnProService.selectOnTask(proId);
+            List<ProDevelopLog> ProDevRecord = OnProService.selectOnProDevRecord(proId);
 
-          OnProInfo.put("ProInfo",ProInfo);
-          OnProInfo.put("ProLogRecord",ProLogRecord);
-          OnProInfo.put("ProTask",ProTask);
-          OnProInfo.put("ProDevRecord",ProDevRecord);
-          OnProInfos.add(OnProInfo);
-          String msg = "查询成功！";
+            OnProInfo.put("ProInfo", ProInfo);
+            OnProInfo.put("ProLogRecord", ProLogRecord);
+            OnProInfo.put("ProTask", ProTask);
+            OnProInfo.put("ProDevRecord", ProDevRecord);
+            OnProInfos.add(OnProInfo);
+            String msg = "查询成功！";
 
-          result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,OnProInfos,null);
+            result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, OnProInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查看项目的详细信息 错误信息：" + e.getMessage());
         }
-          return result;
+        return result;
     }
 
     /**
@@ -253,24 +256,24 @@ public class OnlineProController {
     })
     @RequestMapping(value = "/selectOnTaskInfo", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectOnTaskInfo(
-            @RequestParam(value = "taskId") int taskId){
-        ApiResult<List<Map>> result =null;
+            @RequestParam(value = "taskId") int taskId) {
+        ApiResult<List<Map>> result = null;
         try {
-        List<Map> OnTaskInfos=new ArrayList<Map>();
-        Map<String,Object> OnTaskInfo=new HashMap<String,Object>();
-        ProjectTask TaskInfo=OnProService.selectOnTaskInfo(taskId);
-        List<TaskLogRecord> TaskLogRecord=OnProService.selectOnTaskLogRecord(taskId);
-        List<ProjectSubtask> Subtask=OnProService.selectOnSubtask(taskId);
-        List<TaskDevelopLog> TaskDevRecord=OnProService.selectOnTaskDevRecord(taskId);
+            List<Map> OnTaskInfos = new ArrayList<Map>();
+            Map<String, Object> OnTaskInfo = new HashMap<String, Object>();
+            ProjectTask TaskInfo = OnProService.selectOnTaskInfo(taskId);
+            List<TaskLogRecord> TaskLogRecord = OnProService.selectOnTaskLogRecord(taskId);
+            List<ProjectSubtask> Subtask = OnProService.selectOnSubtask(taskId);
+            List<TaskDevelopLog> TaskDevRecord = OnProService.selectOnTaskDevRecord(taskId);
 
-        OnTaskInfo.put("TaskInfo",TaskInfo);
-        OnTaskInfo.put("TaskLogRecord",TaskLogRecord);
-        OnTaskInfo.put("Subtask",Subtask);
-        OnTaskInfo.put("TaskDevRecord",TaskDevRecord);
-        OnTaskInfos.add(OnTaskInfo);
-        String msg = "查询成功！";
+            OnTaskInfo.put("TaskInfo", TaskInfo);
+            OnTaskInfo.put("TaskLogRecord", TaskLogRecord);
+            OnTaskInfo.put("Subtask", Subtask);
+            OnTaskInfo.put("TaskDevRecord", TaskDevRecord);
+            OnTaskInfos.add(OnTaskInfo);
+            String msg = "查询成功！";
 
-        result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,OnTaskInfos,null);
+            result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, OnTaskInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查看任务的详细信息 错误信息：" + e.getMessage());
@@ -289,13 +292,13 @@ public class OnlineProController {
     })
     @RequestMapping(value = "/selectOnSubtaskDevRecord", method = RequestMethod.POST)
     public ApiResult<List<SubtaskDevelopLog>> selectOnSubtaskDevRecord(
-            @RequestParam(value = "subtaskId") int subtaskId){
-        ApiResult<List<SubtaskDevelopLog>> result =null;
+            @RequestParam(value = "subtaskId") int subtaskId) {
+        ApiResult<List<SubtaskDevelopLog>> result = null;
         try {
-        List<SubtaskDevelopLog> SubDevRecords=OnProService.selectOnSubTaskDevRecord(subtaskId);
-        String msg = "查询成功！";
+            List<SubtaskDevelopLog> SubDevRecords = OnProService.selectOnSubTaskDevRecord(subtaskId);
+            String msg = "查询成功！";
 
-        result = new ApiResult<List<SubtaskDevelopLog>>(Constant.SUCCEED_CODE_VALUE,msg,SubDevRecords,null);
+            result = new ApiResult<List<SubtaskDevelopLog>>(Constant.SUCCEED_CODE_VALUE, msg, SubDevRecords, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查看子任务的开发日志 错误信息：" + e.getMessage());
@@ -314,21 +317,21 @@ public class OnlineProController {
     })
     @RequestMapping(value = "/selectOnSubtaskInfo", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectOnSubtaskInfo(
-            @RequestParam(value = "subtaskId") int subtaskId){
-        ApiResult<List<Map>> result =null;
+            @RequestParam(value = "subtaskId") int subtaskId) {
+        ApiResult<List<Map>> result = null;
         try {
-        List<Map> OnSubtaskInfos=new ArrayList<Map>();
-        Map<String,Object> OnSubtaskInfo=new HashMap<String,Object>();
-        ProjectSubtask SubTaskInfo=OnProService.selectOnSubtaskInfo(subtaskId);
-        List<SubtaskLogRecord> SubLogRecords=OnProService.selectOnSubtaskLogRecord(subtaskId);
-        List<SubtaskDevelopLog> SubDevRecords=OnProService.selectOnSubTaskDevRecord(subtaskId);
-        OnSubtaskInfo.put("SubTaskInfo",SubTaskInfo);
-        OnSubtaskInfo.put("SubLogRecords",SubLogRecords);
-        OnSubtaskInfo.put("SubDevRecords",SubDevRecords);
-        OnSubtaskInfos.add(OnSubtaskInfo);
-        String msg = "查询成功！";
+            List<Map> OnSubtaskInfos = new ArrayList<Map>();
+            Map<String, Object> OnSubtaskInfo = new HashMap<String, Object>();
+            ProjectSubtask SubTaskInfo = OnProService.selectOnSubtaskInfo(subtaskId);
+            List<SubtaskLogRecord> SubLogRecords = OnProService.selectOnSubtaskLogRecord(subtaskId);
+            List<SubtaskDevelopLog> SubDevRecords = OnProService.selectOnSubTaskDevRecord(subtaskId);
+            OnSubtaskInfo.put("SubTaskInfo", SubTaskInfo);
+            OnSubtaskInfo.put("SubLogRecords", SubLogRecords);
+            OnSubtaskInfo.put("SubDevRecords", SubDevRecords);
+            OnSubtaskInfos.add(OnSubtaskInfo);
+            String msg = "查询成功！";
 
-        result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,OnSubtaskInfos,null);
+            result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, OnSubtaskInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查看子任务详细信息 错误信息：" + e.getMessage());
@@ -350,15 +353,15 @@ public class OnlineProController {
     @RequestMapping(value = "/selectInsertProPassLog", method = RequestMethod.POST)
     public ApiResult<String> selectInsertProPassLog(
             @RequestParam(value = "proId") int proId,
-            @RequestParam(value = "explain",required = false) String explain){
-        ApiResult<String> result =null;
+            @RequestParam(value = "explain", required = false) String explain) {
+        ApiResult<String> result = null;
         try {
-        boolean success=OnProService.insertProPassLog(proId,explain);
-        if(success==true){
-            result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批通过","审批通过",null);
-        }else{
-            result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批通过操作失败","审批通过操作失败",null);
-        }
+            boolean success = OnProService.insertProPassLog(proId, explain);
+            if (success == true) {
+                result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过", "审批通过", null);
+            } else {
+                result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过操作失败", "审批通过操作失败", null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("审批通过 错误信息：" + e.getMessage());
@@ -379,15 +382,15 @@ public class OnlineProController {
     @RequestMapping(value = "/selectInsertProReturnLog", method = RequestMethod.POST)
     public ApiResult<String> selectInsertProReturnLog(
             @RequestParam(value = "proId") int proId,
-            @RequestParam(value = "explain",required = false) String explain){
-        ApiResult<String> result =null;
+            @RequestParam(value = "explain", required = false) String explain) {
+        ApiResult<String> result = null;
         try {
-        boolean success=OnProService.insertProReturnLog(proId,explain);
-        if(success==true){
-            result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批驳回","审批驳回",null);
-        }else{
-            result=new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"审批驳回操作失败","审批驳回操作失败",null);
-        }
+            boolean success = OnProService.insertProReturnLog(proId, explain);
+            if (success == true) {
+                result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批驳回", "审批驳回", null);
+            } else {
+                result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批驳回操作失败", "审批驳回操作失败", null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("审批驳回 错误信息：" + e.getMessage());
@@ -396,6 +399,5 @@ public class OnlineProController {
     }
 
 
-
-    }
+}
 

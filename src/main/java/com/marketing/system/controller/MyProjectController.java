@@ -126,16 +126,11 @@ public class MyProjectController {
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
             //项目相关人员集合
 
-            //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-            SystemUser user = new SystemUser();
-            //String userName = user.getUserName();//当前登录用户
-            //测试用***************************************
-            String userName = "小";
-            user.setUserName(userName);
-            user.setDuty("CEO");
-            //String department = user.getDepartment();
-            //department = department.substring(0,2);
-            String department = "技术";
+            SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+            String userName = user.getUserName();//当前登录用户
+
+            String department = user.getDepartment();
+            department = department.substring(0,2);
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
             Department did = myProjectService.getDepartmentIdByMent(department);
             String departmentid = did.getDepartmentid();

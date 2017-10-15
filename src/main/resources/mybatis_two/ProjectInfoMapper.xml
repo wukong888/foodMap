@@ -287,7 +287,7 @@
         proProgress,
       </if>
       <if test="createrSquadId != null" >
-        createrSquad,
+        createrSquadId,
       </if>
       <if test="onlineDate != null" >
         onlineDate,
@@ -344,7 +344,7 @@
         #{proprogress,jdbcType=VARCHAR},
       </if>
       <if test="createrSquadId != null" >
-        #{createrSquad,jdbcType=VARCHAR},
+        #{createrSquadId,jdbcType=VARCHAR},
       </if>
       <if test="onlineDate != null" >
         #{onlineDate,jdbcType=VARCHAR},

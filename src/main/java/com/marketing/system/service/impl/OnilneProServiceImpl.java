@@ -152,7 +152,7 @@ public class OnilneProServiceImpl implements OnlineProService{
 
     //通过操作，项目日志添加记录
     @Transactional
-    public boolean insertProPassLog(Integer proid,String explain){
+    public boolean insertProPassLog(Integer proid,String explain,String onlineDate){
         String type="10";
         Date Date=new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -161,7 +161,7 @@ public class OnilneProServiceImpl implements OnlineProService{
         String emp="陈东和";
         String filepath=null;
         boolean success1=OnProDao.insertProPassLog(proid,type,date,squadid,emp,explain,filepath);
-        boolean success2=OnProDao.updateProPassState(proid);
+        boolean success2=OnProDao.updateProPassState(proid,onlineDate);
         return success1||success2;
     }
 

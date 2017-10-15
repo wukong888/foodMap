@@ -355,8 +355,9 @@ public class OnlineProController {
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "explain", required = false) String explain) {
         ApiResult<String> result = null;
+        String onlineDate=DateUtil.getYMDHMSDate();
         try {
-            boolean success = OnProService.insertProPassLog(proId, explain);
+            boolean success = OnProService.insertProPassLog(proId, explain,onlineDate);
             if (success == true) {
                 result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过", "审批通过", null);
             } else {

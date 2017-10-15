@@ -45,7 +45,7 @@ public interface OnlineProService {
     ProjectSubtask selectOnSubtaskInfo(Integer subtaskId);
 
     //通过操作，项目日志添加记录
-    boolean insertProPassLog(Integer proid,String explain);
+    boolean insertProPassLog(Integer proid,String explain,String onlineDate);
 
     //驳回操作，项目日志添加记录
     boolean insertProReturnLog(Integer proid,String explain);

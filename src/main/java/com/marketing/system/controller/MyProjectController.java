@@ -216,8 +216,6 @@ public class MyProjectController {
                 projectInfosNew = ToolUtil.listSplit2(current,pageSize,projectInfosNew);
             }
 
-
-
             //分页信息
             rdPage.setTotal(sum);
             rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
@@ -265,7 +263,7 @@ public class MyProjectController {
 
             //参与组
             List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
-
+            ProjectTask projectTaskNew = new ProjectTask();
             int sum = 0;
             for (Map<String, Object> projectTask : taskList) {
                 projectTask.get("workDate");
@@ -280,6 +278,29 @@ public class MyProjectController {
                 String departmentId = upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
                 projectTask.put("departmentId", departmentId);//根据squadid取对应部门Id
 
+                //判断是否逾期，是则更新状态为逾期
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date edate = sdf.parse(String.valueOf(projectTask.get("eDate")));//预计完成时间
+
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(edate);
+                //当前时间
+                Date smdate = new Date();
+
+                smdate = sdf.parse(sdf.format(smdate));
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(smdate);
+                long time1 = cal.getTimeInMillis();
+                cal.setTime(calendar.getTime());
+                long time2 = cal.getTimeInMillis();
+                long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
+
+                //则更新状态为逾期
+                if (betweenDays < 0) {
+                    projectTaskNew.setTaskstate("5");//逾期
+                    projectTaskNew.setTaskId(Integer.valueOf(String.valueOf(projectTask.get("taskId"))));
+                    int i = myProjectService.updateTaskById(projectTaskNew);
+                }
             }
             projectInfo.setWorkTatalDay(String.valueOf(sum));//项目预计工期（任务工期之和）
 
@@ -532,6 +553,31 @@ public class MyProjectController {
 
         try {
             List<ProjectSubtask> list = myProjectService.getProjectSubtaskList(taskId);
+            ProjectSubtask projectSubtask1 = new ProjectSubtask();
+            for (ProjectSubtask projectSubtask:list) {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date edate = sdf.parse(projectSubtask.getEdate());//预计完成时间
+
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(edate);
+                //当前时间
+                Date smdate = new Date();
+
+                smdate = sdf.parse(sdf.format(smdate));
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(smdate);
+                long time1 = cal.getTimeInMillis();
+                cal.setTime(calendar.getTime());
+                long time2 = cal.getTimeInMillis();
+                long between = (time2 - time1) / (1000 * 3600*24);
+
+                if (between < 0) {
+                    projectSubtask1.setSubtaskstate("5");
+                    projectSubtask1.setSubtaskId(projectSubtask.getSubtaskId());
+                    int i = myProjectService.updateProSubTask(projectSubtask1);
+                }
+            }
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
         } catch (Exception e) {
@@ -744,7 +790,7 @@ public class MyProjectController {
      * @param subtaskId
      * @return
      */
-    @ApiOperation(value = "我的项目子任务详情页（基本信息+项目信息+参与组）")
+    @ApiOperation(value = "我的项目子任务详情页（基本信息+项目信息+日志记录）")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = true, dataType = "Integer")
     })
@@ -870,7 +916,12 @@ public class MyProjectController {
                 projectTask.setTaskId(Integer.valueOf(taskId));//任务id
                 projectTask.setTaskprogress(progress);//进度
                 projectTask.setCreateDate(str);
-                projectTask.setTaskstate("2");//开发中
+
+                if (Integer.valueOf(type) == 5) {
+                    projectTask.setTaskstate("4");//完成
+                } else {
+                    projectTask.setTaskstate("2");//开发中
+                }
 
                 //有更新进度则同步更新参与组开发进度
                 int k = myProjectService.updateTaskById(projectTask);
@@ -904,7 +955,13 @@ public class MyProjectController {
                 projectSubtask.setSubtaskId(Integer.valueOf(subtaskId));
                 projectSubtask.setSubtaskprogress(progress);//进度
                 projectSubtask.setCreateDate(str);
-                projectSubtask.setSubtaskstate("2");//开发中
+                if (Integer.valueOf(type) == 5) {
+                    projectSubtask.setSubtaskstate("4");
+                } else{
+                    projectSubtask.setSubtaskstate("2");//开发中
+                }
+
+
 
                 //
                 int k = myProjectService.updateProSubTask(projectSubtask);

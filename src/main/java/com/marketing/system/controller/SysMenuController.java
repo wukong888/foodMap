@@ -82,7 +82,7 @@ public class SysMenuController {
 
         List<String> list = applyService.getCreaterByName(user.getUserName());
 
-        if (list.size() > 0) {
+        if (list.size() > 0 && !user.getDuty().equals("CEO")) {
             name = "项目发起人";
         } else {
             if (name.contains("组长") || name.contains("经理")) {

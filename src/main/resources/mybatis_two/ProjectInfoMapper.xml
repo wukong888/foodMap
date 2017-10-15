@@ -202,8 +202,11 @@
     <if test="proState != null and proState != '' ">
       AND proState = #{proState}
     </if>
-
-
+    ORDER BY
+    case proState
+    when 7 then 1
+    end
+    DESC,createDate DESC
   </select>
 
   <!-- 查询立项待审批列表总数 测试 -->
@@ -416,8 +419,8 @@
   <update id="setPassOrReject" parameterType="com.marketing.system.entity.ProjectInfo" >
     update project_info
     set
-    proState = #{proState}
-    where id = #{id} AND proState = '1'
+    proState = #{proState},finishDate = #{finishDate}
+    where id = #{id}
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectInfo" >
@@ -445,6 +448,13 @@
     update project_info
     set
     proProgress = #{proprogress,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKeySelectiveState" parameterType="com.marketing.system.entity.ProjectInfo" >
+    update project_info
+    set
+    proState = #{prostate,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

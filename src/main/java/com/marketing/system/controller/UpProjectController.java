@@ -181,13 +181,15 @@ public class UpProjectController {
             Map<String, Object> map = new HashMap<>();
             map.put("id", id);
             map.put("proState", proState);
-
-            int i = upProjectService.setPassOrReject(map);
-
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             java.util.Date date = new java.util.Date();
             String str = sdf.format(date);
+
+            map.put("finishDate", str);
+
+            int i = upProjectService.setPassOrReject(map);
+
 
             ProLogRecord proLogRecord = new ProLogRecord();
             proLogRecord.setDate(str);//时间

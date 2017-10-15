@@ -17,6 +17,8 @@ public interface ProjectInfoMapper {
 
     int updateByPrimaryKeySelective(ProjectInfo record);
 
+    int updateByPrimaryKeySelectiveState(ProjectInfo record);
+
     int updateByPrimaryKey(ProjectInfo record);
 
     Integer getMyApplyProject(String name);

@@ -124,7 +124,7 @@ public class IndexServerImpl implements IndexService {
             for (Map map : infoList) {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date edate = sdf.parse(String.valueOf(map.get("edate")));//预计完成时间
+                Date edate = sdf.parse(String.valueOf(map.get("eDate")));//预计完成时间
 
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(edate);

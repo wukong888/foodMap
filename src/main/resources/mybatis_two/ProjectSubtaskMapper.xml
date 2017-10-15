@@ -41,7 +41,7 @@
     where subtaskHandler = #{subtaskhandler}
   </select>
 
-  <select id="getProjectSubtaskList" resultType="java.util.HashMap">
+  <select id="getProjectSubtaskList" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
     FROM

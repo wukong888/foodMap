@@ -123,7 +123,6 @@ public class ApplyController {
             }
         }
 
-        projectInfo.setId(1);
         projectInfo.setProid(Integer.valueOf(code));//任务id
         projectInfo.setProname(proName);//项目名称
         projectInfo.setProtype(proType);//项目类型
@@ -204,7 +203,7 @@ public class ApplyController {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("错误信息："+e);
+            logger.error("错误信息："+e.getMessage());
         }
 
         return r;
@@ -228,10 +227,37 @@ public class ApplyController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("错误信息："+e);
+            logger.error("错误信息："+e.getMessage());
         }
 
         r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, group, null);
+
+        return r;
+
+    }
+
+    @ApiOperation(value = "获取项目相关部门（回复人）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer")
+    })
+    @RequestMapping(value = "/getMsgPushDepartment", method = RequestMethod.POST)
+    public ApiResult<List<Department>> getMsgPushDepartment(@RequestParam(value = "proId", required = true) Integer proId) {
+
+        ApiResult<List<Department>> r = null;
+
+        try {
+            //所有部门
+            List<Department> department = departmentService.getDepartment();
+
+            //根据项目id查询任务、子任务负责人
+
+
+
+            r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("获取项目相关部门："+e.getMessage());
+        }
 
         return r;
 
@@ -282,7 +308,7 @@ public class ApplyController {
             } catch (Exception e) {
                 e.printStackTrace();
                 r = new ApiResult<Map<String, String>>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
-                logger.error("上传文件错误信息："+e);
+                logger.error("上传文件错误信息："+e.getMessage());
             }
 
         }

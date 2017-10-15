@@ -241,11 +241,9 @@
       #{rejectDate,jdbcType=VARCHAR},#{cancelDate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectInfo" >
-    set identity_insert project_info ON;
     insert into project_info
 
     <trim prefix="(" suffix=")" suffixOverrides="," >
-
       <if test="proid != null" >
         proId,
       </if>
@@ -264,7 +262,6 @@
       <if test="prodeclare != null" >
         proDeclare,
       </if>
-
       <if test="profilepath != null" >
         proFilePath,
       </if>
@@ -283,11 +280,9 @@
       <if test="prodeveloplogid != null" >
         proDevelopLogId,
       </if>
-
       <if test="proprogress != null" >
         proProgress,
       </if>
-
       <if test="createrSquadId != null" >
         createrSquad,
       </if>
@@ -306,7 +301,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-
       <if test="proid != null" >
         #{proid,jdbcType=VARCHAR},
       </if>
@@ -325,7 +319,6 @@
       <if test="prodeclare != null" >
         #{prodeclare,jdbcType=VARCHAR},
       </if>
-
       <if test="profilepath != null" >
         #{profilepath,jdbcType=VARCHAR},
       </if>
@@ -344,7 +337,6 @@
       <if test="prodeveloplogid != null" >
         #{prodeveloplogid,jdbcType=INTEGER},
       </if>
-
       <if test="proprogress != null" >
         #{proprogress,jdbcType=VARCHAR},
       </if>
@@ -363,10 +355,7 @@
       <if test="cancelDate != null" >
         #{cancelDate,jdbcType=VARCHAR},
       </if>
-
     </trim>
-    set identity_insert project_info OFF;
-    set identity_insert project_info ON;
   </insert>
 
   <update id="setPassOrReject22" parameterType="com.marketing.system.entity.ProjectInfo" >

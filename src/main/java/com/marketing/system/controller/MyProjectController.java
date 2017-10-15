@@ -88,8 +88,6 @@ public class MyProjectController {
         Map<String, Object> map = new HashMap<>();
 
         try {
-
-
             map.put("current", current);
             map.put("pageSize", pageSize);
             map.put("createrSquadId", createrSquadId);//项目发起部门
@@ -152,7 +150,6 @@ public class MyProjectController {
             mapTid.put("mentIds", mIds);
             //组长/经理其小组成员
             List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
-
 
             //当前登录用户所涉及子任务
             List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
@@ -260,11 +257,8 @@ public class MyProjectController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-
-
             //基本信息+项目信息Basic Information
             ProjectInfo projectInfo = upProjectService.selectByPrimaryKey(id);
-
 
             //参与组
             List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
@@ -347,8 +341,6 @@ public class MyProjectController {
         int i = 0;
 
         try {
-
-
             //添加
             if (Type == 1) {
                 ProjectTask projectTask = new ProjectTask();
@@ -498,8 +490,6 @@ public class MyProjectController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-
-
             //基本信息+任务信息Basic Information
             ProjectTask projectTask = myProjectService.getProjectTaskByTaskId(taskId);
 
@@ -877,6 +867,7 @@ public class MyProjectController {
                 projectTask.setTaskId(Integer.valueOf(taskId));//任务id
                 projectTask.setTaskprogress(progress);//进度
                 projectTask.setCreateDate(str);
+                projectTask.setTaskstate("2");//开发中
 
                 //有更新进度则同步更新参与组开发进度
                 int k = myProjectService.updateTaskById(projectTask);
@@ -910,6 +901,7 @@ public class MyProjectController {
                 projectSubtask.setSubtaskId(Integer.valueOf(subtaskId));
                 projectSubtask.setSubtaskprogress(progress);//进度
                 projectSubtask.setCreateDate(str);
+                projectSubtask.setSubtaskstate("2");//开发中
 
                 //
                 int k = myProjectService.updateProSubTask(projectSubtask);
@@ -1169,28 +1161,11 @@ public class MyProjectController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-            //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-            SystemUser user = new SystemUser();
+            SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
 
-            //String tokenjm = String.valueOf(request.getAttribute("token"));
-            String tokenjm = "w60uMlACoOI=";
-            String password = MyDES.decryptBasedDes(tokenjm);
-
-            //String userName = user.getUserName();//当前登录用户
-            //测试用***************************************
-            String userName = "小";
-            UsernamePasswordToken token = new UsernamePasswordToken("陈冬和", password);
-            SecurityUtils.getSubject().login(token);
-            user.setUserName(userName);
-            user.setDuty("CEO");
-            //String department = user.getDepartment();
-            //department = department.substring(0,2);
-            String department = "技术";
-            /*user.setUserName(user.getUserName());
-            user.setDuty("CEO");
             String department = user.getDepartment();
-            department = department.substring(0,2);*/
-            //String department = "技术";
+            department = department.substring(0,2);
+
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
             Department did = myProjectService.getDepartmentIdByMent(department);
 

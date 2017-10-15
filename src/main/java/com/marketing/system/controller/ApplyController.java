@@ -159,6 +159,8 @@ public class ApplyController {
 
             projectTask.setCreateDate(str);//创建时间
             projectTask.setTaskprogress("0");//任务进度
+            projectTask.setTaskstate("1");
+
             sum ++;
             projectTask.setIdd(sum);//项目编号
             //创建任务

@@ -123,6 +123,22 @@ public class MyProjectController {
 
             //所有项目list
             List<ProjectInfo> projectInfos = myProjectService.getMyProjectInfoList(map);
+            List<ProjectInfo> projectInfosNews = new ArrayList<>();
+            List<ProjectInfo> projectInfosNewss = new ArrayList<>();
+
+            ProjectInfo projectInfoNewss = new ProjectInfo();
+            //4：完成，5：驳回，6：作废不在我的项目里显示
+            for (int m =0; m < projectInfos.size(); m++) {
+                projectInfoNewss =projectInfos.get(m);
+                if (projectInfoNewss.getProstate().equals("1") || projectInfoNewss.getProstate().equals("2") || projectInfoNewss.getProstate().equals("3") || projectInfoNewss.getProstate().equals("7")) {
+
+                } else {
+                    projectInfos.remove(projectInfoNewss);
+                    //projectInfos.remove(m);
+                    m--;
+                }
+            }
+
 
             ProjectInfo projectInfoNew = new ProjectInfo();
 
@@ -146,7 +162,7 @@ public class MyProjectController {
                 long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
 
                 //如果是完成状态则不更新
-                if (projectInfo.getProstate().equals("4")) {
+                if (projectInfo.getProstate().equals("3") || projectInfo.getProstate().equals("4")) {
 
                 } else {
                     //则更新状态为逾期
@@ -250,6 +266,8 @@ public class MyProjectController {
                 sum = projectInfosNew.size();
                 projectInfosNew = ToolUtil.listSplit2(current,pageSize,projectInfosNew);
             }
+
+
 
             //分页信息
             rdPage.setTotal(sum);

@@ -62,8 +62,14 @@ public class ProReportController {
             @RequestParam(value="param", required = false) String param){
 
             ApiResult<List<Map>> result =null;
+        try {
             List<Map> ProReports=ProReportService.selectProReport(creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,onlinedate1,onlinedate2,param);
 
             return new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,"查询成功",ProReports,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("项目统计列表 错误信息：" + e.getMessage());
+        }
+        return result;
     }
 }

@@ -73,6 +73,7 @@ public class FinishProController {
             @RequestParam(value="param", required = false) String param) {
 
         ApiResult<List<ProjectInfo>> result =null;
+        try {
         if(creatersquadid==null){
             creatersquadid="";
         }
@@ -105,7 +106,7 @@ public class FinishProController {
         }
 
         //所有项目集合
-        Map<String,Object> FinProMapAll=FinProService.selectFinishPro(current,pageSize,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,onlinedate1,onlinedate2,protype,param);
+        Map<String,Object> FinProMapAll=FinProService.selectFinishPro(current,1000,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,onlinedate1,onlinedate2,protype,param);
 
         List<ProjectInfo> FinProAll=(List<ProjectInfo>)FinProMapAll.get("FinPro");
         //项目相关人员集合
@@ -178,7 +179,7 @@ public class FinishProController {
                 }
             }
             //当前用户是创建人
-            if (pro.getCreater() == user.getUserName()) {
+            if (pro.getCreater().equals( user.getUserName())) {
                 FinPro.add(pro);
             }
         }
@@ -187,8 +188,10 @@ public class FinishProController {
         int sum = 0;
         if (user.getDuty() == "CEO") {
             sum = FinProAll.size();
+            FinProAll=ToolUtil.listSplit2(current,pageSize,FinProAll);
         } else {
             sum = FinPro.size();
+            FinPro=ToolUtil.listSplit2(current,pageSize,FinPro);
         }
 
         //分页信息
@@ -202,7 +205,10 @@ public class FinishProController {
         } else {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, FinPro, rdPage);
         }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查询归档列表 错误信息：" + e.getMessage());
+        }
 
         return  result;
 
@@ -224,6 +230,7 @@ public class FinishProController {
             @RequestParam(value = "proId") int proId){
         ApiResult<List<Map>> result =null;
 
+        try {
         List<Map> FinProInfos=new ArrayList<Map>();
         Map<String,Object> FinProInfo=new HashMap<String,Object>();
         ProjectInfo ProInfo=FinProService.selectFinProInfo(id,proId);
@@ -239,6 +246,10 @@ public class FinishProController {
         String msg = "查询成功！";
 
         result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,FinProInfos,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看项目的详细信息 错误信息：" + e.getMessage());
+        }
         return result;
     }
 
@@ -255,7 +266,7 @@ public class FinishProController {
     public ApiResult<List<Map>> selectFinTaskInfo(
             @RequestParam(value = "taskId") int taskId){
         ApiResult<List<Map>> result =null;
-
+        try {
         List<Map> FinTaskInfos=new ArrayList<Map>();
         Map<String,Object> FinTaskInfo=new HashMap<String,Object>();
         ProjectTask TaskInfo=FinProService.selectFinTaskInfo(taskId);
@@ -271,6 +282,10 @@ public class FinishProController {
         String msg = "查询成功！";
 
         result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,FinTaskInfos,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看任务的详细信息 错误信息：" + e.getMessage());
+        }
         return result;
     }
 
@@ -287,11 +302,15 @@ public class FinishProController {
     public ApiResult<List<SubtaskDevelopLog>> selectFinSubtaskDevRecord(
             @RequestParam(value = "subtaskId") int subtaskId){
         ApiResult<List<SubtaskDevelopLog>> result =null;
-
+        try {
         List<SubtaskDevelopLog> SubDevRecords=FinProService.selectFinSubTaskDevRecord(subtaskId);
         String msg = "查询成功！";
 
         result = new ApiResult<List<SubtaskDevelopLog>>(Constant.SUCCEED_CODE_VALUE,msg,SubDevRecords,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看子任务的开发日志 错误信息：" + e.getMessage());
+        }
         return result;
     }
 
@@ -308,6 +327,8 @@ public class FinishProController {
     public ApiResult<List<Map>> selectFinSubtaskInfo(
             @RequestParam(value = "subtaskId") int subtaskId){
         ApiResult<List<Map>> result =null;
+
+        try {
         List<Map> FinSubtaskInfos=new ArrayList<Map>();
         Map<String,Object> FinSubtaskInfo=new HashMap<String,Object>();
         ProjectSubtask SubTaskInfo=FinProService.selectFinSubtaskInfo(subtaskId);
@@ -320,6 +341,10 @@ public class FinishProController {
         String msg = "查询成功！";
 
         result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,FinSubtaskInfos,null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("查看子任务详细信息 错误信息：" + e.getMessage());
+        }
         return result;
     }
 }

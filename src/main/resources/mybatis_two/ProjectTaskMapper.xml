@@ -89,12 +89,12 @@
     insert into project_task (proId, squadId,
       taskName, sDate, eDate, 
       taskState, taskProgress,
-      taskLogRecordId, taskDevelopLogId,handler,workDate,taskId,createDate)
+      taskLogRecordId, taskDevelopLogId,handler,workDate,createDate)
     values (#{proid,jdbcType=INTEGER}, #{squadId,jdbcType=VARCHAR},
       #{taskname,jdbcType=VARCHAR}, #{sdate,jdbcType=VARCHAR}, #{edate,jdbcType=VARCHAR}, 
       #{taskstate,jdbcType=VARCHAR}, #{taskprogress,jdbcType=VARCHAR},
       #{tasklogrecordid,jdbcType=INTEGER}, #{taskdeveloplogid,jdbcType=INTEGER},#{handler,jdbcType=VARCHAR},
-      #{workDate,jdbcType=VARCHAR},#{taskId,jdbcType=INTEGER},#{createDate,jdbcType=VARCHAR})
+      #{workDate,jdbcType=VARCHAR},#{createDate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectTask" >
 

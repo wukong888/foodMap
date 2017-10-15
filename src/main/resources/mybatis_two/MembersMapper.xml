@@ -47,7 +47,7 @@
     </foreach>
   </select>
 
-  <select id="selectSquadIdByMember" resultType="java.util.HashMap">
+  <select id="selectSquadIdByMember" resultMap="BaseResultMap">
     SELECT DISTINCT
     id,squadId,member
     FROM

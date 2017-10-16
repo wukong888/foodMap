@@ -1210,7 +1210,6 @@ public class MyProjectController {
                 } else {
                     subtaskDevelopLog.setProgress(progress);//进度
                 }
-                subtaskDevelopLog.setProgress(progress);
                 subtaskDevelopLog.setType(type);
 
                 int i = myProjectService.insertSubTaskDevlog(subtaskDevelopLog);
@@ -1225,7 +1224,6 @@ public class MyProjectController {
                 } else {
                     projectSubtask.setSubtaskstate("2");//开发中
                 }
-
                 //
                 int k = myProjectService.updateProSubTask(projectSubtask);
 

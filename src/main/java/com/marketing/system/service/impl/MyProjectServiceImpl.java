@@ -260,4 +260,12 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return departmentMapper.getDepartmentTwo(map);
     }
+
+    @Override
+    public List<ProjectInfo> getProjectByHanderMap(Map<String, Object> map) {
+
+        List<ProjectInfo> list = projectInfoMapper.getProjectByHanderMap(map);
+
+        return list;
+    }
 }

@@ -83,6 +83,7 @@
 
 
 
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_subtask
     where subtaskId = #{subtaskId,jdbcType=INTEGER}

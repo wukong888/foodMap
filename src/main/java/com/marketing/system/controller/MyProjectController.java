@@ -306,11 +306,31 @@ public class MyProjectController {
                 if (pro.getCreater().equals(user.getUserName())) {
                     projectInfosNew.add(pro);
                 }
-
+                //当前登录用户并其成员包含所涉及子任务
+                subtaskListProject = myProjectService.getProjectByHanderMap(mapTmem);
+                if (subtaskListProject.size() > 0) {
+                    for (ProjectInfo map1 : subtaskListProject) {
+                        map1.getCreater();
+                        //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
+                        if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                            map1.setDuty("项目发起人");
+                            //
+                        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
+                            map1.setDuty("组员");
+                        } else if (user.getDuty().equals("CEO")) {
+                            map1.setDuty("CEO");
+                        } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                            map1.setDuty("经理/组长");
+                        } else {
+                            map1.setDuty("项目无关人员");
+                        }
+                    }
+                }
             }
             if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
                 //当前登录用户并其成员包含所涉及子任务
-                subtaskListProject = myProjectService.getProjectByHanderMap(mapTmem);
+                //subtaskListProject = myProjectService.getProjectByHanderMap(mapTmem);
+
                 projectInfosNew.addAll(subtaskListProject);
             }
             RdPage rdPage = new RdPage();

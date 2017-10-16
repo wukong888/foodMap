@@ -112,45 +112,44 @@ public class IndexServerImpl implements IndexService {
     }
 
     @Override
-    public List<Map<String, Object>> getProjectTaskList(String creater) throws ParseException {
+    public List<Map<String, Object>>    getProjectTaskList(String creater) throws ParseException {
 
         List<Map<String, Object>> infoList = new ArrayList<>();
+        List<Map<String, Object>> infoListNew = new ArrayList<>();
 
         if (creater != "") {
             infoList = projectInfoMapper.getProjectTaskList(creater);
         } else {
             infoList = projectInfoMapper.getProjectTaskListNull();
         }
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         //循环计算距逾期时间天数
         for (int i = 0; i < infoList.size(); i++) {
             map = infoList.get(i);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date edate = sdf.parse(String.valueOf(map.get("edate")));//预计完成时间
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date edate = sdf.parse(String.valueOf(map.get("edate")));//预计完成时间
 
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(edate);
-                //当前时间
-                Date smdate = new Date();
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(edate);
+            //当前时间
+            Date smdate = new Date();
 
-                smdate = sdf.parse(sdf.format(smdate));
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(smdate);
-                long time1 = cal.getTimeInMillis();
-                cal.setTime(calendar.getTime());
-                long time2 = cal.getTimeInMillis();
-                long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
+            smdate = sdf.parse(sdf.format(smdate));
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(smdate);
+            long time1 = cal.getTimeInMillis();
+            cal.setTime(calendar.getTime());
+            long time2 = cal.getTimeInMillis();
+            long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
 
-                map.put("betweenDays", betweenDays);
-
-                //任务距离完成时间只有3天时间师即在首页提示
-                if (Integer.valueOf(String.valueOf(map.get("betweenDays"))) > 3 ) {
-                    infoList.remove(map);
-                }
-
+            map.put("betweenDays", betweenDays);
+            infoListNew.add(map);
+            //任务距离完成时间只有3天时间师即在首页提示
+            if (Integer.valueOf(String.valueOf(map.get("betweenDays"))) > 3) {
+                infoListNew.remove(map);
+            }
         }
-
-        return infoList;
+        return infoListNew;
     }
 
     @Override
@@ -167,30 +166,30 @@ public class IndexServerImpl implements IndexService {
         ProjectSubtask projectSubtask = new ProjectSubtask();
         //循环计算距逾期时间天数
         for (int i = 0; i < infoList.size(); i++) {
-                projectSubtask = infoList.get(i);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date edate = sdf.parse(projectSubtask.getEdate());//预计完成时间
+            projectSubtask = infoList.get(i);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date edate = sdf.parse(projectSubtask.getEdate());//预计完成时间
 
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(edate);
-                //当前时间
-                Date smdate = new Date();
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(edate);
+            //当前时间
+            Date smdate = new Date();
 
-                smdate = sdf.parse(sdf.format(smdate));
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(smdate);
-                long time1 = cal.getTimeInMillis();
-                cal.setTime(calendar.getTime());
-                long time2 = cal.getTimeInMillis();
-                long betweenHours = (time2 - time1) / (1000 * 3600);
+            smdate = sdf.parse(sdf.format(smdate));
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(smdate);
+            long time1 = cal.getTimeInMillis();
+            cal.setTime(calendar.getTime());
+            long time2 = cal.getTimeInMillis();
+            long betweenHours = (time2 - time1) / (1000 * 3600);
 
-                projectSubtask.setBetweenHours(betweenHours);
+            projectSubtask.setBetweenHours(betweenHours);
 
-                //子任务距离逾期时间只有1天时间时即在首页提示
-                if (projectSubtask.getBetweenHours() > 24) {
-                    infoList.remove(projectSubtask);
-                }
+            //子任务距离逾期时间只有1天时间时即在首页提示
+            if (projectSubtask.getBetweenHours() > 24) {
+                infoList.remove(projectSubtask);
             }
+        }
 
 
         return infoList;

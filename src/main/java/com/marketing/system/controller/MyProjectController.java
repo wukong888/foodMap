@@ -1158,6 +1158,7 @@ public class MyProjectController {
 
                 if (Integer.valueOf(type) == 5) {
                     projectTask.setTaskstate("4");//完成
+                    projectTask.setTaskprogress("100");
                 } else {
                     projectTask.setTaskstate("2");//开发中
                 }
@@ -1196,6 +1197,7 @@ public class MyProjectController {
                 projectSubtask.setCreateDate(str);
                 if (Integer.valueOf(type) == 5) {
                     projectSubtask.setSubtaskstate("4");
+                    projectSubtask.setSubtaskprogress("100");
                 } else {
                     projectSubtask.setSubtaskstate("2");//开发中
                 }

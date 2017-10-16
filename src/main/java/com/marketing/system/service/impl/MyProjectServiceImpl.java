@@ -268,4 +268,12 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return list;
     }
+
+    @Override
+    public List<ProjectInfo> getProjectByHanderMapFinish(Map<String, Object> map) {
+
+        List<ProjectInfo> list = projectInfoMapper.getProjectByHanderMapFinish(map);
+
+        return list;
+    }
 }

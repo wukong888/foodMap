@@ -117,6 +117,7 @@ public class FinishProController {
         Map<String,Object> FinProMapAll=FinProService.selectFinishPro(current,1000,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,onlinedate1,onlinedate2,protype,param);
 
         List<ProjectInfo> FinProAll=(List<ProjectInfo>)FinProMapAll.get("FinPro");
+            List<ProjectInfo> projectInfosNew = new ArrayList<>();
         //项目相关人员集合
         List<ProjectInfo> FinPro = new ArrayList<>();
 
@@ -139,7 +140,15 @@ public class FinishProController {
         mapTid.put("mentIds", mIds);
         //组长/经理其小组成员
         List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "member"));
 
+            String[] Idsmember = menuLeafIdsmember.split(",");
+
+            Map<String, Object> mapTmem = new HashMap<>();
+
+            mapTmem.put("menuLeafIds", Idsmember);
+
+        List<ProjectInfo> subtaskListProject = new ArrayList<>();
         //当前登录用户所涉及子任务
         List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
         Map<String, Object> objectMapNew = new HashMap<>();
@@ -185,7 +194,13 @@ public class FinishProController {
             if (pro.getCreater().equals( user.getUserName())) {
                 FinPro.add(pro);
             }
+
         }
+            if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
+                //当前登录用户并其成员包含所涉及子任务
+                subtaskListProject = myProjectService.getProjectByHanderMapFinish(mapTmem);
+                FinPro.addAll(subtaskListProject);
+            }
 
         RdPage rdPage = new RdPage();
         int sum = 0;

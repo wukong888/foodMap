@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.rmi.MarshalledObject;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Api(description = "我的项目接口", value = "我的项目接口")
 @Scope("prototype")
@@ -128,7 +129,7 @@ public class MyProjectController {
 
             ProjectInfo projectInfoNewss = new ProjectInfo();
             //4：完成，5：驳回，6：作废不在我的项目里显示
-            for (int m = 0; m < projectInfos.size(); m++) {
+            /*for (int m = 0; m < projectInfos.size(); m++) {
                 projectInfoNewss = projectInfos.get(m);
                 if (projectInfoNewss.getProstate().equals("1") || projectInfoNewss.getProstate().equals("2") || projectInfoNewss.getProstate().equals("3") || projectInfoNewss.getProstate().equals("7")) {
 
@@ -136,7 +137,8 @@ public class MyProjectController {
                     projectInfos.remove(projectInfoNewss);
                     //projectInfos.remove(m);
                 }
-            }
+            }*/
+            projectInfos=projectInfos.stream().filter(t->t.getProstate().equals("1") || t.getProstate().equals("2") || t.getProstate().equals("3") || t.getProstate().equals("7")).collect(Collectors.toList());
 
             ProjectInfo projectInfoNew = new ProjectInfo();
 
@@ -332,6 +334,7 @@ public class MyProjectController {
                 //subtaskListProject = myProjectService.getProjectByHanderMap(mapTmem);
 
                 projectInfosNew.addAll(subtaskListProject);
+                Collections.sort(projectInfosNew);
             }
             RdPage rdPage = new RdPage();
 

@@ -61,7 +61,6 @@ public class IndexController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-            SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
             SystemUser user = systemUserService.selectByPrimaryKey(id);
 
             //职位，立项待审批、上线待审批暂时只有CEO有该权限
@@ -73,7 +72,7 @@ public class IndexController {
             //我申请的项目
             Integer i = indexService.getMyApplyProject(user.getUserName());
 
-            //参与的项目 j 项目任务+子任务
+            //参与的项目 j 项目任务+子任务+项目
             Integer j = indexService.getMyJoinProject(user.getUserName());
 
             //立项待审批

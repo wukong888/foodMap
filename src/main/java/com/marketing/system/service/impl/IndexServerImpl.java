@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class IndexServerImpl implements IndexService {
@@ -40,6 +41,9 @@ public class IndexServerImpl implements IndexService {
     @Override
     public Integer getMyJoinProject(String name) {
 
+        //项目
+        Integer k = projectInfoMapper.getMyJoinProject(name);
+
         //项目任务
         Integer i = projectTaskMapper.getMyJoinProject(name);
         if (i == null) {
@@ -52,7 +56,7 @@ public class IndexServerImpl implements IndexService {
             j = 0;
         }
 
-        return i + j;
+        return i + j + k;
     }
 
     @Override
@@ -95,24 +99,20 @@ public class IndexServerImpl implements IndexService {
             long time1 = cal.getTimeInMillis();
             cal.setTime(calendar.getTime());
             long time2 = cal.getTimeInMillis();
-            String betweenDays = ((time2 - time1) / (1000 * 3600 * 24)) + "";
+            long betweenDays = ((time2 - time1) / (1000 * 3600 * 24));
 
-            projectInfo.setBetweenDays(Integer.valueOf(betweenDays));
+            projectInfo.setBetweenDays(betweenDays);
 
-            //项目距离完成只有6天时间时即在首页提示
-            if (projectInfo.getBetweenDays() > 6) {
-                //infoListNew.set(i, projectInfo);
-                //infoListNew.add(projectInfo);
-                infoList.remove(projectInfo);
-            }
         }
+
+        infoList = infoList.stream().filter(t -> t.getBetweenDays() <= 6).collect(Collectors.toList());
 
 
         return infoList;
     }
 
     @Override
-    public List<Map<String, Object>>    getProjectTaskList(String creater) throws ParseException {
+    public List<Map<String, Object>> getProjectTaskList(String creater) throws ParseException {
 
         List<Map<String, Object>> infoList = new ArrayList<>();
         List<Map<String, Object>> infoListNew = new ArrayList<>();
@@ -145,10 +145,11 @@ public class IndexServerImpl implements IndexService {
             map.put("betweenDays", betweenDays);
             infoListNew.add(map);
             //任务距离完成时间只有3天时间师即在首页提示
-            if (Integer.valueOf(String.valueOf(map.get("betweenDays"))) > 3) {
+            /*if (Integer.valueOf(String.valueOf(map.get("betweenDays"))) > 3) {
                 infoListNew.remove(map);
-            }
+            }*/
         }
+        infoListNew = infoListNew.stream().filter(t -> Integer.valueOf(String.valueOf(t.get("betweenDays"))) <= 3).collect(Collectors.toList());
         return infoListNew;
     }
 
@@ -186,11 +187,12 @@ public class IndexServerImpl implements IndexService {
             projectSubtask.setBetweenHours(betweenHours);
 
             //子任务距离逾期时间只有1天时间时即在首页提示
-            if (projectSubtask.getBetweenHours() > 24) {
+            /*if (projectSubtask.getBetweenHours() > 24) {
                 infoList.remove(projectSubtask);
-            }
+            }*/
         }
 
+        infoList = infoList.stream().filter(t -> Integer.valueOf(String.valueOf(t.getBetweenHours())) <= 24).collect(Collectors.toList());
 
         return infoList;
     }

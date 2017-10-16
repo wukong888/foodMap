@@ -249,6 +249,13 @@
     AND proState = 4
   </select>
 
+  <select id="getMyJoinProject" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select
+    COUNT (id)
+    from project_info
+    where creater = #{name}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_info
     where id = #{id,jdbcType=INTEGER}

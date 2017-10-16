@@ -48,4 +48,6 @@ public interface ProjectInfoMapper {
 
     List<ProjectInfo> getProjectByHanderMapFinish(Map<String,Object> map);
 
+    Integer getMyJoinProject(String name);
+
 }

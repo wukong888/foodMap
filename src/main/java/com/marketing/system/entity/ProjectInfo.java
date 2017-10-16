@@ -1,6 +1,6 @@
 package com.marketing.system.entity;
 
-public class ProjectInfo {
+public class ProjectInfo implements Comparable<ProjectInfo>{
     private Integer id;
 
     private Integer proid;
@@ -55,13 +55,13 @@ public class ProjectInfo {
     /**
      * 距离逾期天数
      */
-    private Integer betweenDays;
+    private Long betweenDays;
 
-    public Integer getBetweenDays() {
+    public Long getBetweenDays() {
         return betweenDays;
     }
 
-    public void setBetweenDays(Integer betweenDays) {
+    public void setBetweenDays(Long betweenDays) {
         this.betweenDays = betweenDays;
     }
 
@@ -225,5 +225,13 @@ public class ProjectInfo {
 
     public void setCancelDate(String cancelDate) {
         this.cancelDate = cancelDate;
+    }
+
+    @Override
+    public int compareTo(ProjectInfo o) {
+
+        int flag = o.prostate.compareTo(this.prostate);
+
+        return flag;
     }
 }

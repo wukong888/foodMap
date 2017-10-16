@@ -176,6 +176,7 @@ public class MyProjectController {
             }
 
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
+            List<ProjectInfo> projectInfosNew2 = new ArrayList<>();
             //项目相关人员集合
 
             SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
@@ -333,8 +334,19 @@ public class MyProjectController {
                 //当前登录用户并其成员包含所涉及子任务
                 //subtaskListProject = myProjectService.getProjectByHanderMap(mapTmem);
 
+
                 projectInfosNew.addAll(subtaskListProject);
+
+                Iterator it = projectInfosNew.iterator();
+                while (it.hasNext()) {
+                    ProjectInfo obj = (ProjectInfo) it.next();
+                    if (!projectInfosNew2.contains(obj)) {                //不包含就添加
+                        projectInfosNew2.add(obj);
+                    }
+                }
+                projectInfosNew = projectInfosNew2;
                 Collections.sort(projectInfosNew);
+
             }
             RdPage rdPage = new RdPage();
 
@@ -1149,7 +1161,11 @@ public class MyProjectController {
                 taskDevelopLog.setExplain(explain);//备注说明
                 taskDevelopLog.setFilepath(filePath);//附件地址
                 taskDevelopLog.setTaskid(Integer.valueOf(taskId));//任务id
-                taskDevelopLog.setProgress(progress);//进度
+                if (Integer.valueOf(type) == 5) {
+                    taskDevelopLog.setProgress("100");
+                } else {
+                    taskDevelopLog.setProgress(progress);//进度
+                }
                 taskDevelopLog.setType(type);//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
 
                 int i = myProjectService.insertTaskDevlog(taskDevelopLog);
@@ -1189,6 +1205,11 @@ public class MyProjectController {
                 subtaskDevelopLog.setExplain(explain);
                 subtaskDevelopLog.setFilepath(filePath);
                 subtaskDevelopLog.setSubtaskid(Integer.valueOf(subtaskId));
+                if (Integer.valueOf(type) == 5) {
+                    subtaskDevelopLog.setProgress("100");
+                } else {
+                    subtaskDevelopLog.setProgress(progress);//进度
+                }
                 subtaskDevelopLog.setProgress(progress);
                 subtaskDevelopLog.setType(type);
 
@@ -1204,7 +1225,6 @@ public class MyProjectController {
                 } else {
                     projectSubtask.setSubtaskstate("2");//开发中
                 }
-
 
                 //
                 int k = myProjectService.updateProSubTask(projectSubtask);

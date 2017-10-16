@@ -234,4 +234,65 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
 
         return flag;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectInfo that = (ProjectInfo) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (proid != null ? !proid.equals(that.proid) : that.proid != null) return false;
+        if (proname != null ? !proname.equals(that.proname) : that.proname != null) return false;
+        if (protype != null ? !protype.equals(that.protype) : that.protype != null) return false;
+        if (plansdate != null ? !plansdate.equals(that.plansdate) : that.plansdate != null) return false;
+        if (planedate != null ? !planedate.equals(that.planedate) : that.planedate != null) return false;
+        if (prodeclare != null ? !prodeclare.equals(that.prodeclare) : that.prodeclare != null) return false;
+        if (profilepath != null ? !profilepath.equals(that.profilepath) : that.profilepath != null) return false;
+        if (createdate != null ? !createdate.equals(that.createdate) : that.createdate != null) return false;
+        if (prostate != null ? !prostate.equals(that.prostate) : that.prostate != null) return false;
+        if (creater != null ? !creater.equals(that.creater) : that.creater != null) return false;
+        if (prologrecordid != null ? !prologrecordid.equals(that.prologrecordid) : that.prologrecordid != null)
+            return false;
+        if (prodeveloplogid != null ? !prodeveloplogid.equals(that.prodeveloplogid) : that.prodeveloplogid != null)
+            return false;
+        if (proprogress != null ? !proprogress.equals(that.proprogress) : that.proprogress != null) return false;
+        if (createrSquadId != null ? !createrSquadId.equals(that.createrSquadId) : that.createrSquadId != null)
+            return false;
+        if (onlineDate != null ? !onlineDate.equals(that.onlineDate) : that.onlineDate != null) return false;
+        if (workTatalDay != null ? !workTatalDay.equals(that.workTatalDay) : that.workTatalDay != null) return false;
+        if (finishDate != null ? !finishDate.equals(that.finishDate) : that.finishDate != null) return false;
+        if (rejectDate != null ? !rejectDate.equals(that.rejectDate) : that.rejectDate != null) return false;
+        if (cancelDate != null ? !cancelDate.equals(that.cancelDate) : that.cancelDate != null) return false;
+        if (duty != null ? !duty.equals(that.duty) : that.duty != null) return false;
+        return betweenDays != null ? betweenDays.equals(that.betweenDays) : that.betweenDays == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (proid != null ? proid.hashCode() : 0);
+        result = 31 * result + (proname != null ? proname.hashCode() : 0);
+        result = 31 * result + (protype != null ? protype.hashCode() : 0);
+        result = 31 * result + (plansdate != null ? plansdate.hashCode() : 0);
+        result = 31 * result + (planedate != null ? planedate.hashCode() : 0);
+        result = 31 * result + (prodeclare != null ? prodeclare.hashCode() : 0);
+        result = 31 * result + (profilepath != null ? profilepath.hashCode() : 0);
+        result = 31 * result + (createdate != null ? createdate.hashCode() : 0);
+        result = 31 * result + (prostate != null ? prostate.hashCode() : 0);
+        result = 31 * result + (creater != null ? creater.hashCode() : 0);
+        result = 31 * result + (prologrecordid != null ? prologrecordid.hashCode() : 0);
+        result = 31 * result + (prodeveloplogid != null ? prodeveloplogid.hashCode() : 0);
+        result = 31 * result + (proprogress != null ? proprogress.hashCode() : 0);
+        result = 31 * result + (createrSquadId != null ? createrSquadId.hashCode() : 0);
+        result = 31 * result + (onlineDate != null ? onlineDate.hashCode() : 0);
+        result = 31 * result + (workTatalDay != null ? workTatalDay.hashCode() : 0);
+        result = 31 * result + (finishDate != null ? finishDate.hashCode() : 0);
+        result = 31 * result + (rejectDate != null ? rejectDate.hashCode() : 0);
+        result = 31 * result + (cancelDate != null ? cancelDate.hashCode() : 0);
+        result = 31 * result + (duty != null ? duty.hashCode() : 0);
+        result = 31 * result + (betweenDays != null ? betweenDays.hashCode() : 0);
+        return result;
+    }
 }

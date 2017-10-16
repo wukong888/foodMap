@@ -189,7 +189,7 @@ public class FinishProController {
 
         RdPage rdPage = new RdPage();
         int sum = 0;
-        if (user.getDuty() == "CEO") {
+        if (user.getDuty() .equals("CEO") ) {
             sum = FinProAll.size();
             FinProAll=ToolUtil.listSplit2(current,pageSize,FinProAll);
         } else {

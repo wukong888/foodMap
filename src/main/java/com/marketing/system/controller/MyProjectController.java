@@ -208,6 +208,7 @@ public class MyProjectController {
             mapTmem.put("menuLeafIds", Idsmember);
 
             List<Map<String, Object>> subtaskList = new ArrayList<>();
+            List<ProjectInfo> subtaskListProject = new ArrayList<>();
 
             if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
                 //当前登录用户并其成员包含所涉及子任务
@@ -229,6 +230,7 @@ public class MyProjectController {
 
             //根据taskId查找proId
             List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
+
 
             List<Map<String, Object>> taskString = new ArrayList<>();
             List<Map<String, Object>> taskProId = new ArrayList<>();
@@ -298,13 +300,19 @@ public class MyProjectController {
                         }
                     }
                 }
+
+
                 //当前用户是创建人
                 if (pro.getCreater().equals(user.getUserName())) {
                     projectInfosNew.add(pro);
                 }
 
             }
-
+            if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
+                //当前登录用户并其成员包含所涉及子任务
+                subtaskListProject = myProjectService.getProjectByHanderMap(mapTmem);
+                projectInfosNew.addAll(subtaskListProject);
+            }
             RdPage rdPage = new RdPage();
 
             int sum = 0;

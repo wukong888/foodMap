@@ -44,4 +44,6 @@ public interface ProjectInfoMapper {
 
     List<ProjectInfo> getMyProjectInfoList(Map<String,Object> map);
 
+    List<ProjectInfo> getProjectByHanderMap(Map<String,Object> map);
+
 }

@@ -79,4 +79,7 @@ public interface MyProjectService {
 
     //根据姓名查找部门
     Department getDepartmentById(Map<String,Object> map);
+
+    //当前登录用户并其成员包含所涉及项目
+    List<ProjectInfo> getProjectByHanderMap(Map<String, Object> map);
 }

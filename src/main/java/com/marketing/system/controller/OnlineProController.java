@@ -179,7 +179,7 @@ public class OnlineProController {
 
             RdPage rdPage = new RdPage();
             int sum = 0;
-            if (user.getDuty() == "CEO") {
+            if (user.getDuty() .equals("CEO") ) {
                 sum = OnProAll.size();
                 OnProAll = ToolUtil.listSplit2(current, pageSize, OnProAll);
             } else {
@@ -194,7 +194,7 @@ public class OnlineProController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            if (user.getDuty() == "CEO") {
+            if (user.getDuty().equals("CEO") ) {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, OnProAll, rdPage);
             } else {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, OnPro, rdPage);

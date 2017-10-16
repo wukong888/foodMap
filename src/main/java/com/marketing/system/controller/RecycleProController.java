@@ -189,14 +189,14 @@ public class RecycleProController {
                 }
             }
             //当前用户是创建人
-            if (pro.getCreater().equals(user.getUserName()) ) {
+            if (pro.getCreater().equals(user.getUserName( )) ) {
                 RecPro.add(pro);
             }
         }
 
         RdPage rdPage = new RdPage();
         int sum = 0;
-        if (user.getDuty() == "CEO") {
+        if (user.getDuty() .equals("CEO") ) {
             sum = RecProAll.size();
             RecProAll=ToolUtil.listSplit2(current,pageSize,RecProAll);
         } else {
@@ -211,7 +211,7 @@ public class RecycleProController {
         rdPage.setCurrent(current);
         rdPage.setPageSize(pageSize);
 
-        if (user.getDuty() == "CEO") {
+        if (user.getDuty().equals("CEO") ) {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, RecProAll, rdPage);
         } else {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, RecPro, rdPage);

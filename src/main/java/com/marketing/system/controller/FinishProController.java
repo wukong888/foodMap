@@ -203,7 +203,7 @@ public class FinishProController {
         rdPage.setCurrent(current);
         rdPage.setPageSize(pageSize);
 
-        if (user.getDuty() == "CEO") {
+        if (user.getDuty().equals("CEO") ) {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, FinProAll, rdPage);
         } else {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, FinPro, rdPage);

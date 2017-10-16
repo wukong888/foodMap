@@ -41,6 +41,12 @@
     </foreach>
   </select>
 
+  <select id="getDepartmentTwo" resultMap="BaseResultMap">
+    SELECT id, departmentId,department from department WHERE departmentId =
+    (SELECT departmentId FROM projectManage.dbo.[group] WHERE squadId =
+    (SELECT squadId from members where member= #{member}))
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from department
     where id = #{id,jdbcType=INTEGER}

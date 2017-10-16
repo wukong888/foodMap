@@ -138,7 +138,6 @@ public class MyProjectController {
                 }
             }
 
-
             ProjectInfo projectInfoNew = new ProjectInfo();
 
             for (ProjectInfo projectInfo : projectInfos) {
@@ -200,8 +199,23 @@ public class MyProjectController {
             //组长/经理其小组成员
             List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
 
-            //当前登录用户所涉及子任务
-            List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "member"));
+
+            String[] Idsmember = menuLeafIdsmember.split(",");
+
+            Map<String, Object> mapTmem = new HashMap<>();
+
+            mapTmem.put("menuLeafIds", Idsmember);
+
+            List<Map<String, Object>> subtaskList = new ArrayList<>();
+
+            if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
+                //当前登录用户并其成员包含所涉及子任务
+                subtaskList = myProjectService.getSubTaskIdByHanderMap(mapTmem);
+            } else {
+                //当前登录用户所涉及子任务
+                subtaskList = myProjectService.getSubTaskIdByHander(userName);
+            }
 
             Map<String, Object> objectMapNew = new HashMap<>();
 
@@ -226,10 +240,47 @@ public class MyProjectController {
                         taskString.add(map0);
                     }
                 }
+
             }
 
             //判断是否是项目相关的人（我的项目）是则重新赋值组成新 我的项目list
             for (ProjectInfo pro : projectInfos) {
+
+                //根据项目id查询子任务负责人
+                List<Map<String, Object>> projectSubtaskList = applyService.selectProSubtaskByProId(pro.getProid());
+                //判断当前登录用户在对应项目中是项目发起人还是项目负责人（组员）
+
+                //有子任务的情况
+                if (projectSubtaskList.size() > 0) {
+                    for (Map map1 : projectSubtaskList) {
+                        map1.get("subtaskHandler");
+                        //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
+                        if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                            pro.setDuty("项目发起人");
+                            //
+                        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.get("subtaskHandler"))) {
+                            pro.setDuty("组员");
+                        } else if (user.getDuty().equals("CEO")) {
+                            pro.setDuty("CEO");
+                        } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                            pro.setDuty("经理/组长");
+                        } else {
+                            pro.setDuty("项目无关人员");
+                        }
+                    }
+                } else {
+                    if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                        pro.setDuty("项目发起人");
+                    } else if (user.getDuty().equals("CEO")) {
+                        pro.setDuty("CEO");
+                    } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                        pro.setDuty("经理/组长");
+                    } else {
+                        pro.setDuty("项目无关人员");
+                    }
+                }
+
+
                 for (Map map1 : taskList) {
                     if (map1.get("proId") == (Integer.valueOf(pro.getProid()))) {
                         projectInfosNew.add(pro);
@@ -297,12 +348,14 @@ public class MyProjectController {
     @ApiOperation(value = "我的项目开发中详情页（基本信息+项目信息+参与组）")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getMyProjectDetails", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getMyProjectDetails(
             @RequestParam(value = "id") int id,
-            @RequestParam(value = "proId") int proId) {
+            @RequestParam(value = "proId") int proId,
+            @RequestParam(value = "userId") int userId) {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
@@ -312,22 +365,71 @@ public class MyProjectController {
             //基本信息+项目信息Basic Information
             ProjectInfo projectInfo = upProjectService.selectByPrimaryKey(id);
 
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
             //参与组
             List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
             ProjectTask projectTaskNew = new ProjectTask();
+
+            Map<String, Object> map1 = new HashMap<>();
             int sum = 0;
+            boolean flag = false;
+
             for (Map<String, Object> projectTask : taskList) {
-                projectTask.get("workDate");
-                if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null)
+                if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null) {
                     sum += Integer.valueOf((String) projectTask.get("workDate"));
+                }
 
                 Group group = groupService.getGroupBySquadId(Integer.valueOf((String) projectTask.get("squadId")));
                 String squad = group.getSquad();
                 //projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
                 projectTask.put("squad", squad);//根据id取对应小组中文名
                 String squadId = (String) projectTask.get("squadId");
+
                 String departmentId = upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
                 projectTask.put("departmentId", departmentId);//根据squadid取对应部门Id
+
+                String department = upProjectService.selectDepartmentByDId(departmentId);
+
+                if (department.length() > 1) {
+                    department = department.substring(0, 2);
+                }
+
+                map1.put("department", department);
+
+                //对应组所有人信息
+                List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+                List<Map<String, Object>> systemUserListNew = new ArrayList<>();
+
+                for (Map sys : systemUserList) {
+                    if (sys.get("duty") != "" && sys.get("duty") != null) {
+                        if (String.valueOf(sys.get("duty")).contains("组长") || String.valueOf(sys.get("duty")).contains("经理")) {
+                            systemUserListNew.add(sys);
+                        }
+                    } else {
+                        projectTask.put("duty", "组员");
+                    }
+
+                }
+                String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(systemUserListNew, "UserName"));
+
+                String[] Ids = menuLeafIds.split(",");
+
+                Map<String, Object> mapT = new HashMap<>();
+
+                mapT.put("menuLeafIds", Ids);
+                if (menuLeafIds.contains(user.getUserName())) {
+                    flag = true;
+                    projectTask.put("duty", "经理/组长");
+                } else {
+                    projectTask.put("duty", "组员");
+                }
+
+                if (user.getDuty().equals("CEO")) {
+                    projectTask.put("duty", "CEO");
+                }
+                if (projectInfo.getCreater().equals(user.getUserName())) {
+                    projectTask.put("duty", "项目发起人");
+                }
 
                 //判断是否逾期，是则更新状态为逾期
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -600,18 +702,65 @@ public class MyProjectController {
      */
     @ApiOperation(value = "我的项目任务分配详细页（子任务列表）")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getSubTaskList", method = RequestMethod.POST)
     public ApiResult<List<ProjectSubtask>> getSubTaskList(
-            @RequestParam(value = "taskId") int taskId) {
+            @RequestParam(value = "taskId") int taskId,
+            @RequestParam(value = "id") int id) {
 
         ApiResult<List<ProjectSubtask>> result = null;
 
         try {
             List<ProjectSubtask> list = myProjectService.getProjectSubtaskList(taskId);
+
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
             ProjectSubtask projectSubtask1 = new ProjectSubtask();
             for (ProjectSubtask projectSubtask : list) {
+
+                //子任务权限：自己、自己组长、经理和ceo有权限
+                Map<String, Object> map1 = new HashMap<>();
+                Map<String, Object> map2 = new HashMap<>();
+
+                map2.put("member", projectSubtask.getSubtaskhandler());
+                Department department = myProjectService.getDepartmentById(map2);
+
+                String department2 = department.getDepartment();
+                if (department2.length() > 1) {
+                    department2 = department2.substring(0,2);
+                }
+                map1.put("department", department2);
+
+                //对应组所有人信息
+                List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+
+                List<Map<String, Object>> systemUserListNew = new ArrayList<>();
+
+                for (Map sys : systemUserList) {
+                    if (sys.get("duty") != "" && sys.get("duty") != null) {
+                        if (String.valueOf(sys.get("duty")).contains("组长") || String.valueOf(sys.get("duty")).contains("经理")) {
+                            systemUserListNew.add(sys);
+                        }
+                    } else {
+                        projectSubtask.setDuty("组员");
+                    }
+                }
+
+                String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(systemUserListNew, "UserName"));
+
+                if (menuLeafIds.contains(user.getUserName())) {
+                    projectSubtask.setDuty("经理/组长");
+                } else {
+                    projectSubtask.setDuty("组员");
+                }
+
+                if (projectSubtask.getSubtaskhandler().equals(user.getUserName())) {
+                    projectSubtask.setDuty("项目发起人");
+                }
+                if (user.getDuty().equals("CEO")) {
+                    projectSubtask.setDuty("CEO");
+                }
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date edate = sdf.parse(projectSubtask.getEdate());//预计完成时间

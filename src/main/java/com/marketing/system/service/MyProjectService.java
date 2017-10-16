@@ -73,4 +73,10 @@ public interface MyProjectService {
 
     //同步更新项目进度
     int updateProjectInfo(ProjectInfo projectInfo);
+
+    //当前登录用户并其成员包含所涉及子任务
+    List<Map<String,Object>> getSubTaskIdByHanderMap(Map<String, Object> map);
+
+    //根据姓名查找部门
+    Department getDepartmentById(Map<String,Object> map);
 }

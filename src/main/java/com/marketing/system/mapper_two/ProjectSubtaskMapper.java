@@ -30,4 +30,10 @@ public interface ProjectSubtaskMapper {
 
     List<Map<String, Object>> selectProSubtaskByProId(Integer proId);
 
+    List<Map<String, Object>> getSubTaskIdByHanderMap(Map<String,Object> map);
+
+    String getDepartment(Map<String,Object> map);
+
+
+
 }

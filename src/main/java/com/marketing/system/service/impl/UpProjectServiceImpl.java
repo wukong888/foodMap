@@ -93,4 +93,12 @@ public class UpProjectServiceImpl implements UpProjectService {
 
         return logRecordList;
     }
+
+    @Override
+    public String selectDepartmentByDId(String departmentId) {
+
+        String department = projectTaskMapper.selectDepartmentByDId(departmentId);
+
+        return department;
+    }
 }

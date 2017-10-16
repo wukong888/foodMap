@@ -245,4 +245,19 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return projectInfoMapper.updateByPrimaryKeySelectiveState(projectInfo);
     }
+
+    //当前登录用户并其成员包含所涉及子任务
+    @Override
+    public List<Map<String, Object>> getSubTaskIdByHanderMap(Map<String, Object> map) {
+
+        List<Map<String,Object>> list = projectSubtaskMapper.getSubTaskIdByHanderMap(map);
+
+        return list;
+    }
+
+    @Override
+    public Department getDepartmentById(Map<String, Object> map) {
+
+        return departmentMapper.getDepartmentTwo(map);
+    }
 }

@@ -69,6 +69,20 @@
     (SELECT taskId from project_task where proId = (select proId from project_info WHERE proId = #{proId}))
   </select>
 
+  <select id="getSubTaskIdByHanderMap" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    subtaskId, taskId, subtaskName
+    FROM
+    project_subtask
+    WHERE
+    <foreach item="item" index="index" collection="menuLeafIds"
+             open=" subtaskHandler IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_subtask
     where subtaskId = #{subtaskId,jdbcType=INTEGER}

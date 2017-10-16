@@ -24,4 +24,7 @@ public interface DepartmentMapper {
     Department getDepartmentIdByMent(@Param("department")String department);
 
     List<Map<String,Object>> getDepartmentList(Map<String,Object> map);
+
+    Department getDepartmentTwo(Map<String,Object> map);
+
 }

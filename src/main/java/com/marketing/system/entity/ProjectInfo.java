@@ -41,6 +41,16 @@ public class ProjectInfo {
 
     private String cancelDate;
 
+    //项目扮演角色
+    private String duty;
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
+    }
 
     /**
      * 距离逾期天数

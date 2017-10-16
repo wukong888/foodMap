@@ -13,4 +13,6 @@ public interface SystemUserMapper {
     boolean updateById(SystemUser userInfo);
 
     SystemUser selectByPrimaryKey(int id);
+
+    List<Map<String, Object>> selectManagerBydepartment(Map<String,Object> map);
 }

@@ -29,4 +29,6 @@ public interface UpProjectService {
 
     List<ProLogRecord> getProLogRecordList(int proId);
 
+    String selectDepartmentByDId(String departmentId);
+
 }

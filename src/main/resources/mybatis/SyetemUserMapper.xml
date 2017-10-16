@@ -20,4 +20,10 @@
         where UserName = #{UserName,jdbcType=VARCHAR} AND Password = #{Password,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectManagerBydepartment" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+        select
+        <include refid="Base_Column_List" />
+        from SystemUser
+        where Department LIKE '${department}%'
+    </select>
 </mapper>

@@ -30,4 +30,12 @@ public class SystemUserServiceImpl implements SystemUserService{
     public SystemUser selectByPrimaryKey(int id) {
         return systemUserMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public List<Map<String, Object>> selectManagerBydepartment(Map<String,Object> map) {
+
+        List<Map<String, Object>> list = systemUserMapper.selectManagerBydepartment(map);
+
+        return list;
+    }
 }

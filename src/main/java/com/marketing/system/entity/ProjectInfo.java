@@ -41,6 +41,8 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
 
     private String cancelDate;
 
+    private Integer againState;
+
     //项目扮演角色
     private String duty;
 
@@ -56,6 +58,14 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
      * 距离逾期天数
      */
     private Long betweenDays;
+
+    public Integer getAgainState() {
+        return againState;
+    }
+
+    public void setAgainState(Integer againState) {
+        this.againState = againState;
+    }
 
     public Long getBetweenDays() {
         return betweenDays;

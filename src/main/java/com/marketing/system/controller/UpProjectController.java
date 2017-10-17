@@ -192,8 +192,17 @@ public class UpProjectController {
 
             map.put("finishDate", str);
 
-            int i = upProjectService.setPassOrReject(map);
-
+            int i = 0;
+            //申请的项目审批通过或者驳回
+            if (proState.equals("2") || proState.equals("5")) {
+                map.put("againState",2);//开发中
+                i = upProjectService.setPassOrRejectTwo(map);
+            } else if (proState.equals("3")){ //上线带审批
+                map.put("againState",null);//开发中
+                i = upProjectService.setPassOrRejectTwo(map);
+            } else{
+                i = upProjectService.setPassOrReject(map);
+            }
 
             ProLogRecord proLogRecord = new ProLogRecord();
             proLogRecord.setDate(str);//时间

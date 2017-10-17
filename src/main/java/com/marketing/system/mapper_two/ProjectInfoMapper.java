@@ -40,6 +40,8 @@ public interface ProjectInfoMapper {
 
     Integer setPassOrReject(Map<String,Object> map);
 
+    Integer setPassOrRejectTwo(Map<String,Object> map);
+
     List<String> getCreaterByName(String creater);
 
     List<ProjectInfo> getMyProjectInfoList(Map<String,Object> map);

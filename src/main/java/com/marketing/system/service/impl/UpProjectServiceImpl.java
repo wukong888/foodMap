@@ -45,6 +45,12 @@ public class UpProjectServiceImpl implements UpProjectService {
     }
 
     @Override
+    public int setPassOrRejectTwo(Map<String, Object> map) {
+
+        return projectInfoMapper.setPassOrRejectTwo(map);
+    }
+
+    @Override
     public ProjectInfo selectByPrimaryKey(int id) {
 
         return projectInfoMapper.selectByPrimaryKey(id);

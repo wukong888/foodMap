@@ -15,6 +15,8 @@ public interface UpProjectService {
 
     int setPassOrReject(Map<String, Object> map);
 
+    int setPassOrRejectTwo(Map<String, Object> map);
+
     ProjectInfo selectByPrimaryKey(int id);
 
     List<ProjectTask> getProjectTaskList(int proId);

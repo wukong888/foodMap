@@ -98,13 +98,14 @@ public class ProReportServiceImpl implements ProReportService{
             Map<String,Object> ProReport=new HashMap<String,Object>();
             for(Map<String,Object> Report1:ProReport1){
                 if(group.equals((String)Report1.get("squadd"))){
-                    ProReport.put("squadId",group);
                     ProReport.put("sum1",(Integer)Report1.get("sum1"));
                     break;
                 }
-                ProReport.put("squadId",group);
+            }
+            if(ProReport.get("sum1")==null){
                 ProReport.put("sum1","");
             }
+            ProReport.put("squadId",group);
             String squad=ProReportDao.selectSquadBySquadId(group);
             ProReport.put("squad",squad);
             ProReports.add(ProReport);

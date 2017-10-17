@@ -274,7 +274,7 @@ public class DayReportController {
                    } catch (Exception e) {
                        e.printStackTrace();
                    }*/
-       return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" ProjectReport.xlsx",null);
+       return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" ProjectReport.xls",null);
 
        }else if(type==2){
           /* String taskFile="static//"+Date+" TaskReport.xlsx";
@@ -290,7 +290,7 @@ public class DayReportController {
                    e.printStackTrace();
                }
 */
-           return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" TaskReport.xlsx",null);
+           return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" TaskReport.xls",null);
       }else if(type==3){
          /* // String subtaskFile="static//"+Date+" SubtaskReport.xlsx";
           String subtaskFile="E://工作空间projectManage//static//"+Date+" SubtaskReport.xlsx";
@@ -303,7 +303,7 @@ public class DayReportController {
            } catch (Exception e) {
                e.printStackTrace();
            }*/
-           return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" SubtaskReport.xlsx",null);
+           return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" SubtaskReport.xls",null);
 
        }
         } catch (Exception e) {

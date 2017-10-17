@@ -53,7 +53,7 @@ public class TestJob extends BatchProperties.Job {
         //项目日报的定时导出
         Map<String,Object> Report1=DayReportService.exportProExcel(date);
         List<Map> ProReport=(List<Map>)Report1.get("proReports");
-        String pathProName ="static//"+date+"ProjectReport.xlsx";
+        String pathProName ="static//"+date+"ProjectReport.xls";
         try {
             File file=new File(pathProName);
             if(!file.exists()){
@@ -70,7 +70,7 @@ public class TestJob extends BatchProperties.Job {
         //任务日报的定时导出
         Map<String,Object> Report2=DayReportService.exportTaskExcel(date);
         List<Map> TaskReport=(List<Map>)Report2.get("taskReports");
-        String pathTaskName ="static//"+date+"TaskReport.xlsx";
+        String pathTaskName ="static//"+date+"TaskReport.xls";
         try {
             File file=new File(pathTaskName);
             if(!file.exists()){
@@ -86,7 +86,7 @@ public class TestJob extends BatchProperties.Job {
         //子任务日报的定时导出
         Map<String,Object> Report3=DayReportService.exportSubtaskExcel(date);
         List<Map> SubtaskReport=(List<Map>)Report3.get("subtaskReports");
-        String pathSubtaskName ="static//"+date+"SubtaskReport.xlsx";
+        String pathSubtaskName ="static//"+date+"SubtaskReport.xls";
         try {
             File file=new File(pathSubtaskName);
             if(!file.exists()){

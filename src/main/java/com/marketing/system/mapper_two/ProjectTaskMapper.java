@@ -37,4 +37,6 @@ public interface ProjectTaskMapper {
 
     String selectDepartmentByDId(String departmentId);
 
+    List<Map<String,Object>> selecttaskInfoByProId(Integer proId);
+
 }

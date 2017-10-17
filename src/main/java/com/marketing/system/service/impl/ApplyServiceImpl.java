@@ -102,4 +102,12 @@ public class ApplyServiceImpl implements ApplyService{
 
         return membersMapper.selectSquadIdByMember(member);
     }
+
+    @Override
+    public List<Map<String, Object>> selecttaskInfoByProId(int proId) {
+
+        List<Map<String, Object>> list = projectTaskMapper.selecttaskInfoByProId(proId);
+
+        return list;
+    }
 }

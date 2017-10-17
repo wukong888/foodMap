@@ -30,4 +30,7 @@ public interface ApplyService {
     List<Map<String, Object>> getDepartmentList(Map<String,Object> map);
 
     Members selectSquadIdByMember(String member);
+
+    //根据项目id查询任务负责人
+    List<Map<String, Object>> selecttaskInfoByProId(int proId);
 }

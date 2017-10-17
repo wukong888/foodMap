@@ -283,23 +283,11 @@ public class ApplyController {
         ApiResult<List<Map<String, Object>>> r = null;
 
         try {
-            //根据项目id查询子任务负责人
-            List<Map<String, Object>> projectSubtaskList = applyService.selectProSubtaskByProId(proId);
-
-            //子任务负责人
-            String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(projectSubtaskList, "subtaskHandler"));
-
-            String[] Ids = menuLeafIds.split(",");
-
-            Map<String, Object> mapT = new HashMap<>();
-
-            mapT.put("mentIds", Ids);
-
-            //根据负责人查找squadId(小组id)
-            List<Map<String, Object>> squadIdList = applyService.getSquadIdList(mapT);
+            //根据项目id查询任务相关信息
+            List<Map<String, Object>> taskList = applyService.selecttaskInfoByProId(proId);
 
             //小组id
-            String menuLeafIdsTwo = StringUtil.toString(MapUtil.collectProperty(squadIdList, "squadId"));
+            String menuLeafIdsTwo = StringUtil.toString(MapUtil.collectProperty(taskList, "squadId"));
 
             String[] IdsT = menuLeafIdsTwo.split(",");
 

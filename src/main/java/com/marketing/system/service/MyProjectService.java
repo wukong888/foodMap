@@ -85,4 +85,7 @@ public interface MyProjectService {
 
     //当前登录用户并其成员包含所涉及归档项目
     List<ProjectInfo> getProjectByHanderMapFinish(Map<String, Object> map);
+
+    //根据proid查找项目list
+    List<Map<String,Object>> getProjectByProId(Map<String,Object> map);
 }

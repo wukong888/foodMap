@@ -52,7 +52,9 @@ public class IndexServerImpl implements IndexService {
         String userName = user.getUserName();//当前登录用户
 
         String department = user.getDepartment();
+
         department = department.substring(0, 2);
+
         //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
         Department did = myProjectService.getDepartmentIdByMent(department);
         String departmentid = did.getDepartmentid();
@@ -97,9 +99,23 @@ public class IndexServerImpl implements IndexService {
         //根据taskId查找proId
         List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
 
-        Integer k = 0 ;
+        String menuLeafIds2 = StringUtil.toString(MapUtil.collectProperty(taskList, "proId"));
+
+        String[] Ids2 = menuLeafIds2.split(",");
+
+        Map<String, Object> mapTt = new HashMap<>();
+
+        mapTt.put("menuLeafIds", Ids2);
+
+        //根据proid查找项目list
+        List<Map<String, Object>> proList = myProjectService.getProjectByProId(mapTt);
+
+        Integer k = 0;
         if (taskList.size() > 0) {
-            k = taskList.size();
+            //4：完成，5：驳回，6：作废不在我的项目里显示
+            proList = proList.stream().filter(t -> t.get("proState").equals("1") || t.get("proState").equals("2") || t.get("proState").equals("3") || t.get("proState").equals("7")).collect(Collectors.toList());
+
+            k = proList.size();
             if (user.getDuty().equals("CEO")) {
                 k = projectInfoMapper.getAllProjectSize();
             }

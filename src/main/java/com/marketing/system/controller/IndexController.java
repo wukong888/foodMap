@@ -86,7 +86,7 @@ public class IndexController {
             map.put("applyProject", i);//我申请的项目
             map.put("joinProject", j);//参与的项目
             map.put("upProject", k);//立项待审批
-            map.put("onlineProject", k);//上线待审批
+            map.put("onlineProject", m);//上线待审批
 
             String creater = "";
 

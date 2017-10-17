@@ -11,6 +11,7 @@ import com.marketing.system.util.StringUtil;
 import io.swagger.annotations.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -328,6 +329,9 @@ public class ApplyController {
 
             try {
                 Map<String, Object> result = new HashMap<String, Object>();
+
+                request.setCharacterEncoding("utf-8");
+
                 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
                 //获取multiRequest 中所有的文件名
                 Iterator iter = multipartRequest.getFileNames();

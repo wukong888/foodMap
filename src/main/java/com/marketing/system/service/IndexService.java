@@ -3,6 +3,7 @@ package com.marketing.system.service;
 import com.marketing.system.entity.ProjectInfo;
 import com.marketing.system.entity.ProjectSubtask;
 import com.marketing.system.entity.ProjectTask;
+import com.marketing.system.entity.SystemUser;
 
 import java.text.ParseException;
 import java.util.List;
@@ -12,7 +13,7 @@ public interface IndexService {
 
     Integer getMyApplyProject(String name);
 
-    Integer getMyJoinProject(String name);
+    Integer getMyJoinProject(SystemUser user);
 
     Integer getUpApplyProject(String proState);
 

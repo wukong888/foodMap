@@ -50,4 +50,6 @@ public interface ProjectInfoMapper {
 
     Integer getMyJoinProject(String name);
 
+    Integer getAllProjectSize();
+
 }

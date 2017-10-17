@@ -21,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Api(description = "归档接口", value = "归档接口")
 @Scope("prototype")
@@ -120,6 +117,7 @@ public class FinishProController {
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
         //项目相关人员集合
         List<ProjectInfo> FinPro = new ArrayList<>();
+            List<ProjectInfo> FinPro2 = new ArrayList<>();
 
         SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
         SystemUser user = systemUserService.selectByPrimaryKey(id);
@@ -198,8 +196,17 @@ public class FinishProController {
         }
             if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
                 //当前登录用户并其成员包含所涉及子任务
-                subtaskListProject = myProjectService.getProjectByHanderMapFinish(mapTmem);
+               subtaskListProject = myProjectService.getProjectByHanderMapFinish(mapTmem);
+
                 FinPro.addAll(subtaskListProject);
+                Iterator it = FinPro.iterator();
+                while (it.hasNext()) {
+                    ProjectInfo obj = (ProjectInfo) it.next();
+                    if (!FinPro2.contains(obj)) {                //不包含就添加
+                        FinPro2.add(obj);
+                    }
+                }
+                FinPro = FinPro2;
             }
 
         RdPage rdPage = new RdPage();

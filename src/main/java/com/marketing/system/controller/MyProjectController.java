@@ -124,21 +124,9 @@ public class MyProjectController {
 
             //所有项目list
             List<ProjectInfo> projectInfos = myProjectService.getMyProjectInfoList(map);
-            List<ProjectInfo> projectInfosNews = new ArrayList<>();
-            List<ProjectInfo> projectInfosNewss = new ArrayList<>();
 
-            ProjectInfo projectInfoNewss = new ProjectInfo();
             //4：完成，5：驳回，6：作废不在我的项目里显示
-            /*for (int m = 0; m < projectInfos.size(); m++) {
-                projectInfoNewss = projectInfos.get(m);
-                if (projectInfoNewss.getProstate().equals("1") || projectInfoNewss.getProstate().equals("2") || projectInfoNewss.getProstate().equals("3") || projectInfoNewss.getProstate().equals("7")) {
-
-                } else {
-                    projectInfos.remove(projectInfoNewss);
-                    //projectInfos.remove(m);
-                }
-            }*/
-            projectInfos=projectInfos.stream().filter(t->t.getProstate().equals("1") || t.getProstate().equals("2") || t.getProstate().equals("3") || t.getProstate().equals("7")).collect(Collectors.toList());
+            projectInfos = projectInfos.stream().filter(lin -> !lin.getProstate().equals("")|| lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
 
             ProjectInfo projectInfoNew = new ProjectInfo();
 
@@ -771,7 +759,7 @@ public class MyProjectController {
 
                 String department2 = department.getDepartment();
                 if (department2.length() > 1) {
-                    department2 = department2.substring(0,2);
+                    department2 = department2.substring(0, 2);
                 }
                 map1.put("department", department2);
 
@@ -1127,7 +1115,11 @@ public class MyProjectController {
                 proDevelopLog.setExplain(explain);//备注说明
                 proDevelopLog.setProid(Integer.valueOf(proId));//项目id
                 proDevelopLog.setType(type);//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
-                proDevelopLog.setProgress(progress);//进度
+                if (progress == "" || progress == null) {
+                    proDevelopLog.setProgress("0");//进度
+                } else {
+                    proDevelopLog.setProgress(progress);//进度
+                }
                 proDevelopLog.setFilepath(filePath);//附件地址
 
                 int i = myProjectService.insertProDeveLog(proDevelopLog);

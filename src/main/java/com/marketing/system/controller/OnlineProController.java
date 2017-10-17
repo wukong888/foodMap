@@ -110,7 +110,7 @@ public class OnlineProController {
                 param = "";
             }
             //所有项目集合
-            Map<String, Object> OnProMapAll = OnProService.selectOnPro(current, 1000, creatersquadid, creater, createdate1, createdate2, finishdate1, finishdate2, protype, param);
+            Map<String, Object> OnProMapAll = OnProService.selectOnPro(1, 1000, creatersquadid, creater, createdate1, createdate2, finishdate1, finishdate2, protype, param);
 
             //项目相关人员集合
             List<ProjectInfo> OnPro = new ArrayList<>();

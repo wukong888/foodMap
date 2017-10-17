@@ -26,4 +26,11 @@
         from SystemUser
         where Department LIKE '${department}%'
     </select>
+
+    <select id="selectUserGroupBydepartment" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+        select
+        <include refid="Base_Column_List" />
+        from SystemUser
+        where UserGroup = #{UserGroup,jdbcType=VARCHAR}
+    </select>
 </mapper>

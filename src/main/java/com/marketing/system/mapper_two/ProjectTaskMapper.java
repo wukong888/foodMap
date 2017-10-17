@@ -27,6 +27,8 @@ public interface ProjectTaskMapper {
 
     String selectDepartmentIdBySquadId(Integer squadId);
 
+    String selectSquadBySquadId(Integer squadId);
+
     List<Map<String, Object>> getProjectTaskListMap1(Integer proId);
 
     List<Map<String,Object>> getProjectTaskListMap(Integer proId);

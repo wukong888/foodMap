@@ -38,4 +38,12 @@ public class SystemUserServiceImpl implements SystemUserService{
 
         return list;
     }
+
+    @Override
+    public List<Map<String, Object>> selectUserGroupBydepartment(Map<String, Object> map) {
+
+        List<Map<String, Object>> list = systemUserMapper.selectUserGroupBydepartment(map);
+
+        return list;
+    }
 }

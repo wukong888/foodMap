@@ -25,6 +25,8 @@ public interface UpProjectService {
 
     String selectDepartmentIdBySquadId(int squadId);
 
+    String selectSquadBySquadId(int squadId);
+
     int insertProLogRecord(ProLogRecord proLogRecord);
 
     List<ProLogRecord> getProLogRecordList(int proId);

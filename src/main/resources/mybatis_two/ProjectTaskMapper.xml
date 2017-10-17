@@ -69,6 +69,13 @@
     WHERE squadId = #{squadId}
   </select>
 
+  <select id="selectSquadBySquadId" resultType="java.lang.String" parameterType="java.lang.Integer" >
+    select
+    squad
+    from projectManage.dbo.[group]
+    WHERE squadId = #{squadId}
+  </select>
+
   <select id="selectDepartmentByDId" resultType="java.lang.String" parameterType="java.lang.String" >
     select
     department

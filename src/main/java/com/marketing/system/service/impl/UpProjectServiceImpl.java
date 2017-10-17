@@ -73,6 +73,14 @@ public class UpProjectServiceImpl implements UpProjectService {
     }
 
     @Override
+    public String selectSquadBySquadId(int squadId) {
+
+        String departmentId=projectTaskMapper.selectSquadBySquadId(squadId);
+
+        return departmentId;
+    }
+
+    @Override
     public List<Map<String, Object>> getProjectTaskListMap(int proId) {
 
         List<Map<String, Object>> mapList = projectTaskMapper.getProjectTaskListMap(proId);

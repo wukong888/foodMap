@@ -3,10 +3,7 @@ package com.marketing.system.controller;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.marketing.system.entity.*;
-import com.marketing.system.service.ApplyService;
-import com.marketing.system.service.DepartmentService;
-import com.marketing.system.service.GroupService;
-import com.marketing.system.service.MyProjectService;
+import com.marketing.system.service.*;
 import com.marketing.system.util.ApiResult;
 import com.marketing.system.util.Constant;
 import com.marketing.system.util.MapUtil;
@@ -54,6 +51,12 @@ public class ApplyController {
 
     @Autowired
     private MyProjectService myProjectService;
+
+    @Autowired
+    private UpProjectService upProjectService;
+
+    @Autowired
+    private SystemUserService systemUserService;
 
 
     @ApiOperation(value = "项目申请")
@@ -155,9 +158,35 @@ public class ApplyController {
 
         int ap = 0;
         int sum = 0;
+        Map<String, Object> map1 = new HashMap<>();
         for (ProjectTask task : list) {
             projectTask.setProid(Integer.valueOf(code));//项目Id
             projectTask.setSquadId(task.getSquadId());//参与组id
+
+            String squadId = task.getSquadId();
+
+            String squad = upProjectService.selectSquadBySquadId(Integer.parseInt(squadId));
+
+            map1.put("UserGroup", squad);
+
+            //对应组所有人信息
+            List<Map<String, Object>> systemUserList = systemUserService.selectUserGroupBydepartment(map1);
+
+            List<Map<String, Object>> systemUserListNew = new ArrayList<>();
+
+            for (Map sys : systemUserList) {
+                if (sys.get("duty") != "" && sys.get("duty") != null) {
+                    if (String.valueOf(sys.get("duty")).contains("组长")) {
+                        systemUserListNew.add(sys);
+                    }
+                }
+            }
+            String handler ="";
+            for (Map handle :systemUserListNew) {
+                handler = String.valueOf(handle.get("UserName"));
+
+            }
+            projectTask.setHandler(handler);
             projectTask.setTaskname(task.getTaskname());//任务名称
             projectTask.setSdate(task.getSdate());//任务开始时间
             projectTask.setEdate(task.getEdate());//任务结束时间

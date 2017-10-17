@@ -14,4 +14,6 @@ public interface SystemUserService {
     SystemUser selectByPrimaryKey(int id);
 
     List<Map<String, Object>> selectManagerBydepartment(Map<String,Object> map);
+
+    List<Map<String, Object>> selectUserGroupBydepartment(Map<String,Object> map);
 }

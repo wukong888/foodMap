@@ -134,7 +134,7 @@ public class UpProjectController {
             rdPage.setPageSize(pageSize);
 
             String msg = "";
-            if (current > rdPage.getPages()) {
+            if (current > rdPage.getPages() && sum !=0) {
                 msg = "已经超过当前所有页数！";
                 result = new ApiResult<List<ProjectInfo>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
             } else {

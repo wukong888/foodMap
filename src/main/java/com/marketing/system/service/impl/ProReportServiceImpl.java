@@ -98,7 +98,7 @@ public class ProReportServiceImpl implements ProReportService{
             ProReports.add(ProReport);
         }
 
-        for(Map<String,Object> ProReport:ProReports){
+        /*for(Map<String,Object> ProReport:ProReports){
             for(Map<String,Object> Report2:ProReport2){
                 if(((String)ProReport.get("squadId")).equals((String)Report2.get("squadd"))){
                     ProReport.put("sum2",(Integer)Report2.get("sum2"));
@@ -106,6 +106,23 @@ public class ProReportServiceImpl implements ProReportService{
                 }
             }
             ProReport.put("sum2","");
+        }*/
+        for(int i=0;i<ProReports.size();i++){
+
+            for (int j=0;j<ProReport2.size();j++){
+                String squadId1=(String) ProReports.get(i).get("squadId");
+                String squadId2=(String)ProReport2.get(j).get("squadd");
+                if(squadId1.equals(squadId2)){
+                    System.out.println("---------");
+                }
+                if(ProReports.get(i).get("squadId").equals(ProReport2.get(j).get("squadd"))){
+                    ProReports.get(i).put("sum2",ProReport2.get(j).get("sum2"));
+                    break;
+                }else{
+                    ProReports.get(i).put("sum2","");
+                }
+            }
+
         }
 
         return ProReports;

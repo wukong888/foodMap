@@ -66,7 +66,7 @@
     SELECT <include refid="Base_Column_List" />
     from project_subtask
     where taskId in
-    (SELECT taskId from project_task where proId = (select proId from project_info WHERE proId = #{proId}))
+    (SELECT taskId from project_task where proId in (select proId from project_info WHERE proId = #{proId}))
   </select>
 
   <select id="getSubTaskIdByHanderMap" resultType="java.util.HashMap">

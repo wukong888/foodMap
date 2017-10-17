@@ -177,6 +177,7 @@
     <if test="proState != null and proState != '' ">
       AND proState = #{proState}
     </if>
+    ORDER BY createDate DESC
   </select>
 
   <select id="getMyProjectInfoList" resultMap="BaseResultMap"  >

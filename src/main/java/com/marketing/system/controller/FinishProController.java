@@ -206,7 +206,7 @@ public class FinishProController {
                         FinPro2.add(obj);
                     }
                 }
-                FinPro = FinPro2;
+                FinPro  = FinPro2;
             }
 
         RdPage rdPage = new RdPage();

@@ -120,9 +120,13 @@ public class IndexServerImpl implements IndexService {
                 k = projectInfoMapper.getAllProjectSize();
             }
         } else {
-            k = projectInfoMapper.getMyApplyProject(userName);
-        }
+            if (user.getDuty().equals("CEO")) {
+                k = projectInfoMapper.getAllProjectSize();
+            } else {
+                k = projectInfoMapper.getMyApplyProject(userName);
 
+            }
+        }
 
         return k;
     }

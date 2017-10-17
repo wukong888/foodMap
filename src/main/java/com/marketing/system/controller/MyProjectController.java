@@ -308,7 +308,24 @@ public class MyProjectController {
                     }
                 }
 
-
+                if (projectInfotaskNew.size() > 0) {
+                    for (ProjectInfo map1 : projectInfotaskNew) {
+                        map1.getCreater();
+                        //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
+                        if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                            map1.setDuty("项目发起人");
+                            //
+                        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
+                            map1.setDuty("组员");
+                        } else if (user.getDuty().equals("CEO")) {
+                            map1.setDuty("CEO");
+                        } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                            map1.setDuty("经理/组长");
+                        } else {
+                            map1.setDuty("项目无关人员");
+                        }
+                    }
+                }
                 //当前用户是创建人
                 if (pro.getCreater().equals(user.getUserName())) {
                     projectInfosNew.add(pro);
@@ -340,7 +357,10 @@ public class MyProjectController {
 
 
                 projectInfosNew.addAll(subtaskListProject);
-                projectInfosNew.addAll(projectInfotaskNew);
+
+
+
+                projectInfosNew.addAll(projectInfotaskNew);//任务
                 Iterator it = projectInfosNew.iterator();
                 while (it.hasNext()) {
                     ProjectInfo obj = (ProjectInfo) it.next();

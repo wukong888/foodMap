@@ -1493,24 +1493,29 @@ public class MyProjectController {
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
             Department did = myProjectService.getDepartmentIdByMent(department);
 
-            String departmentid = did.getDepartmentid();
+            if (did == null) {
+                result = new ApiResult<>(Constant.FAIL_CODE_VALUE, "抱歉，暂未匹配到您相关部门！", list, null);
+            } else {
+                String departmentid = did.getDepartmentid();
 
-            //根据部门id查找小组id
-            List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+                //根据部门id查找小组id
+                List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
 
-            String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
-            String[] mIds = mentIds.split(",");
-            Map<String, Object> mapTid = new HashMap<>();
+                String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
+                String[] mIds = mentIds.split(",");
+                Map<String, Object> mapTid = new HashMap<>();
 
-            mapTid.put("mentIds", mIds);
-            //组长/经理其小组成员
-            List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+                mapTid.put("mentIds", mIds);
+                //组长/经理其小组成员
+                List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
 
-            map.put("members", mapList1);
+                map.put("members", mapList1);
 
-            list.add(map);
+                list.add(map);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("我的项目任务分配详情页子任务列表-添加（选择参与部门）错误信息：" + e.getMessage());

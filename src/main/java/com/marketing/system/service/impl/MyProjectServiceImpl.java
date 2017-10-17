@@ -276,4 +276,12 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return list;
     }
+
+    @Override
+    public List<Map<String, Object>> getProjectByProId(Map<String, Object> map) {
+
+        List<Map<String,Object>> list = projectInfoMapper.getProjectByProId(map);
+
+        return list;
+    }
 }

@@ -76,7 +76,7 @@
   select
   COUNT (creater)
   from project_info
-  where creater = #{creater}
+  where creater = #{creater} AND proState IN (1,2,3,7)
 </select>
 
   <select id="getUpApplyProject" resultType="java.lang.Integer"  parameterType="java.lang.String" >
@@ -249,11 +249,30 @@
     AND proState = 4
   </select>
 
+  <select id="getProjectByProId" resultType="java.util.HashMap">
+    SELECT DISTINCT
+    <include refid="Base_Column_List" />
+    FROM
+    project_info
+    WHERE
+    <foreach item="item" index="index" collection="menuLeafIds"
+             open=" proId IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
   <select id="getMyJoinProject" resultType="java.lang.Integer" parameterType="java.lang.String" >
     select
     COUNT (id)
     from project_info
     where creater = #{name}
+  </select>
+
+
+  <select id="getAllProjectSize" resultType="java.lang.Integer"  >
+    select
+    COUNT (id)
+    from project_info
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

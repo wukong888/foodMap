@@ -1,11 +1,16 @@
 package com.marketing.system.service.impl;
 
+import com.marketing.system.entity.Department;
 import com.marketing.system.entity.ProjectInfo;
 import com.marketing.system.entity.ProjectSubtask;
+import com.marketing.system.entity.SystemUser;
 import com.marketing.system.mapper_two.ProjectInfoMapper;
 import com.marketing.system.mapper_two.ProjectSubtaskMapper;
 import com.marketing.system.mapper_two.ProjectTaskMapper;
 import com.marketing.system.service.IndexService;
+import com.marketing.system.service.MyProjectService;
+import com.marketing.system.util.MapUtil;
+import com.marketing.system.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +31,9 @@ public class IndexServerImpl implements IndexService {
     @Autowired
     private ProjectSubtaskMapper projectSubtaskMapper;
 
+    @Autowired
+    private MyProjectService myProjectService;
+
     @Override
     public Integer getMyApplyProject(String name) {
 
@@ -39,24 +47,88 @@ public class IndexServerImpl implements IndexService {
     }
 
     @Override
-    public Integer getMyJoinProject(String name) {
+    public Integer getMyJoinProject(SystemUser user) {
 
-        //项目
-        Integer k = projectInfoMapper.getMyJoinProject(name);
+        String userName = user.getUserName();//当前登录用户
 
-        //项目任务
-        Integer i = projectTaskMapper.getMyJoinProject(name);
-        if (i == null) {
-            i = 0;
+        String department = user.getDepartment();
+
+        department = department.substring(0, 2);
+
+        //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
+        Department did = myProjectService.getDepartmentIdByMent(department);
+        String departmentid = did.getDepartmentid();
+
+        //根据部门id查找小组id
+        List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+
+        String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
+        String[] mIds = mentIds.split(",");
+        Map<String, Object> mapTid = new HashMap<>();
+
+        mapTid.put("mentIds", mIds);
+        //组长/经理其小组成员
+        List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+
+        String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "member"));
+
+        String[] Idsmember = menuLeafIdsmember.split(",");
+
+        Map<String, Object> mapTmem = new HashMap<>();
+
+        mapTmem.put("menuLeafIds", Idsmember);
+
+        List<Map<String, Object>> subtaskList = new ArrayList<>();
+
+        if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
+            //当前登录用户并其成员包含所涉及子任务
+            subtaskList = myProjectService.getSubTaskIdByHanderMap(mapTmem);
+        } else {
+            //当前登录用户所涉及子任务
+            subtaskList = myProjectService.getSubTaskIdByHander(userName);
         }
 
-        //子任务
-        Integer j = projectSubtaskMapper.getMyJoinProject(name);
-        if (j == null) {
-            j = 0;
+        String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(subtaskList, "taskId"));
+
+        String[] Ids = menuLeafIds.split(",");
+
+        Map<String, Object> mapT = new HashMap<>();
+
+        mapT.put("menuLeafIds", Ids);
+
+        //根据taskId查找proId
+        List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
+
+        String menuLeafIds2 = StringUtil.toString(MapUtil.collectProperty(taskList, "proId"));
+
+        String[] Ids2 = menuLeafIds2.split(",");
+
+        Map<String, Object> mapTt = new HashMap<>();
+
+        mapTt.put("menuLeafIds", Ids2);
+
+        //根据proid查找项目list
+        List<Map<String, Object>> proList = myProjectService.getProjectByProId(mapTt);
+
+        Integer k = 0;
+        if (taskList.size() > 0) {
+            //4：完成，5：驳回，6：作废不在我的项目里显示
+            proList = proList.stream().filter(t -> t.get("proState").equals("1") || t.get("proState").equals("2") || t.get("proState").equals("3") || t.get("proState").equals("7")).collect(Collectors.toList());
+
+            k = proList.size();
+            if (user.getDuty().equals("CEO")) {
+                k = projectInfoMapper.getAllProjectSize();
+            }
+        } else {
+            if (user.getDuty().equals("CEO")) {
+                k = projectInfoMapper.getAllProjectSize();
+            } else {
+                k = projectInfoMapper.getMyApplyProject(userName);
+
+            }
         }
 
-        return i + j + k;
+        return k;
     }
 
     @Override

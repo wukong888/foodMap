@@ -7,6 +7,7 @@ import com.marketing.system.service.UpProjectService;
 import com.marketing.system.util.ApiResult;
 import com.marketing.system.util.Constant;
 import com.marketing.system.util.RdPage;
+import com.marketing.system.util.ToolUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -79,7 +80,7 @@ public class UpProjectController {
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("current", current);
-            map.put("pageSize", pageSize);
+            map.put("pageSize", 1000);
             map.put("createrSquadId", createrSquadId);//项目发起部门
             map.put("creater", creater);//创建人
             if (createDateStart == "" || createDateStart == null) {
@@ -120,9 +121,12 @@ public class UpProjectController {
             RdPage rdPage = new RdPage();
 
             Map<String, Object> mapT = new HashMap<>();
+            int sum = 0;
+            sum = projectInfos.size();
+            projectInfos = ToolUtil.listSplit2(current, pageSize, projectInfos);
 
             mapT.put("proState", "1");//项目状态(1:立项待审批
-            int sum = upProjectService.sumAll(mapT);
+            //int sum = upProjectService.sumAll(mapT);
             //分页信息
             rdPage.setTotal(sum);
             rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);

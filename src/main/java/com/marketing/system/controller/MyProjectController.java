@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.tools.ant.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,8 @@ public class MyProjectController {
             //所有项目list
             List<ProjectInfo> projectInfos = myProjectService.getMyProjectInfoList(map);
 
+            List<ProjectInfo> projectInfotaskNew = new ArrayList<>();
+
             //4：完成，5：驳回，6：作废不在我的项目里显示
             projectInfos = projectInfos.stream().filter(lin -> !lin.getProstate().equals("")|| lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
 
@@ -167,11 +170,24 @@ public class MyProjectController {
             List<ProjectInfo> projectInfosNew2 = new ArrayList<>();
             //项目相关人员集合
 
-            SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-
             SystemUser user = systemUserService.selectByPrimaryKey(id);
 
             String userName = user.getUserName();//当前登录用户
+
+            //当前登录人为任务负责人则加入我的项目
+            List<Map<String, Object>> projectTaskInfos = myProjectService.getTaskInfoList(userName);
+
+            String mentIdtask = StringUtil.toString(MapUtil.collectProperty(projectTaskInfos, "proId"));
+            String[] mIdtask = mentIdtask.split(",");
+            Map<String, Object> mapTask = new HashMap<>();
+
+            mapTask.put("menuLeafIds", mIdtask);
+
+            List<ProjectInfo> infoList = myProjectService.getMyProjectInfoListByProId(mapTask);
+
+            for (ProjectInfo p:infoList) {
+                projectInfotaskNew.add(p);
+            }
 
             String department = user.getDepartment();
             department = department.substring(0, 2);
@@ -324,7 +340,7 @@ public class MyProjectController {
 
 
                 projectInfosNew.addAll(subtaskListProject);
-
+                projectInfosNew.addAll(projectInfotaskNew);
                 Iterator it = projectInfosNew.iterator();
                 while (it.hasNext()) {
                     ProjectInfo obj = (ProjectInfo) it.next();
@@ -346,6 +362,7 @@ public class MyProjectController {
             } else {
                 sum = projectInfosNew.size();
                 projectInfosNew = ToolUtil.listSplit2(current, pageSize, projectInfosNew);
+
             }
 
 
@@ -553,7 +570,7 @@ public class MyProjectController {
         ApiResult<Integer> result = null;
 
         int i = 0;
-
+        Map<String, Object> map1 = new HashMap<>();
         try {
             //添加
             if (Type == 1) {
@@ -564,7 +581,29 @@ public class MyProjectController {
                 projectTask.setSdate(sDate);//任务开始时间
                 projectTask.setEdate(eDate);//任务结束时间
                 projectTask.setWorkDate(workDate);//任务工时
-                projectTask.setHandler(handler);//操作人
+
+                String squad = upProjectService.selectSquadBySquadId(Integer.parseInt(squadId));
+
+                map1.put("UserGroup", squad);
+
+                //对应组所有人信息
+                List<Map<String, Object>> systemUserList = systemUserService.selectUserGroupBydepartment(map1);
+
+                List<Map<String, Object>> systemUserListNew = new ArrayList<>();
+
+                for (Map sys : systemUserList) {
+                    if (sys.get("duty") != "" && sys.get("duty") != null) {
+                        if (String.valueOf(sys.get("duty")).contains("组长")) {
+                            systemUserListNew.add(sys);
+                        }
+                    }
+                }
+                String handler2 ="";
+                for (Map handle :systemUserListNew) {
+                    handler2 = String.valueOf(handle.get("UserName"));
+
+                }
+                projectTask.setHandler(handler2);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                 java.util.Date date = new java.util.Date();

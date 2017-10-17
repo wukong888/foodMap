@@ -100,6 +100,11 @@
     from project_task where proId in (select proId from project_info WHERE proId = #{proId})
   </select>
 
+  <select id="getTaskInfoList" resultType="java.util.HashMap" >
+    SELECT <include refid="Base_Column_List" />
+    from project_task where handler = #{handler}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_task
     where taskId = #{taskId,jdbcType=INTEGER}

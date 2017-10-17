@@ -284,4 +284,20 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return list;
     }
+
+    @Override
+    public List<Map<String, Object>> getTaskInfoList(String handler) {
+
+        List<Map<String, Object>> list = projectTaskMapper.getTaskInfoList(handler);
+
+        return list;
+    }
+
+    @Override
+    public List<ProjectInfo> getMyProjectInfoListByProId(Map<String, Object> map) {
+
+        List<ProjectInfo> list = projectInfoMapper.getgetMyProjectInfoListByProId(map);
+
+        return list;
+    }
 }

@@ -267,6 +267,19 @@
         </foreach>
     </select>
 
+
+    <select id="getgetMyProjectInfoListByProId" resultMap="BaseResultMap">
+        SELECT DISTINCT
+        <include refid="Base_Column_List"/>
+        FROM
+        project_info
+        WHERE
+        <foreach item="item" index="index" collection="menuLeafIds"
+                 open=" proId IN (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
     <select id="getMyJoinProject" resultType="java.lang.Integer" parameterType="java.lang.String">
     select
     COUNT (id)

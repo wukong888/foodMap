@@ -328,15 +328,12 @@ public class ApplyController {
         if (ServletFileUpload.isMultipartContent(request)) {
 
             try {
-                Map<String, Object> result = new HashMap<String, Object>();
-
                 request.setCharacterEncoding("utf-8");
 
                 MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
                 //获取multiRequest 中所有的文件名
                 Iterator iter = multipartRequest.getFileNames();
 
-                Map<String, String> map = new HashMap<>();
                 session = request.getSession(true);
                 //遍历list，每迭代一个FileItem对象，调用其isFormField方法判断是否是上传文件
                 while (iter.hasNext()) {

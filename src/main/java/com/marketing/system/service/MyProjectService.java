@@ -88,4 +88,10 @@ public interface MyProjectService {
 
     //根据proid查找项目list
     List<Map<String,Object>> getProjectByProId(Map<String,Object> map);
+
+    //当前登录人为任务负责人则加入我的项目
+    List<Map<String, Object>> getTaskInfoList(String UserName);
+
+    //获取
+    List<ProjectInfo> getMyProjectInfoListByProId(Map<String,Object> map);
 }

@@ -92,16 +92,24 @@ public class RecycleProController {
             creater="";
         }
         if(createdate1==null||createdate1==""){
-            createdate1="2010-01-01";
+            createdate1="2010-01-01 00:00:00";
+        }else{
+            createdate1=createdate1+" 00:00:00";
         }
         if(createdate2==null||createdate2==""){
-            createdate2="2040-01-01";
+            createdate2="2040-01-01 23:59:59";
+        }else{
+            createdate1=createdate1+" 23:59:59";
         }
         if(plansdate1==null||plansdate1==""){
-            plansdate1="2010-01-01";
+            plansdate1="2010-01-01 00:00:00";
+        }else{
+            plansdate1=plansdate1+" 00:00:00";
         }
         if(plansdate2==null||plansdate2==""){
-            plansdate2="2040-01-01";
+            plansdate2="2040-01-01 23:59:59";
+        }else{
+            plansdate2=plansdate2+" 23:59:59";
         }
         if(protype==null){
             protype="";

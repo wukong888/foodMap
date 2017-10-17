@@ -21,7 +21,7 @@ public class WeiXinPushUtil {
     public static void main(String[] args) {
         String postUrl = "{\"Uid\":" + 1299 + ",\"Content\":\"创建人:" + "周圣李"
                 + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + "内容" + "\\n\\n期望处理时间:" + ""
-                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"http://192.168.3.26:5826/index?username=王东&password=5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5\"}";
+                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
         try {
             httpPostWithJSON(postUrl);
         } catch (Exception e) {

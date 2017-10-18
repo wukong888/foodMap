@@ -169,7 +169,8 @@ public class UpProjectController {
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "creatName", value = "用户名", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "explain", value = "原因", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType = "query", name = "proState", value = "操作日志类型(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废)", required = true, dataType = "String")
+            @ApiImplicitParam(paramType = "query", name = "proState", value = "操作日志类型(1:立项待审批，2：开发中，3：上线待审批，4：完成，5：驳回，6：作废)", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "rejectState", value = "区分驳回（1：立项待审批驳回 2：上线待审批驳回）", required = false, dataType = "String")
     })
     @RequestMapping(value = "/passOrReject", method = RequestMethod.POST)
     public ApiResult<String> passOrReject(
@@ -177,7 +178,8 @@ public class UpProjectController {
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "creatName") String creatName,
             @RequestParam(value = "explain") String explain,
-            @RequestParam(value = "proState") String proState) {
+            @RequestParam(value = "proState") String proState,
+            @RequestParam(value = "rejectState") String rejectState) {
 
         ApiResult<String> result = null;
 
@@ -194,9 +196,21 @@ public class UpProjectController {
 
             int i = 0;
             //申请的项目审批通过或者驳回
-            if (proState.equals("2") || proState.equals("5")) {
+            //1：立项待审批驳回
+            if (proState.equals("2")) {
                 map.put("againState",2);//开发中
                 i = upProjectService.setPassOrRejectTwo(map);
+                //驳回 1：立项待审批驳回 2：上线待审批驳回
+            } if ( proState.equals("5")) {
+                if (rejectState.equals("1")) {
+                    //&& (rejectState.equals("1") || rejectState.equals("2"))
+                    map.put("againState",null);//开发中
+                    i = upProjectService.setPassOrRejectTwo(map);
+                } else if(rejectState.equals("2")){
+                    map.put("againState",2);//开发中
+                    i = upProjectService.setPassOrRejectTwo(map);
+                }
+
             } else if (proState.equals("3")){ //上线带审批
                 map.put("againState",null);//开发中
                 i = upProjectService.setPassOrRejectTwo(map);

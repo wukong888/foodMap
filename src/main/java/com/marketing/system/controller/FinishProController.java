@@ -123,7 +123,7 @@ public class FinishProController {
         }
 
         //所有项目集合
-        Map<String,Object> FinProMapAll=FinProService.selectFinishPro(current,1000,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,onlinedate1,onlinedate2,protype,param);
+        Map<String,Object> FinProMapAll=FinProService.selectFinishPro(1,1000,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,onlinedate1,onlinedate2,protype,param);
 
         List<ProjectInfo> FinProAll=(List<ProjectInfo>)FinProMapAll.get("FinPro");
             List<ProjectInfo> projectInfosNew = new ArrayList<>();

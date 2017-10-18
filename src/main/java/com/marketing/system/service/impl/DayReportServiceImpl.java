@@ -110,6 +110,7 @@ public class DayReportServiceImpl implements DayReportService{
             taskReport.put("taskState",taskState);
             taskReport.put("taskProgress",taskProgress);
             taskReport.put("taskLogs",taskLogs);
+            System.out.println("taskLogs----------------"+taskLogs);
             taskReports.add(taskReport);
         }
         List<Map> taskReport=ToolUtil.listSplit(current,pageSize,taskReports);

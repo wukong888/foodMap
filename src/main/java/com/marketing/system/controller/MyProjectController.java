@@ -1178,8 +1178,10 @@ public class MyProjectController {
                 proDevelopLog.setType(type);//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
                 if (progress == "" || progress == null) {
                     proDevelopLog.setProgress("0");//进度
+                } else if (Integer.valueOf(type) == 5){//5：预验收
+                    proDevelopLog.setProgress("100");//进度
                 } else {
-                    proDevelopLog.setProgress(progress);//进度
+                    proDevelopLog.setProgress(progress);
                 }
                 proDevelopLog.setFilepath(filePath);//附件地址
 

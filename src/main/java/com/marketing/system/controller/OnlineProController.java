@@ -394,8 +394,9 @@ public class OnlineProController {
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "explain", required = false) String explain,
             @RequestParam(value = "rejectState", required = false) String rejectState) {
+        ApiResult<String> result = null;
         if(rejectState.equals("2")){
-            ApiResult<String> result = null;
+
             try {
                 boolean success = OnProService.insertProReturnLog(proId, explain);
                 if (success == true) {
@@ -420,7 +421,7 @@ public class OnlineProController {
             e.printStackTrace();
             logger.error("审批驳回 错误信息：" + e.getMessage());
         }*/
-        return null;
+        return result;
     }
 
 

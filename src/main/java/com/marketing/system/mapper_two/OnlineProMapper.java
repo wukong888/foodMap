@@ -90,7 +90,7 @@ public interface OnlineProMapper {
                              @Param("explain")String explain,@Param("filepath")String filepath);
 
     //项目上线审批驳回，更改项目状态
-    @Update("UPDATE project_info SET proState=2 WHERE proId=#{proId}")
+    @Update("UPDATE project_info SET proState=2 ,againState=2 WHERE proId=#{proId}")
     boolean updateProReturnState(@Param("proId")Integer proId);
 
     //根据小组id查找部门id

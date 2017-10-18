@@ -386,13 +386,29 @@ public class OnlineProController {
     @ApiOperation(value = "审批驳回")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批驳回说明", required = true, dataType = "String")
+            @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批驳回说明", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "rejectState", value = "区分驳回（1：立项待审批驳回 2：上线待审批驳回）", required = false, dataType = "String")
     })
     @RequestMapping(value = "/selectInsertProReturnLog", method = RequestMethod.POST)
     public ApiResult<String> selectInsertProReturnLog(
             @RequestParam(value = "proId") int proId,
-            @RequestParam(value = "explain", required = false) String explain) {
-        ApiResult<String> result = null;
+            @RequestParam(value = "explain", required = false) String explain,
+            @RequestParam(value = "rejectState", required = false) String rejectState) {
+        if(rejectState.equals("2")){
+            ApiResult<String> result = null;
+            try {
+                boolean success = OnProService.insertProReturnLog(proId, explain);
+                if (success == true) {
+                    result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批驳回", "审批驳回", null);
+                } else {
+                    result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批驳回操作失败", "审批驳回操作失败", null);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("审批驳回 错误信息：" + e.getMessage());
+            }
+        }
+        /*ApiResult<String> result = null;
         try {
             boolean success = OnProService.insertProReturnLog(proId, explain);
             if (success == true) {
@@ -403,8 +419,8 @@ public class OnlineProController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("审批驳回 错误信息：" + e.getMessage());
-        }
-        return result;
+        }*/
+        return null;
     }
 
 

@@ -35,7 +35,7 @@ import java.util.Map;
 @EnableAutoConfiguration
 public class IndexController {
 
-    private Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     @Autowired
     private IndexService indexService;

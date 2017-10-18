@@ -32,7 +32,7 @@ import java.util.Map;
 @EnableAutoConfiguration
 public class UpProjectController {
 
-    private Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private Logger logger = LoggerFactory.getLogger(UpProjectController.class);
 
     @Autowired
     private UpProjectService upProjectService;
@@ -179,7 +179,7 @@ public class UpProjectController {
             @RequestParam(value = "creatName") String creatName,
             @RequestParam(value = "explain") String explain,
             @RequestParam(value = "proState") String proState,
-            @RequestParam(value = "rejectState") String rejectState) {
+            @RequestParam(value = "rejectState",required = false) String rejectState) {
 
         ApiResult<String> result = null;
 
@@ -201,7 +201,7 @@ public class UpProjectController {
                 map.put("againState",2);//开发中
                 i = upProjectService.setPassOrRejectTwo(map);
                 //驳回 1：立项待审批驳回 2：上线待审批驳回
-            } if ( proState.equals("5")) {
+            } else if ( proState.equals("5")) {
                 if (rejectState.equals("1")) {
                     //&& (rejectState.equals("1") || rejectState.equals("2"))
                     map.put("againState",null);//开发中

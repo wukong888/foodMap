@@ -103,15 +103,12 @@
     <select id="getProjectTaskList" resultMap="taskHashMap" parameterType="java.lang.String">
         select
         task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress
-        from project_task task
-        JOIN project_info info ON task.proId = info.id
-        <include refid="searchByTask"/>
+        from project_task task where task.proId in (select proId from project_info WHERE creater = #{creater})
     </select>
     <select id="getProjectTaskListNull" resultMap="taskHashMap" parameterType="java.lang.String">
-    select
-    task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress
-    from project_task task
-    JOIN project_info info ON task.proId = info.id
+        select
+        task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress
+        from project_task task where task.proId in (select proId from project_info)
   </select>
 
     <select id="getProjectSubTaskList" resultType="com.marketing.system.entity.ProjectSubtask"

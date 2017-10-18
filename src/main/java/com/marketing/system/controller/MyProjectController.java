@@ -357,8 +357,8 @@ public class MyProjectController {
 
 
                 projectInfosNew.addAll(subtaskListProject);
-
-
+                //4：完成，5：驳回，6：作废不在我的项目里显示
+                projectInfotaskNew = projectInfotaskNew.stream().filter(lin -> !lin.getProstate().equals("")|| lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
 
                 projectInfosNew.addAll(projectInfotaskNew);//任务
                 Iterator it = projectInfosNew.iterator();

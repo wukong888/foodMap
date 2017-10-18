@@ -201,7 +201,7 @@ public class UpProjectController {
                 map.put("againState",2);//开发中
                 i = upProjectService.setPassOrRejectTwo(map);
                 //驳回 1：立项待审批驳回 2：上线待审批驳回
-            } if ( proState.equals("5")) {
+            } else if ( proState.equals("5")) {
                 if (rejectState.equals("1")) {
                     //&& (rejectState.equals("1") || rejectState.equals("2"))
                     map.put("againState",null);//开发中

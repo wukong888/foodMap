@@ -179,7 +179,7 @@ public class UpProjectController {
             @RequestParam(value = "creatName") String creatName,
             @RequestParam(value = "explain") String explain,
             @RequestParam(value = "proState") String proState,
-            @RequestParam(value = "rejectState") String rejectState) {
+            @RequestParam(value = "rejectState",required = false) String rejectState) {
 
         ApiResult<String> result = null;
 

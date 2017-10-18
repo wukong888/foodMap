@@ -237,6 +237,21 @@
                  open=" creater IN (" separator="," close=")">
             #{item}
         </foreach>
+        <if test="createrSquadId != null and createrSquadId != '' ">
+            AND createrSquadId = #{createrSquadId}
+        </if>
+        AND createDate >= #{createDateStart} AND #{createDateEnd} >=createDate
+        AND planSDate >= #{planSDateStart} AND #{planSDateEnd} > =planSDate
+        <if test="proType != null and proType != '' ">
+            AND proType = #{proType}
+        </if>
+        AND proName LIKE '%${proName}%'
+        <if test="proState != null and proState != '' ">
+            AND proState = #{proState}
+        </if>
+        <if test="proState == null or proState == '' ">
+            AND proState IN (1,2,3,7)
+        </if>
     </select>
 
     <select id="getProjectByHanderMapFinish" resultMap="BaseResultMap">

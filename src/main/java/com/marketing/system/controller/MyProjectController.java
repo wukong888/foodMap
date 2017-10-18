@@ -214,6 +214,36 @@ public class MyProjectController {
 
             mapTmem.put("menuLeafIds", Idsmember);
 
+            mapTmem.put("createrSquadId", createrSquadId);//项目发起部门
+            mapTmem.put("creater", creater);//创建人
+            mapTmem.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
+            if (createDateStart == "" || createDateStart == null) {
+                mapTmem.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
+            } else {
+                mapTmem.put("createDateStart", createDateStart);//项目发起开始时间
+            }
+
+            if (createDateEnd == "" || createDateEnd == null) {
+                mapTmem.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
+            } else {
+                mapTmem.put("createDateEnd", createDateEnd);//项目发起结束时间
+            }
+
+            if (planSDateStart == "" || planSDateStart == null) {
+                mapTmem.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
+            } else {
+                mapTmem.put("planSDateStart", planSDateStart);//预计上线开始时间
+            }
+
+            if (planSDateEnd == "" || planSDateEnd == null) {
+                mapTmem.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
+            } else {
+                mapTmem.put("planSDateEnd", planSDateEnd);//预计上线结束时间
+            }
+
+            mapTmem.put("proType", proType);//项目类型
+            mapTmem.put("proName", proName);//项目名称
+
             List<Map<String, Object>> subtaskList = new ArrayList<>();
             List<ProjectInfo> subtaskListProject = new ArrayList<>();
 
@@ -224,8 +254,6 @@ public class MyProjectController {
                 //当前登录用户所涉及子任务
                 subtaskList = myProjectService.getSubTaskIdByHander(userName);
             }
-
-            Map<String, Object> objectMapNew = new HashMap<>();
 
             String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(subtaskList, "taskId"));
 
@@ -358,9 +386,13 @@ public class MyProjectController {
 
                 projectInfosNew.addAll(subtaskListProject);
                 //4：完成，5：驳回，6：作废不在我的项目里显示
-                projectInfotaskNew = projectInfotaskNew.stream().filter(lin -> lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
+                projectInfotaskNew = projectInfotaskNew.stream().filter(lin -> lin.getProstate().equals(proState) ).collect(Collectors.toList());
 
                 projectInfosNew.addAll(projectInfotaskNew);//任务
+
+                if (creater != "") {
+                    projectInfosNew = projectInfosNew.stream().filter(lin -> lin.getCreater().equals(creater) ).collect(Collectors.toList());
+                }
                 Iterator it = projectInfosNew.iterator();
                 while (it.hasNext()) {
                     ProjectInfo obj = (ProjectInfo) it.next();

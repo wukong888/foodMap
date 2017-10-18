@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @EnableAutoConfiguration
 public class MyProjectController {
 
-    private Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private Logger logger = LoggerFactory.getLogger(MyProjectController.class);
 
     @Autowired
     private MyProjectService myProjectService;

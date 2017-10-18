@@ -32,7 +32,7 @@ import java.util.Map;
 @EnableAutoConfiguration
 public class UpProjectController {
 
-    private Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private Logger logger = LoggerFactory.getLogger(UpProjectController.class);
 
     @Autowired
     private UpProjectService upProjectService;

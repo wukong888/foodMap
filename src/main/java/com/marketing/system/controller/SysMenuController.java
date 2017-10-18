@@ -38,7 +38,7 @@ import java.util.Map;
 @EnableAutoConfiguration
 public class SysMenuController {
 
-    private Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private Logger logger = LoggerFactory.getLogger(SysMenuController.class);
 
     @Autowired
     private SysMenuService sysMenuService;

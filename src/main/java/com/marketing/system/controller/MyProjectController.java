@@ -129,7 +129,7 @@ public class MyProjectController {
             List<ProjectInfo> projectInfotaskNew = new ArrayList<>();
 
             //4：完成，5：驳回，6：作废不在我的项目里显示
-            projectInfos = projectInfos.stream().filter(lin -> !lin.getProstate().equals("")|| lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
+            projectInfos = projectInfos.stream().filter(lin -> lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
 
             ProjectInfo projectInfoNew = new ProjectInfo();
 
@@ -358,7 +358,7 @@ public class MyProjectController {
 
                 projectInfosNew.addAll(subtaskListProject);
                 //4：完成，5：驳回，6：作废不在我的项目里显示
-                projectInfotaskNew = projectInfotaskNew.stream().filter(lin -> !lin.getProstate().equals("")|| lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
+                projectInfotaskNew = projectInfotaskNew.stream().filter(lin -> lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
 
                 projectInfosNew.addAll(projectInfotaskNew);//任务
                 Iterator it = projectInfosNew.iterator();
@@ -378,6 +378,8 @@ public class MyProjectController {
 
             if (user.getDuty().equals("CEO")) {
                 sum = projectInfos.size();
+                //projectInfos = projectInfos.stream().filter(lin -> lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
+
                 projectInfos = ToolUtil.listSplit2(current, pageSize, projectInfos);
             } else {
                 sum = projectInfosNew.size();

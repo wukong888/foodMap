@@ -68,7 +68,7 @@ public class ProReportController {
             return new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,"查询成功",ProReports,null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("项目统计列表 错误信息：" + e.getMessage());
+            logger.error("项目统计列表 错误信息：" + e);
         }
         return result;
     }

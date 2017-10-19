@@ -140,7 +140,7 @@ public class FinishProController {
             mapTid.put("mentIds", mIds);
             //组长/经理其小组成员
             List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
-            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "member"));
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "subtaskHandler"));
 
             String[] Idsmember = menuLeafIdsmember.split(",");
 
@@ -249,7 +249,7 @@ public class FinishProController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查询归档列表 错误信息：" + e.getMessage());
+            logger.error("查询归档列表 错误信息：" + e);
         }
 
         return result;
@@ -290,7 +290,7 @@ public class FinishProController {
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, FinProInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看项目的详细信息 错误信息：" + e.getMessage());
+            logger.error("查看项目的详细信息 错误信息：" + e);
         }
         return result;
     }
@@ -326,7 +326,7 @@ public class FinishProController {
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, FinTaskInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看任务的详细信息 错误信息：" + e.getMessage());
+            logger.error("查看任务的详细信息 错误信息：" + e);
         }
         return result;
     }
@@ -351,7 +351,7 @@ public class FinishProController {
             result = new ApiResult<List<SubtaskDevelopLog>>(Constant.SUCCEED_CODE_VALUE, msg, SubDevRecords, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看子任务的开发日志 错误信息：" + e.getMessage());
+            logger.error("查看子任务的开发日志 错误信息：" + e);
         }
         return result;
     }
@@ -385,7 +385,7 @@ public class FinishProController {
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, FinSubtaskInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看子任务详细信息 错误信息：" + e.getMessage());
+            logger.error("查看子任务详细信息 错误信息：" + e);
         }
         return result;
     }

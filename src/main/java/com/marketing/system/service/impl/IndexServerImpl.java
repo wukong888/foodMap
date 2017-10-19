@@ -11,6 +11,7 @@ import com.marketing.system.service.IndexService;
 import com.marketing.system.service.MyProjectService;
 import com.marketing.system.util.MapUtil;
 import com.marketing.system.util.StringUtil;
+import com.marketing.system.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +71,7 @@ public class IndexServerImpl implements IndexService {
         //组长/经理其小组成员
         List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
 
-        String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "member"));
+        String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "subtaskHandler"));
 
         String[] Idsmember = menuLeafIdsmember.split(",");
 
@@ -145,7 +146,6 @@ public class IndexServerImpl implements IndexService {
 
     @Override
     public List<ProjectInfo> getProjectInfoList(String creater) throws ParseException {
-        List<ProjectInfo> infoListNew = new ArrayList<>();
         List<ProjectInfo> infoList = new ArrayList<>();
         if (creater != "") {
             infoList = projectInfoMapper.getProjectInfoList(creater);
@@ -157,28 +157,14 @@ public class IndexServerImpl implements IndexService {
         //循环计算距逾期时间天数
         for (int i = 0; i < infoList.size(); i++) {
             projectInfo = infoList.get(i);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date plansdate = sdf.parse(projectInfo.getPlansdate());//预计完成时间
 
-            Calendar calendar = new GregorianCalendar();
-            calendar.setTime(plansdate);
-            //当前时间
-            Date smdate = new Date();
-
-            smdate = sdf.parse(sdf.format(smdate));
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(smdate);
-            long time1 = cal.getTimeInMillis();
-            cal.setTime(calendar.getTime());
-            long time2 = cal.getTimeInMillis();
-            long betweenDays = ((time2 - time1) / (1000 * 3600 * 24));
+            long betweenDays = ToolUtil.getBetweenTimes(projectInfo.getPlansdate());
 
             projectInfo.setBetweenDays(betweenDays);
 
         }
 
         infoList = infoList.stream().filter(t -> t.getBetweenDays() <= 6).collect(Collectors.toList());
-
 
         return infoList;
     }
@@ -198,29 +184,14 @@ public class IndexServerImpl implements IndexService {
         //循环计算距逾期时间天数
         for (int i = 0; i < infoList.size(); i++) {
             map = infoList.get(i);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date edate = sdf.parse(String.valueOf(map.get("edate")));//预计完成时间
 
-            Calendar calendar = new GregorianCalendar();
-            calendar.setTime(edate);
-            //当前时间
-            Date smdate = new Date();
-
-            smdate = sdf.parse(sdf.format(smdate));
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(smdate);
-            long time1 = cal.getTimeInMillis();
-            cal.setTime(calendar.getTime());
-            long time2 = cal.getTimeInMillis();
-            long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
+            long betweenDays = ToolUtil.getBetweenTimes(String.valueOf(map.get("edate")));
 
             map.put("betweenDays", betweenDays);
             infoListNew.add(map);
-            //任务距离完成时间只有3天时间师即在首页提示
-            /*if (Integer.valueOf(String.valueOf(map.get("betweenDays"))) > 3) {
-                infoListNew.remove(map);
-            }*/
+
         }
+        //任务距离完成时间只有3天时间师即在首页提示
         infoListNew = infoListNew.stream().filter(t -> Integer.valueOf(String.valueOf(t.get("betweenDays"))) <= 3).collect(Collectors.toList());
         return infoListNew;
     }
@@ -258,12 +229,8 @@ public class IndexServerImpl implements IndexService {
 
             projectSubtask.setBetweenHours(betweenHours);
 
-            //子任务距离逾期时间只有1天时间时即在首页提示
-            /*if (projectSubtask.getBetweenHours() > 24) {
-                infoList.remove(projectSubtask);
-            }*/
         }
-
+        //子任务距离逾期时间只有1天时间时即在首页提示
         infoList = infoList.stream().filter(t -> Integer.valueOf(String.valueOf(t.getBetweenHours())) <= 24).collect(Collectors.toList());
 
         return infoList;

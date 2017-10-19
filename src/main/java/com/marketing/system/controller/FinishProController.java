@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Api(description = "归档接口", value = "归档接口")
 @Scope("prototype")
@@ -65,91 +67,91 @@ public class FinishProController {
     public ApiResult<List<ProjectInfo>> selectFinPro(
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize,
-            @RequestParam(value="creatersquadid", required = false) String creatersquadid,
-            @RequestParam(value="creater", required = false) String creater,
+            @RequestParam(value = "creatersquadid", required = false) String creatersquadid,
+            @RequestParam(value = "creater", required = false) String creater,
             @RequestParam(value = "id", required = true) int id,
-            @RequestParam(value="createdate1", required = false) String createdate1,
-            @RequestParam(value="createdate2", required = false) String createdate2,
-            @RequestParam(value="finishdate1", required = false) String finishdate1,
-            @RequestParam(value="finishdate2", required = false) String finishdate2,
-            @RequestParam(value="onlinedate1", required = false) String onlinedate1,
-            @RequestParam(value="onlinedate2", required = false) String onlinedate2,
-            @RequestParam(value="protype", required = false) String protype,
-            @RequestParam(value="param", required = false) String param) {
+            @RequestParam(value = "createdate1", required = false) String createdate1,
+            @RequestParam(value = "createdate2", required = false) String createdate2,
+            @RequestParam(value = "finishdate1", required = false) String finishdate1,
+            @RequestParam(value = "finishdate2", required = false) String finishdate2,
+            @RequestParam(value = "onlinedate1", required = false) String onlinedate1,
+            @RequestParam(value = "onlinedate2", required = false) String onlinedate2,
+            @RequestParam(value = "protype", required = false) String protype,
+            @RequestParam(value = "param", required = false) String param) {
 
-        ApiResult<List<ProjectInfo>> result =null;
+        ApiResult<List<ProjectInfo>> result = null;
         try {
-        if(creatersquadid==null){
-            creatersquadid="";
-        }
-        if(creater==null){
-            creater="";
-        }
-        if(createdate1==null||createdate1==""){
-            createdate1="2010-01-01 00:00:00";
-        }else{
-            createdate1=createdate1+" 00:00:00";
-        }
-        if(createdate2==null||createdate2==""){
-            createdate2="2040-01-01 23:59:59";
-        }else{
-            createdate2=createdate2+" 23:59:59";
-        }
-        if(finishdate1==null||finishdate1==""){
-            finishdate1="2010-01-01 00:00:00";
-        }else{
-            finishdate1=finishdate1+" 00:00:00";
-        }
-        if(finishdate2==null||finishdate2==""){
-            finishdate2="2040-01-01 23:59:59";
-        }else{
-            finishdate2=finishdate2+" 23:59:59";
-        }
-        if(onlinedate1==null||onlinedate1==""){
-            onlinedate1="2010-01-01 00:00:00";
-        }else{
-            onlinedate1=onlinedate1+" 00:00:00";
-        }
-        if(onlinedate2==null||onlinedate2==""){
-            onlinedate2="2040-01-01 23:59:59";
-        }else{
-            onlinedate2=onlinedate2+" 23:59:59";
-        }
-        if(protype==null){
-            protype="";
-        }
-        if(param==null){
-            param="";
-        }
+            if (creatersquadid == null) {
+                creatersquadid = "";
+            }
+            /*if (creater == null) {
+                creater = "";
+            }*/
+            if (createdate1 == null || createdate1 == "") {
+                createdate1 = "2010-01-01 00:00:00";
+            } else {
+                createdate1 = createdate1 + " 00:00:00";
+            }
+            if (createdate2 == null || createdate2 == "") {
+                createdate2 = "2040-01-01 23:59:59";
+            } else {
+                createdate2 = createdate2 + " 23:59:59";
+            }
+            if (finishdate1 == null || finishdate1 == "") {
+                finishdate1 = "2010-01-01 00:00:00";
+            } else {
+                finishdate1 = finishdate1 + " 00:00:00";
+            }
+            if (finishdate2 == null || finishdate2 == "") {
+                finishdate2 = "2040-01-01 23:59:59";
+            } else {
+                finishdate2 = finishdate2 + " 23:59:59";
+            }
+            if (onlinedate1 == null || onlinedate1 == "") {
+                onlinedate1 = "2010-01-01 00:00:00";
+            } else {
+                onlinedate1 = onlinedate1 + " 00:00:00";
+            }
+            if (onlinedate2 == null || onlinedate2 == "") {
+                onlinedate2 = "2040-01-01 23:59:59";
+            } else {
+                onlinedate2 = onlinedate2 + " 23:59:59";
+            }
+            if (protype == null) {
+                protype = "";
+            }
+            if (param == null) {
+                param = "";
+            }
 
-        //所有项目集合
-        Map<String,Object> FinProMapAll=FinProService.selectFinishPro(1,1000,creatersquadid,creater,createdate1,createdate2,finishdate1,finishdate2,onlinedate1,onlinedate2,protype,param);
+            //所有项目集合
+            Map<String, Object> FinProMapAll = FinProService.selectFinishPro(1, 1000, creatersquadid, creater, createdate1, createdate2, finishdate1, finishdate2, onlinedate1, onlinedate2, protype, param);
 
-        List<ProjectInfo> FinProAll=(List<ProjectInfo>)FinProMapAll.get("FinPro");
+            List<ProjectInfo> FinProAll = (List<ProjectInfo>) FinProMapAll.get("FinPro");
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
-        //项目相关人员集合
-        List<ProjectInfo> FinPro = new ArrayList<>();
+            //项目相关人员集合
+            List<ProjectInfo> FinPro = new ArrayList<>();
             List<ProjectInfo> FinPro2 = new ArrayList<>();
 
-        SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-        SystemUser user = systemUserService.selectByPrimaryKey(id);
-        String userName = user.getUserName();//当前登录用户
+            SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            String userName = user.getUserName();//当前登录用户
             String department = user.getDepartment();
             department = department.substring(0, 2);
 
-        //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
-        Department did = myProjectService.getDepartmentIdByMent(department);
-        String departmentid = did.getDepartmentid();
-        //根据部门id查找小组id
-        List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
-        String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
+            //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
+            Department did = myProjectService.getDepartmentIdByMent(department);
+            String departmentid = did.getDepartmentid();
+            //根据部门id查找小组id
+            List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+            String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
 
-        String[] mIds = mentIds.split(",");
-        Map<String, Object> mapTid = new HashMap<>();
+            String[] mIds = mentIds.split(",");
+            Map<String, Object> mapTid = new HashMap<>();
 
-        mapTid.put("mentIds", mIds);
-        //组长/经理其小组成员
-        List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+            mapTid.put("mentIds", mIds);
+            //组长/经理其小组成员
+            List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
             String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "member"));
 
             String[] Idsmember = menuLeafIdsmember.split(",");
@@ -158,59 +160,74 @@ public class FinishProController {
 
             mapTmem.put("menuLeafIds", Idsmember);
 
-        List<ProjectInfo> subtaskListProject = new ArrayList<>();
-        //当前登录用户所涉及子任务
-        List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
-        Map<String, Object> objectMapNew = new HashMap<>();
-        String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(subtaskList, "taskId"));
-        String[] Ids = menuLeafIds.split(",");
-        Map<String, Object> mapT = new HashMap<>();
-        mapT.put("menuLeafIds", Ids);
+            mapTmem.put("creatersquadid", creatersquadid);
+            mapTmem.put("createdate1", createdate1);
+            mapTmem.put("createdate2", createdate2);
+            mapTmem.put("finishdate1", finishdate1);
+            mapTmem.put("finishdate2", finishdate2);
+            mapTmem.put("onlinedate1", onlinedate1);
+            mapTmem.put("onlinedate2", onlinedate2);
+            mapTmem.put("protype", protype);
+            mapTmem.put("param", param);
 
-        //根据taskId查找proId
-        List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
-        List<Map<String, Object>> taskString = new ArrayList<>();
-        List<Map<String, Object>> taskProId = new ArrayList<>();
-        //判断项目集合中是否有对应小组成员
-        //小组集合中是否匹配子任务负责人
-        for (Map map1 : mapList1) {
-            for (Map map0 : subtaskList) {
-                if (map0.get("subtaskHandler") == map1.get("member")) {
-                    taskString.add(map0);
-                }
-            }
-        }
+            List<ProjectInfo> subtaskListProject = new ArrayList<>();
+            //当前登录用户所涉及子任务
+            List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
+            Map<String, Object> objectMapNew = new HashMap<>();
+            String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(subtaskList, "taskId"));
+            String[] Ids = menuLeafIds.split(",");
+            Map<String, Object> mapT = new HashMap<>();
+            mapT.put("menuLeafIds", Ids);
 
-        //判断是否是项目相关的人（我的项目）是则重新赋值组成新 我的项目list
-        for (ProjectInfo pro : FinProAll) {
-            for (Map map1 : taskList) {
-                if (map1.get("proId") == (Integer.valueOf(pro.getProid()))) {
-                    FinPro.add(pro);
-                }
-                //通过子任务里的taskId匹配对应任务里的taskId
-                for (Map s : taskString) {
-                    if (s.get("taskId") == map1.get("taskId")) {
-                        taskProId.add(map1);
+            //根据taskId查找proId
+            List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
+            List<Map<String, Object>> taskString = new ArrayList<>();
+            List<Map<String, Object>> taskProId = new ArrayList<>();
+            //判断项目集合中是否有对应小组成员
+            //小组集合中是否匹配子任务负责人
+            for (Map map1 : mapList1) {
+                for (Map map0 : subtaskList) {
+                    if (map0.get("subtaskHandler") == map1.get("member")) {
+                        taskString.add(map0);
                     }
                 }
-                //通过匹配的taskId匹配对应的proId
-                for (Map map3 : taskProId) {
-                    if (map3.get("proId") == pro.getProid()) {
+            }
+
+            //判断是否是项目相关的人（我的项目）是则重新赋值组成新 我的项目list
+            for (ProjectInfo pro : FinProAll) {
+                for (Map map1 : taskList) {
+                    if (map1.get("proId") == (Integer.valueOf(pro.getProid()))) {
                         FinPro.add(pro);
                     }
+                    //通过子任务里的taskId匹配对应任务里的taskId
+                    for (Map s : taskString) {
+                        if (s.get("taskId") == map1.get("taskId")) {
+                            taskProId.add(map1);
+                        }
+                    }
+                    //通过匹配的taskId匹配对应的proId
+                    for (Map map3 : taskProId) {
+                        if (map3.get("proId") == pro.getProid()) {
+                            FinPro.add(pro);
+                        }
+                    }
                 }
-            }
-            //当前用户是创建人
-            if (pro.getCreater().equals( user.getUserName())) {
-                FinPro.add(pro);
-            }
+                //当前用户是创建人
+                if (pro.getCreater().equals(user.getUserName())) {
+                    FinPro.add(pro);
+                }
 
-        }
+            }
             if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
                 //当前登录用户并其成员包含所涉及子任务
-               subtaskListProject = myProjectService.getProjectByHanderMapFinish(mapTmem);
+                subtaskListProject = myProjectService.getProjectByHanderMapFinish(mapTmem);
 
                 FinPro.addAll(subtaskListProject);
+
+                if (creater != "") {
+                    FinPro = FinPro.stream().filter(lin -> lin.getCreater().equals(creater) ).collect(Collectors.toList());
+
+                }
                 Iterator it = FinPro.iterator();
                 while (it.hasNext()) {
                     ProjectInfo obj = (ProjectInfo) it.next();
@@ -218,36 +235,36 @@ public class FinishProController {
                         FinPro2.add(obj);
                     }
                 }
-                FinPro  = FinPro2;
+                FinPro = FinPro2;
             }
 
-        RdPage rdPage = new RdPage();
-        int sum = 0;
-        if (user.getDuty() .equals("CEO") ) {
-            sum = FinProAll.size();
-            FinProAll=ToolUtil.listSplit2(current,pageSize,FinProAll);
-        } else {
-            sum = FinPro.size();
-            FinPro=ToolUtil.listSplit2(current,pageSize,FinPro);
-        }
+            RdPage rdPage = new RdPage();
+            int sum = 0;
+            if (user.getDuty().equals("CEO")) {
+                sum = FinProAll.size();
+                FinProAll = ToolUtil.listSplit2(current, pageSize, FinProAll);
+            } else {
+                sum = FinPro.size();
+                FinPro = ToolUtil.listSplit2(current, pageSize, FinPro);
+            }
 
-        //分页信息
-        rdPage.setTotal(sum);
-        rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
-        rdPage.setCurrent(current);
-        rdPage.setPageSize(pageSize);
+            //分页信息
+            rdPage.setTotal(sum);
+            rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+            rdPage.setCurrent(current);
+            rdPage.setPageSize(pageSize);
 
-        if (user.getDuty().equals("CEO") ) {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, FinProAll, rdPage);
-        } else {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, FinPro, rdPage);
-        }
+            if (user.getDuty().equals("CEO")) {
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, FinProAll, rdPage);
+            } else {
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, FinPro, rdPage);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查询归档列表 错误信息：" + e.getMessage());
         }
 
-        return  result;
+        return result;
 
     }
 
@@ -264,25 +281,25 @@ public class FinishProController {
     @RequestMapping(value = "/selectFinProInfo", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectFinProInfo(
             @RequestParam(value = "id") int id,
-            @RequestParam(value = "proId") int proId){
-        ApiResult<List<Map>> result =null;
+            @RequestParam(value = "proId") int proId) {
+        ApiResult<List<Map>> result = null;
 
         try {
-        List<Map> FinProInfos=new ArrayList<Map>();
-        Map<String,Object> FinProInfo=new HashMap<String,Object>();
-        ProjectInfo ProInfo=FinProService.selectFinProInfo(id,proId);
-        List<ProLogRecord> ProLogRecord=FinProService.selectFinProLogRecord(proId);
-        List<Map> ProTask=FinProService.selectFinTask(proId);
-        List<ProDevelopLog> ProDevRecord=FinProService.selectFinProDevRecord(proId);
+            List<Map> FinProInfos = new ArrayList<Map>();
+            Map<String, Object> FinProInfo = new HashMap<String, Object>();
+            ProjectInfo ProInfo = FinProService.selectFinProInfo(id, proId);
+            List<ProLogRecord> ProLogRecord = FinProService.selectFinProLogRecord(proId);
+            List<Map> ProTask = FinProService.selectFinTask(proId);
+            List<ProDevelopLog> ProDevRecord = FinProService.selectFinProDevRecord(proId);
 
-        FinProInfo.put("ProInfo",ProInfo);
-        FinProInfo.put("ProLogRecord",ProLogRecord);
-        FinProInfo.put("ProTask",ProTask);
-        FinProInfo.put("ProDevRecord",ProDevRecord);
-        FinProInfos.add(FinProInfo);
-        String msg = "查询成功！";
+            FinProInfo.put("ProInfo", ProInfo);
+            FinProInfo.put("ProLogRecord", ProLogRecord);
+            FinProInfo.put("ProTask", ProTask);
+            FinProInfo.put("ProDevRecord", ProDevRecord);
+            FinProInfos.add(FinProInfo);
+            String msg = "查询成功！";
 
-        result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,FinProInfos,null);
+            result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, FinProInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查看项目的详细信息 错误信息：" + e.getMessage());
@@ -301,24 +318,24 @@ public class FinishProController {
     })
     @RequestMapping(value = "/selecFinTaskInfo", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectFinTaskInfo(
-            @RequestParam(value = "taskId") int taskId){
-        ApiResult<List<Map>> result =null;
+            @RequestParam(value = "taskId") int taskId) {
+        ApiResult<List<Map>> result = null;
         try {
-        List<Map> FinTaskInfos=new ArrayList<Map>();
-        Map<String,Object> FinTaskInfo=new HashMap<String,Object>();
-        ProjectTask TaskInfo=FinProService.selectFinTaskInfo(taskId);
-        List<TaskLogRecord> TaskLogRecord=FinProService.selectFinTaskLogRecord(taskId);
-        List<ProjectSubtask> Subtask=FinProService.selectFinSubtask(taskId);
-        List<TaskDevelopLog> TaskDevRecord=FinProService.selectFinTaskDevRecord(taskId);
+            List<Map> FinTaskInfos = new ArrayList<Map>();
+            Map<String, Object> FinTaskInfo = new HashMap<String, Object>();
+            ProjectTask TaskInfo = FinProService.selectFinTaskInfo(taskId);
+            List<TaskLogRecord> TaskLogRecord = FinProService.selectFinTaskLogRecord(taskId);
+            List<ProjectSubtask> Subtask = FinProService.selectFinSubtask(taskId);
+            List<TaskDevelopLog> TaskDevRecord = FinProService.selectFinTaskDevRecord(taskId);
 
-        FinTaskInfo.put("TaskInfo",TaskInfo);
-        FinTaskInfo.put("TaskLogRecord",TaskLogRecord);
-        FinTaskInfo.put("Subtask",Subtask);
-        FinTaskInfo.put("TaskDevRecord",TaskDevRecord);
-        FinTaskInfos.add(FinTaskInfo);
-        String msg = "查询成功！";
+            FinTaskInfo.put("TaskInfo", TaskInfo);
+            FinTaskInfo.put("TaskLogRecord", TaskLogRecord);
+            FinTaskInfo.put("Subtask", Subtask);
+            FinTaskInfo.put("TaskDevRecord", TaskDevRecord);
+            FinTaskInfos.add(FinTaskInfo);
+            String msg = "查询成功！";
 
-        result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,FinTaskInfos,null);
+            result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, FinTaskInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查看任务的详细信息 错误信息：" + e.getMessage());
@@ -337,13 +354,13 @@ public class FinishProController {
     })
     @RequestMapping(value = "/selectFinSubtaskDevRecord", method = RequestMethod.POST)
     public ApiResult<List<SubtaskDevelopLog>> selectFinSubtaskDevRecord(
-            @RequestParam(value = "subtaskId") int subtaskId){
-        ApiResult<List<SubtaskDevelopLog>> result =null;
+            @RequestParam(value = "subtaskId") int subtaskId) {
+        ApiResult<List<SubtaskDevelopLog>> result = null;
         try {
-        List<SubtaskDevelopLog> SubDevRecords=FinProService.selectFinSubTaskDevRecord(subtaskId);
-        String msg = "查询成功！";
+            List<SubtaskDevelopLog> SubDevRecords = FinProService.selectFinSubTaskDevRecord(subtaskId);
+            String msg = "查询成功！";
 
-        result = new ApiResult<List<SubtaskDevelopLog>>(Constant.SUCCEED_CODE_VALUE,msg,SubDevRecords,null);
+            result = new ApiResult<List<SubtaskDevelopLog>>(Constant.SUCCEED_CODE_VALUE, msg, SubDevRecords, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查看子任务的开发日志 错误信息：" + e.getMessage());
@@ -362,22 +379,22 @@ public class FinishProController {
     })
     @RequestMapping(value = "/selectFinSubtaskInfo", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectFinSubtaskInfo(
-            @RequestParam(value = "subtaskId") int subtaskId){
-        ApiResult<List<Map>> result =null;
+            @RequestParam(value = "subtaskId") int subtaskId) {
+        ApiResult<List<Map>> result = null;
 
         try {
-        List<Map> FinSubtaskInfos=new ArrayList<Map>();
-        Map<String,Object> FinSubtaskInfo=new HashMap<String,Object>();
-        ProjectSubtask SubTaskInfo=FinProService.selectFinSubtaskInfo(subtaskId);
-        List<SubtaskLogRecord> SubLogRecords=FinProService.selectFinSubtaskLogRecord(subtaskId);
-        List<SubtaskDevelopLog> SubDevRecords=FinProService.selectFinSubTaskDevRecord(subtaskId);
-        FinSubtaskInfo.put("SubTaskInfo",SubTaskInfo);
-        FinSubtaskInfo.put("SubLogRecords",SubLogRecords);
-        FinSubtaskInfo.put("SubDevRecords",SubDevRecords);
-        FinSubtaskInfos.add(FinSubtaskInfo);
-        String msg = "查询成功！";
+            List<Map> FinSubtaskInfos = new ArrayList<Map>();
+            Map<String, Object> FinSubtaskInfo = new HashMap<String, Object>();
+            ProjectSubtask SubTaskInfo = FinProService.selectFinSubtaskInfo(subtaskId);
+            List<SubtaskLogRecord> SubLogRecords = FinProService.selectFinSubtaskLogRecord(subtaskId);
+            List<SubtaskDevelopLog> SubDevRecords = FinProService.selectFinSubTaskDevRecord(subtaskId);
+            FinSubtaskInfo.put("SubTaskInfo", SubTaskInfo);
+            FinSubtaskInfo.put("SubLogRecords", SubLogRecords);
+            FinSubtaskInfo.put("SubDevRecords", SubDevRecords);
+            FinSubtaskInfos.add(FinSubtaskInfo);
+            String msg = "查询成功！";
 
-        result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,FinSubtaskInfos,null);
+            result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, FinSubtaskInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查看子任务详细信息 错误信息：" + e.getMessage());

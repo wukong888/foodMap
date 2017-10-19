@@ -264,6 +264,17 @@
                  open=" creater IN (" separator="," close=")">
             #{item}
         </foreach>
+
+        <if test="creatersquadid != null and creatersquadid != '' ">
+            AND createrSquadId = #{creatersquadid}
+        </if>
+        AND createDate >= #{createdate1} AND #{createdate2} >=createDate
+        AND planSDate >= #{finishdate1} AND #{finishdate2} > =planSDate
+        AND onlineDate >= #{onlinedate1} AND #{onlinedate2} > =onlineDate
+        <if test="protype != null and protype != '' ">
+            AND proType = #{protype}
+        </if>
+        AND proName LIKE '%${param}%'
         AND proState = 4
     </select>
 

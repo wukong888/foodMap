@@ -85,23 +85,15 @@ public class OnlineProController {
             }
             if (createdate1 == null || createdate1 == "") {
                 createdate1 = "2010-01-01 00:00:00";
-            }else{
-                createdate1=createdate1+" 00:00:00";
             }
             if (createdate2 == null || createdate2 == "") {
-                createdate2 = "2040-01-01 23:59:59";
-            }else{
-                createdate2=createdate2+" 23:59:59";
+                createdate2 = "2040-01-01 00:00:00";
             }
             if (finishdate1 == null || finishdate1 == "") {
                 finishdate1 = "2010-01-01 00:00:00";
-            }else{
-                finishdate1=finishdate1+" 00:00:00";
             }
             if (finishdate2 == null || finishdate2 == "") {
-                finishdate2 = "2040-01-01 23:59:59";
-            }else{
-                finishdate2=finishdate2+" 23:59:59";
+                finishdate2 = "2040-01-01 00:00:00";
             }
             if (protype == null) {
                 protype = "";
@@ -394,8 +386,9 @@ public class OnlineProController {
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "explain", required = false) String explain,
             @RequestParam(value = "rejectState", required = false) String rejectState) {
+        ApiResult<String> result = null;
         if(rejectState.equals("2")){
-            ApiResult<String> result = null;
+
             try {
                 boolean success = OnProService.insertProReturnLog(proId, explain);
                 if (success == true) {
@@ -420,7 +413,7 @@ public class OnlineProController {
             e.printStackTrace();
             logger.error("审批驳回 错误信息：" + e.getMessage());
         }*/
-        return null;
+        return result;
     }
 
 

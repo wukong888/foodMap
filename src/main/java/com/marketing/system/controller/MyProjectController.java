@@ -117,7 +117,6 @@ public class MyProjectController {
             }
 
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
-            List<ProjectInfo> projectInfosNew2 = new ArrayList<>();
             List<ProjectInfo> projectInfosNew3 = new ArrayList<>();
             //项目相关人员集合
 

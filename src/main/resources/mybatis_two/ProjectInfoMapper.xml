@@ -92,23 +92,35 @@
         id,proId,proName,planSDate,creater,proProgress
         from project_info
         <include refid="searchBy"/>
+        ORDER BY
+        planSDate
+        DESC
+
     </select>
     <select id="getProjectInfoListNull" resultMap="BaseResultMap" parameterType="java.lang.String">
     select
-    id,proId,proName,planSDate,creater,proProgress
+    id,proId,proName,planSDate,creater,proProgress,proState
     from project_info
-
+    ORDER BY
+    planSDate
+    DESC
   </select>
 
     <select id="getProjectTaskList" resultMap="taskHashMap" parameterType="java.lang.String">
         select
         task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress
         from project_task task where task.proId in (select proId from project_info WHERE creater = #{creater})
+        ORDER BY
+        eDate
+        DESC
     </select>
     <select id="getProjectTaskListNull" resultMap="taskHashMap" parameterType="java.lang.String">
         select
-        task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress
+        task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress,task.taskState
         from project_task task where task.proId in (select proId from project_info)
+        ORDER BY
+        eDate
+        DESC
   </select>
 
     <select id="getProjectSubTaskList" resultType="com.marketing.system.entity.ProjectSubtask"
@@ -119,14 +131,19 @@
         JOIN project_task info ON task.taskId = info.taskId
 
         <include refid="searchBySubTask"/>
+        ORDER BY
+        eDate
+        DESC
     </select>
     <select id="getProjectSubTaskListNull" resultType="com.marketing.system.entity.ProjectSubtask"
             parameterType="java.lang.String">
     select
-    task.subtaskId,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress
+    task.subtaskId,task.taskId,task.subtaskName,task.eDate,task.subtaskHandler,task.subtaskProgress,task.subtaskState
     from project_subtask task
     JOIN project_task info ON task.taskId = info.taskId
-
+    ORDER BY
+    eDate
+    DESC
   </select>
 
 

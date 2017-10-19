@@ -163,6 +163,7 @@ public class IndexServerImpl implements IndexService {
             projectInfo.setBetweenDays(betweenDays);
 
         }
+        infoList = infoList.stream().filter(t -> Integer.valueOf(t.getProstate()) == 2).collect(Collectors.toList());
 
         infoList = infoList.stream().filter(t -> t.getBetweenDays() <= 6).collect(Collectors.toList());
 
@@ -191,6 +192,8 @@ public class IndexServerImpl implements IndexService {
             infoListNew.add(map);
 
         }
+        infoListNew = infoListNew.stream().filter(t -> Integer.valueOf(String.valueOf(t.get("taskstate"))) == 2).collect(Collectors.toList());
+
         //任务距离完成时间只有3天时间师即在首页提示
         infoListNew = infoListNew.stream().filter(t -> Integer.valueOf(String.valueOf(t.get("betweenDays"))) <= 3).collect(Collectors.toList());
         return infoListNew;
@@ -230,6 +233,8 @@ public class IndexServerImpl implements IndexService {
             projectSubtask.setBetweenHours(betweenHours);
 
         }
+        infoList = infoList.stream().filter(t -> Integer.valueOf(String.valueOf(t.getSubtaskstate())) == 2).collect(Collectors.toList());
+
         //子任务距离逾期时间只有1天时间时即在首页提示
         infoList = infoList.stream().filter(t -> Integer.valueOf(String.valueOf(t.getBetweenHours())) <= 24).collect(Collectors.toList());
 

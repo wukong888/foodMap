@@ -1,13 +1,12 @@
 package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper_two.ProjectSubtaskMapper;
+import com.marketing.system.mapper_two.ProjectTaskMapper;
 import com.marketing.system.service.GroupService;
 import com.marketing.system.service.MembersService;
 import com.marketing.system.service.UpProjectService;
-import com.marketing.system.util.ApiResult;
-import com.marketing.system.util.Constant;
-import com.marketing.system.util.RdPage;
-import com.marketing.system.util.ToolUtil;
+import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -42,6 +41,12 @@ public class UpProjectController {
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    ProjectSubtaskMapper projectSubtaskMapper;
+
+    @Autowired
+    ProjectTaskMapper projectTaskMapper;
 
     /**
      * 查询立项待审批列表
@@ -192,6 +197,25 @@ public class UpProjectController {
                 i = upProjectService.setPassOrRejectTwo(map);
             } else{
                 i = upProjectService.setPassOrReject(map);
+            }
+
+            //上线待审批更新任务和子任务进度
+            if (proState.equals("3")) {
+                //任务
+                boolean updateTaskProgress = projectTaskMapper.updateTaskProgress(proId);
+
+                //子任务
+                List<Map<String,Object>> updateSubtaskProgress = projectSubtaskMapper.selectProSubtaskByProId(proId);
+
+                String mentIds = StringUtil.toString(MapUtil.collectProperty(updateSubtaskProgress, "taskId"));
+                String[] mIds = mentIds.split(",");
+                Map<String, Object> mapTid = new HashMap<>();
+
+                mapTid.put("mentIds", mIds);
+
+                //更新任务相关子任务进度为100
+                boolean updateSubtaskProgressResult = projectSubtaskMapper.updateSubtaskProgress(mapTid);
+
             }
 
             ProLogRecord proLogRecord = new ProLogRecord();

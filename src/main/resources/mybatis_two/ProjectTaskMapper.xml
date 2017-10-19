@@ -278,4 +278,11 @@
 
     where taskId = #{taskId,jdbcType=INTEGER}
   </update>
+
+  <update id="updateTaskProgress" parameterType="com.marketing.system.entity.ProjectTask" >
+    update project_task
+    set
+    taskProgress = '100'
+    where proId = #{proId}
+  </update>
 </mapper>

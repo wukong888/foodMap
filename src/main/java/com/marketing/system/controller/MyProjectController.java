@@ -386,9 +386,14 @@ public class MyProjectController {
 
                 projectInfosNew.addAll(subtaskListProject);
                 //4：完成，5：驳回，6：作废不在我的项目里显示
-                projectInfotaskNew = projectInfotaskNew.stream().filter(lin -> lin.getProstate().equals(proState) ).collect(Collectors.toList());
+                if (!"".equals(proState)) {
+                    projectInfotaskNew = projectInfotaskNew.stream().filter(lin -> lin.getProstate().equals(proState) ).collect(Collectors.toList());
+
+                }
 
                 projectInfosNew.addAll(projectInfotaskNew);//任务
+
+                projectInfosNew = projectInfosNew.stream().filter(lin -> lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
 
                 if (creater != "") {
                     projectInfosNew = projectInfosNew.stream().filter(lin -> lin.getCreater().equals(creater) ).collect(Collectors.toList());

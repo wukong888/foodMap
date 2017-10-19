@@ -201,7 +201,7 @@ public class OnlineProController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查询上线待审批列表 错误信息：" + e.getMessage());
+            logger.error("查询上线待审批列表 错误信息：" + e);
         }
         return result;
 
@@ -240,7 +240,7 @@ public class OnlineProController {
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, OnProInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看项目的详细信息 错误信息：" + e.getMessage());
+            logger.error("查看项目的详细信息 错误信息：" + e);
         }
         return result;
     }
@@ -276,7 +276,7 @@ public class OnlineProController {
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, OnTaskInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看任务的详细信息 错误信息：" + e.getMessage());
+            logger.error("查看任务的详细信息 错误信息：" + e);
         }
         return result;
     }
@@ -301,7 +301,7 @@ public class OnlineProController {
             result = new ApiResult<List<SubtaskDevelopLog>>(Constant.SUCCEED_CODE_VALUE, msg, SubDevRecords, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看子任务的开发日志 错误信息：" + e.getMessage());
+            logger.error("查看子任务的开发日志 错误信息：" + e);
         }
         return result;
     }
@@ -334,7 +334,7 @@ public class OnlineProController {
             result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, OnSubtaskInfos, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看子任务详细信息 错误信息：" + e.getMessage());
+            logger.error("查看子任务详细信息 错误信息：" + e);
         }
         return result;
     }
@@ -365,7 +365,7 @@ public class OnlineProController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("审批通过 错误信息：" + e.getMessage());
+            logger.error("审批通过 错误信息：" + e);
         }
         return result;
     }
@@ -398,7 +398,7 @@ public class OnlineProController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.error("审批驳回 错误信息：" + e.getMessage());
+                logger.error("审批驳回 错误信息：" + e);
             }
         }
         /*ApiResult<String> result = null;

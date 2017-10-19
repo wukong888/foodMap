@@ -218,7 +218,7 @@ public class RecycleProController {
         }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查询回收列表 错误信息：" + e.getMessage());
+            logger.error("查询回收列表 错误信息：" + e);
         }
         return  result;
 
@@ -255,7 +255,7 @@ public class RecycleProController {
         result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,msg,RecProInfos,null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查看项目的基本信息 错误信息：" + e.getMessage());
+            logger.error("查看项目的基本信息 错误信息：" + e);
         }
         return result;
     }

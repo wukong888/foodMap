@@ -3,6 +3,7 @@ package com.marketing.system.util;
 import com.marketing.system.cache.Cache;
 import com.marketing.system.cache.CacheManager;
 import com.marketing.system.entity.ProjectInfo;
+import com.marketing.system.entity.SystemUser;
 import org.apache.http.HttpResponse;
 
 import java.io.File;
@@ -126,5 +127,157 @@ public class ToolUtil {
         } else {
             return "full";
         }
+    }
+
+    /**
+     * 判断返回map
+     */
+    public static Map<String,Object> putMap(int current,String createrSquadId,String creater,String proState,
+                                            String createDateStart,String createDateEnd,String planSDateStart,String planSDateEnd,
+                                            String proType,String proName){
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("current", current);
+        map.put("pageSize", 1000);
+        map.put("createrSquadId", createrSquadId);//项目发起部门
+        map.put("creater", creater);//创建人
+        map.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
+        if (createDateStart == "" || createDateStart == null) {
+            map.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
+        } else {
+            map.put("createDateStart", createDateStart);//项目发起开始时间
+        }
+
+        if (createDateEnd == "" || createDateEnd == null) {
+            map.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
+        } else {
+            map.put("createDateEnd", createDateEnd);//项目发起结束时间
+        }
+
+        if (planSDateStart == "" || planSDateStart == null) {
+            map.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
+        } else {
+            map.put("planSDateStart", planSDateStart);//预计上线开始时间
+        }
+
+        if (planSDateEnd == "" || planSDateEnd == null) {
+            map.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
+        } else {
+            map.put("planSDateEnd", planSDateEnd);//预计上线结束时间
+        }
+
+        map.put("proType", proType);//项目类型
+        map.put("proName", proName);//项目名称
+
+        return map;
+    }
+
+    /**
+     * 判断返回map
+     */
+    public static Map<String,Object> putMaplimit(String[] Idsmember,String createrSquadId,String creater,String proState,
+                                            String createDateStart,String createDateEnd,String planSDateStart,String planSDateEnd,
+                                            String proType,String proName){
+
+        Map<String, Object> mapTmem = new HashMap<>();
+
+        mapTmem.put("menuLeafIds", Idsmember);
+
+        mapTmem.put("createrSquadId", createrSquadId);//项目发起部门
+        mapTmem.put("creater", creater);//创建人
+        mapTmem.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
+        if (createDateStart == "" || createDateStart == null) {
+            mapTmem.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
+        } else {
+            mapTmem.put("createDateStart", createDateStart);//项目发起开始时间
+        }
+
+        if (createDateEnd == "" || createDateEnd == null) {
+            mapTmem.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
+        } else {
+            mapTmem.put("createDateEnd", createDateEnd);//项目发起结束时间
+        }
+
+        if (planSDateStart == "" || planSDateStart == null) {
+            mapTmem.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
+        } else {
+            mapTmem.put("planSDateStart", planSDateStart);//预计上线开始时间
+        }
+
+        if (planSDateEnd == "" || planSDateEnd == null) {
+            mapTmem.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
+        } else {
+            mapTmem.put("planSDateEnd", planSDateEnd);//预计上线结束时间
+        }
+
+        mapTmem.put("proType", proType);//项目类型
+        mapTmem.put("proName", proName);//项目名称
+
+        return mapTmem;
+    }
+
+    /**
+     * setDuty
+     * @param pro
+     * @param userName
+     * @param user
+     * @param map1
+     * @return
+     */
+    public static ProjectInfo setDuty(ProjectInfo pro,String userName,SystemUser user,Map map1){
+        if (map1 != null) {
+            if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                pro.setDuty("项目发起人");
+            } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.get("subtaskHandler"))) {
+                pro.setDuty("组员");
+            } else if (user.getDuty().equals("CEO")) {
+                pro.setDuty("CEO");
+            } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                pro.setDuty("经理/组长");
+            } else {
+                pro.setDuty("项目无关人员");
+            }
+        } else {
+            if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                pro.setDuty("项目发起人");
+            } else if (user.getDuty().equals("CEO")) {
+                pro.setDuty("CEO");
+            } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                pro.setDuty("经理/组长");
+            } else {
+                pro.setDuty("项目无关人员");
+            }
+        }
+        return pro;
+    }
+
+    public static ProjectInfo setDutyProInfo(ProjectInfo pro,String userName,SystemUser user,ProjectInfo map1){
+        if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+            map1.setDuty("项目发起人");
+            //
+        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
+            map1.setDuty("组员");
+        } else if (user.getDuty().equals("CEO")) {
+            map1.setDuty("CEO");
+        } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+            map1.setDuty("经理/组长");
+        } else {
+            map1.setDuty("项目无关人员");
+        }
+
+        return map1;
+    }
+
+
+    public static Map<String,Object> getmapList(List<Map<String, Object>> mapList,String id){
+
+        String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, id));
+        String[] mIds = mentIds.split(",");
+        Map<String, Object> mapTid = new HashMap<>();
+
+        mapTid.put("mentIds", mIds);
+
+        return mapTid;
     }
 }

@@ -94,4 +94,7 @@ public interface MyProjectService {
 
     //获取
     List<ProjectInfo> getMyProjectInfoListByProId(Map<String,Object> map);
+
+    //查找组长涉及相关项目
+    List<ProjectInfo> getProjectInfoByZuzhang(Map<String,Object> map);
 }

@@ -243,7 +243,7 @@ public class ApplyController {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("错误信息："+e.getMessage());
+            logger.error("错误信息："+e);
         }
 
         return r;
@@ -267,7 +267,7 @@ public class ApplyController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("错误信息："+e.getMessage());
+            logger.error("错误信息："+e);
         }
 
         r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, group, null);
@@ -315,7 +315,7 @@ public class ApplyController {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, departmentList, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("获取项目相关部门："+e.getMessage());
+            logger.error("获取项目相关部门："+e);
         }
 
         return r;
@@ -365,10 +365,14 @@ public class ApplyController {
                     r = new ApiResult<Map<String, String>>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, objectMap, null);
                 }
 
-            } catch (Exception e) {
+            } catch (IllegalStateException e) {
                 e.printStackTrace();
                 r = new ApiResult<Map<String, String>>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
-                logger.error("上传文件错误信息："+e.getMessage());
+                logger.error("上传文件错误信息："+e);
+            }catch (Exception e) {
+                e.printStackTrace();
+                r = new ApiResult<Map<String, String>>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+                logger.error("上传文件错误信息："+e);
             }
 
         }
@@ -481,7 +485,7 @@ public class ApplyController {
         } catch (Exception e) {
             e.printStackTrace();
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.OPERATION_FAIL,null,null);
-            logger.error("消息推送错误信息："+e.getMessage());
+            logger.error("消息推送错误信息："+e);
         }
 
 

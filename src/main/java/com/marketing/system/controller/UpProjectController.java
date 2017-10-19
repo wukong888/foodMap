@@ -79,37 +79,8 @@ public class UpProjectController {
 
         try {
             Map<String, Object> map = new HashMap<>();
-            map.put("current", current);
-            map.put("pageSize", 1000);
-            map.put("createrSquadId", createrSquadId);//项目发起部门
-            map.put("creater", creater);//创建人
-            if (createDateStart == "" || createDateStart == null) {
-                map.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
-            } else {
-                map.put("createDateStart", createDateStart);//项目发起开始时间
-            }
 
-            if (createDateEnd == "" || createDateEnd == null) {
-                map.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
-            } else {
-                map.put("createDateEnd", createDateEnd);//项目发起结束时间
-            }
-
-            if (planSDateStart == "" || planSDateStart == null) {
-                map.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
-            } else {
-                map.put("planSDateStart", planSDateStart);//预计上线开始时间
-            }
-
-            if (planSDateEnd == "" || planSDateEnd == null) {
-                map.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
-            } else {
-                map.put("planSDateEnd", planSDateEnd);//预计上线结束时间
-            }
-
-            map.put("proType", proType);//项目类型
-            map.put("proName", proName);//项目名称
-            map.put("proState", "1");//项目状态(1:立项待审批
+            map = ToolUtil.putMap(current,createrSquadId,creater,"1",createDateStart,createDateEnd,planSDateStart,planSDateEnd,proType,proName);
 
             List<ProjectInfo> projectInfos = upProjectService.getProjectInfoList(map);
 
@@ -150,7 +121,7 @@ public class UpProjectController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("查询立项待审批列表错误信息：" + e.getMessage());
+            logger.error("查询立项待审批列表错误信息：" + e);
         }
         return result;
 
@@ -240,7 +211,7 @@ public class UpProjectController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("项目操作错误信息：" + e.getMessage());
+            logger.error("项目操作错误信息：" + e);
 
         }
         return result;
@@ -304,7 +275,7 @@ public class UpProjectController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("立项待审批详情页错误信息：" + e.getMessage());
+            logger.error("立项待审批详情页错误信息：" + e);
         }
 
         return result;
@@ -328,9 +299,9 @@ public class UpProjectController {
             List<Members> list = membersService.getMembersById(String.valueOf(squadId));
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+
             logger.info("结果list：" + list);
         } catch (Exception e) {
-
             e.printStackTrace();
             logger.error("错误信息：" + e);
         }

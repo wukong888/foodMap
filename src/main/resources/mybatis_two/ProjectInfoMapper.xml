@@ -181,6 +181,49 @@
         ORDER BY createDate DESC
     </select>
 
+    <select id="getProjectInfoByZuzhang" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+
+        from project_info
+        where proState in (1,2,3,7)
+        <if test="createrSquadId != null and createrSquadId != '' ">
+            AND createrSquadId = #{createrSquadId}
+        </if>
+
+        <if test="creater != null and creater != '' ">
+            AND creater = #{creater}
+        </if>
+        AND createDate >= #{createDateStart} AND #{createDateEnd} >=createDate
+        AND planSDate >= #{planSDateStart} AND #{planSDateEnd} > =planSDate
+        <if test="proType != null and proType != '' ">
+            AND proType = #{proType}
+        </if>
+        AND proName LIKE '%${proName}%'
+        <if test="proState != null and proState != '' ">
+            AND proState = #{proState}
+        </if>
+         AND (
+        <foreach item="item" index="index" collection="Idsmember"
+                 open=" creater IN (" separator="," close=")">
+            #{item}
+        </foreach>
+        or proId in (
+        SELECT proId from project_task where handler = #{handler} or taskId IN
+        (select taskId from project_subtask where
+        <foreach item="item" index="index" collection="Idsmember"
+                 open=" subtaskHandler IN (" separator="," close=")">
+            #{item}
+        </foreach>)))
+
+        ORDER BY
+        case proState
+        when 7 then 1
+        end
+        DESC,createDate DESC
+    </select>
+
     <select id="getMyProjectInfoList" resultMap="BaseResultMap">
         SELECT
         TOP ${pageSize}
@@ -509,20 +552,19 @@
     </update>
 
 
-  <update id="setPassOrReject" parameterType="com.marketing.system.entity.ProjectInfo">
+    <update id="setPassOrReject" parameterType="com.marketing.system.entity.ProjectInfo">
     update project_info
     set
     proState = #{proState},finishDate = #{finishDate}
     where id = #{id}
   </update>
 
-  <update id="setPassOrRejectTwo" parameterType="com.marketing.system.entity.ProjectInfo">
+    <update id="setPassOrRejectTwo" parameterType="com.marketing.system.entity.ProjectInfo">
     update project_info
     set
     proState = #{proState},finishDate = #{finishDate},againState = #{againState}
     where id = #{id}
 </update>
-
 
 
     <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.ProjectInfo">

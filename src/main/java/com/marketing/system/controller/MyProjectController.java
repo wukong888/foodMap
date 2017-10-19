@@ -8,9 +8,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.tools.ant.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.rmi.MarshalledObject;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -91,37 +87,7 @@ public class MyProjectController {
         Map<String, Object> map = new HashMap<>();
 
         try {
-            map.put("current", current);
-            map.put("pageSize", 1000);
-            map.put("createrSquadId", createrSquadId);//项目发起部门
-            map.put("creater", creater);//创建人
-            map.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
-            if (createDateStart == "" || createDateStart == null) {
-                map.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
-            } else {
-                map.put("createDateStart", createDateStart);//项目发起开始时间
-            }
-
-            if (createDateEnd == "" || createDateEnd == null) {
-                map.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
-            } else {
-                map.put("createDateEnd", createDateEnd);//项目发起结束时间
-            }
-
-            if (planSDateStart == "" || planSDateStart == null) {
-                map.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
-            } else {
-                map.put("planSDateStart", planSDateStart);//预计上线开始时间
-            }
-
-            if (planSDateEnd == "" || planSDateEnd == null) {
-                map.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
-            } else {
-                map.put("planSDateEnd", planSDateEnd);//预计上线结束时间
-            }
-
-            map.put("proType", proType);//项目类型
-            map.put("proName", proName);//项目名称
+            map = ToolUtil.putMap(current, createrSquadId, creater, proState, createDateStart, createDateEnd, planSDateStart, planSDateEnd, proType, proName);
 
             //所有项目list
             List<ProjectInfo> projectInfos = myProjectService.getMyProjectInfoList(map);
@@ -135,22 +101,7 @@ public class MyProjectController {
 
             for (ProjectInfo projectInfo : projectInfos) {
 
-                //判断是否逾期，是则更新状态为逾期
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date edate = sdf.parse(projectInfo.getPlansdate());//预计完成时间
-
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(edate);
-                //当前时间
-                Date smdate = new Date();
-
-                smdate = sdf.parse(sdf.format(smdate));
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(smdate);
-                long time1 = cal.getTimeInMillis();
-                cal.setTime(calendar.getTime());
-                long time2 = cal.getTimeInMillis();
-                long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
+                long betweenDays = ToolUtil.getBetweenTimes(projectInfo.getPlansdate());
 
                 //如果是完成状态则不更新
                 if (projectInfo.getProstate().equals("3") || projectInfo.getProstate().equals("4")) {
@@ -163,11 +114,11 @@ public class MyProjectController {
                         int i = myProjectService.updateProjectInfo(projectInfoNew);
                     }
                 }
-
             }
 
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
             List<ProjectInfo> projectInfosNew2 = new ArrayList<>();
+            List<ProjectInfo> projectInfosNew3 = new ArrayList<>();
             //项目相关人员集合
 
             SystemUser user = systemUserService.selectByPrimaryKey(id);
@@ -183,9 +134,10 @@ public class MyProjectController {
 
             mapTask.put("menuLeafIds", mIdtask);
 
+            //查询当前登录人是任务负责人的项目
             List<ProjectInfo> infoList = myProjectService.getMyProjectInfoListByProId(mapTask);
 
-            for (ProjectInfo p:infoList) {
+            for (ProjectInfo p : infoList) {
                 projectInfotaskNew.add(p);
             }
 
@@ -198,11 +150,9 @@ public class MyProjectController {
             //根据部门id查找小组id
             List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
 
-            String mentIds = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
-            String[] mIds = mentIds.split(",");
             Map<String, Object> mapTid = new HashMap<>();
 
-            mapTid.put("mentIds", mIds);
+            mapTid = ToolUtil.getmapList(mapList, "squadId");
             //组长/经理其小组成员
             List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
 
@@ -212,37 +162,7 @@ public class MyProjectController {
 
             Map<String, Object> mapTmem = new HashMap<>();
 
-            mapTmem.put("menuLeafIds", Idsmember);
-
-            mapTmem.put("createrSquadId", createrSquadId);//项目发起部门
-            mapTmem.put("creater", creater);//创建人
-            mapTmem.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
-            if (createDateStart == "" || createDateStart == null) {
-                mapTmem.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
-            } else {
-                mapTmem.put("createDateStart", createDateStart);//项目发起开始时间
-            }
-
-            if (createDateEnd == "" || createDateEnd == null) {
-                mapTmem.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
-            } else {
-                mapTmem.put("createDateEnd", createDateEnd);//项目发起结束时间
-            }
-
-            if (planSDateStart == "" || planSDateStart == null) {
-                mapTmem.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
-            } else {
-                mapTmem.put("planSDateStart", planSDateStart);//预计上线开始时间
-            }
-
-            if (planSDateEnd == "" || planSDateEnd == null) {
-                mapTmem.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
-            } else {
-                mapTmem.put("planSDateEnd", planSDateEnd);//预计上线结束时间
-            }
-
-            mapTmem.put("proType", proType);//项目类型
-            mapTmem.put("proName", proName);//项目名称
+            mapTmem = ToolUtil.putMaplimit(Idsmember, createrSquadId, creater, proState, createDateStart, createDateEnd, planSDateStart, planSDateEnd, proType, proName);
 
             List<Map<String, Object>> subtaskList = new ArrayList<>();
             List<ProjectInfo> subtaskListProject = new ArrayList<>();
@@ -250,6 +170,7 @@ public class MyProjectController {
             if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
                 //当前登录用户并其成员包含所涉及子任务
                 subtaskList = myProjectService.getSubTaskIdByHanderMap(mapTmem);
+
             } else {
                 //当前登录用户所涉及子任务
                 subtaskList = myProjectService.getSubTaskIdByHander(userName);
@@ -266,6 +187,41 @@ public class MyProjectController {
             //根据taskId查找proId
             List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
 
+            if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
+                Map<String,Object> objectMap = new HashMap<>();
+                objectMap.put("Idsmember",Idsmember);//小组成员
+                objectMap.put("Ids",Ids);//taskId集合
+                objectMap.put("handler",userName);
+                objectMap.put("createrSquadId", createrSquadId);//项目发起部门
+                objectMap.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
+                if (createDateStart == "" || createDateStart == null) {
+                    objectMap.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
+                } else {
+                    objectMap.put("createDateStart", createDateStart);//项目发起开始时间
+                }
+
+                if (createDateEnd == "" || createDateEnd == null) {
+                    objectMap.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
+                } else {
+                    objectMap.put("createDateEnd", createDateEnd);//项目发起结束时间
+                }
+
+                if (planSDateStart == "" || planSDateStart == null) {
+                    objectMap.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
+                } else {
+                    objectMap.put("planSDateStart", planSDateStart);//预计上线开始时间
+                }
+
+                if (planSDateEnd == "" || planSDateEnd == null) {
+                    objectMap.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
+                } else {
+                    objectMap.put("planSDateEnd", planSDateEnd);//预计上线结束时间
+                }
+
+                objectMap.put("proType", proType);//项目类型
+                objectMap.put("proName", proName);//项目名称
+                projectInfosNew3 = myProjectService.getProjectInfoByZuzhang(objectMap);
+            }
 
             List<Map<String, Object>> taskString = new ArrayList<>();
             List<Map<String, Object>> taskProId = new ArrayList<>();
@@ -277,12 +233,9 @@ public class MyProjectController {
                         taskString.add(map0);
                     }
                 }
-
             }
-
             //判断是否是项目相关的人（我的项目）是则重新赋值组成新 我的项目list
             for (ProjectInfo pro : projectInfos) {
-
                 //根据项目id查询子任务负责人
                 List<Map<String, Object>> projectSubtaskList = applyService.selectProSubtaskByProId(pro.getProid());
                 //判断当前登录用户在对应项目中是项目发起人还是项目负责人（组员）
@@ -290,33 +243,12 @@ public class MyProjectController {
                 //有子任务的情况
                 if (projectSubtaskList.size() > 0) {
                     for (Map map1 : projectSubtaskList) {
-                        map1.get("subtaskHandler");
                         //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
-                        if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
-                            pro.setDuty("项目发起人");
-                            //
-                        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.get("subtaskHandler"))) {
-                            pro.setDuty("组员");
-                        } else if (user.getDuty().equals("CEO")) {
-                            pro.setDuty("CEO");
-                        } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
-                            pro.setDuty("经理/组长");
-                        } else {
-                            pro.setDuty("项目无关人员");
-                        }
+                        pro = ToolUtil.setDuty(pro, userName, user, map1);
                     }
                 } else {
-                    if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
-                        pro.setDuty("项目发起人");
-                    } else if (user.getDuty().equals("CEO")) {
-                        pro.setDuty("CEO");
-                    } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
-                        pro.setDuty("经理/组长");
-                    } else {
-                        pro.setDuty("项目无关人员");
-                    }
+                    pro = ToolUtil.setDuty(pro, userName, user, new HashMap());
                 }
-
 
                 for (Map map1 : taskList) {
                     if (map1.get("proId") == (Integer.valueOf(pro.getProid()))) {
@@ -340,18 +272,7 @@ public class MyProjectController {
                     for (ProjectInfo map1 : projectInfotaskNew) {
                         map1.getCreater();
                         //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
-                        if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
-                            map1.setDuty("项目发起人");
-                            //
-                        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
-                            map1.setDuty("组员");
-                        } else if (user.getDuty().equals("CEO")) {
-                            map1.setDuty("CEO");
-                        } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
-                            map1.setDuty("经理/组长");
-                        } else {
-                            map1.setDuty("项目无关人员");
-                        }
+                        map1 = ToolUtil.setDutyProInfo(pro, userName, user, map1);
                     }
                 }
                 //当前用户是创建人
@@ -364,49 +285,16 @@ public class MyProjectController {
                     for (ProjectInfo map1 : subtaskListProject) {
                         map1.getCreater();
                         //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
-                        if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
-                            map1.setDuty("项目发起人");
-                            //
-                        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
-                            map1.setDuty("组员");
-                        } else if (user.getDuty().equals("CEO")) {
-                            map1.setDuty("CEO");
-                        } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
-                            map1.setDuty("经理/组长");
-                        } else {
-                            map1.setDuty("项目无关人员");
-                        }
+                        map1 = ToolUtil.setDutyProInfo(pro, userName, user, map1);
                     }
                 }
             }
             if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
-                //当前登录用户并其成员包含所涉及子任务
-                //subtaskListProject = myProjectService.getProjectByHanderMap(mapTmem);
-
-
-                projectInfosNew.addAll(subtaskListProject);
-                //4：完成，5：驳回，6：作废不在我的项目里显示
-                if (!"".equals(proState)) {
-                    projectInfotaskNew = projectInfotaskNew.stream().filter(lin -> lin.getProstate().equals(proState) ).collect(Collectors.toList());
-
+                if (!creater.equals("")) {
+                    projectInfosNew3 = projectInfosNew3.stream().filter(lin -> lin.getCreater().equals(creater)).collect(Collectors.toList());
                 }
-
-                projectInfosNew.addAll(projectInfotaskNew);//任务
-
-                projectInfosNew = projectInfosNew.stream().filter(lin -> lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
-
-                if (creater != "") {
-                    projectInfosNew = projectInfosNew.stream().filter(lin -> lin.getCreater().equals(creater) ).collect(Collectors.toList());
-                }
-                Iterator it = projectInfosNew.iterator();
-                while (it.hasNext()) {
-                    ProjectInfo obj = (ProjectInfo) it.next();
-                    if (!projectInfosNew2.contains(obj)) {                //不包含就添加
-                        projectInfosNew2.add(obj);
-                    }
-                }
-                projectInfosNew = projectInfosNew2;
-                Collections.sort(projectInfosNew);
+                projectInfosNew = projectInfosNew3;
+                //Collections.sort(projectInfosNew);
 
             }
             RdPage rdPage = new RdPage();
@@ -415,15 +303,11 @@ public class MyProjectController {
 
             if (user.getDuty().equals("CEO")) {
                 sum = projectInfos.size();
-                //projectInfos = projectInfos.stream().filter(lin -> lin.getProstate().equals("1") || lin.getProstate().equals("2") || lin.getProstate().equals("3") || lin.getProstate().equals("7")).collect(Collectors.toList());
-
                 projectInfos = ToolUtil.listSplit2(current, pageSize, projectInfos);
             } else {
                 sum = projectInfosNew.size();
                 projectInfosNew = ToolUtil.listSplit2(current, pageSize, projectInfosNew);
-
             }
-
 
             //分页信息
             rdPage.setTotal(sum);
@@ -438,7 +322,7 @@ public class MyProjectController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目列表错误信息：" + e.getMessage());
+            logger.error("我的项目列表错误信息：" + e);
         }
         return result;
 
@@ -479,7 +363,6 @@ public class MyProjectController {
 
             Map<String, Object> map1 = new HashMap<>();
             int sum = 0;
-            boolean flag = false;
 
             for (Map<String, Object> projectTask : taskList) {
                 if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null) {
@@ -525,12 +408,10 @@ public class MyProjectController {
 
                 mapT.put("menuLeafIds", Ids);
                 if (menuLeafIds.contains(user.getUserName())) {
-                    flag = true;
                     projectTask.put("duty", "经理/组长");
                 } else {
                     projectTask.put("duty", "组员");
                 }
-
                 if (user.getDuty().equals("CEO")) {
                     projectTask.put("duty", "CEO");
                 }
@@ -539,22 +420,7 @@ public class MyProjectController {
                 }
 
                 //判断是否逾期，是则更新状态为逾期
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date edate = sdf.parse(String.valueOf(projectTask.get("eDate")));//预计完成时间
-
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(edate);
-                //当前时间
-                Date smdate = new Date();
-
-                smdate = sdf.parse(sdf.format(smdate));
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(smdate);
-                long time1 = cal.getTimeInMillis();
-                cal.setTime(calendar.getTime());
-                long time2 = cal.getTimeInMillis();
-                long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
-
+                long betweenDays = ToolUtil.getBetweenTimes(String.valueOf(projectTask.get("eDate")));
                 //完成
                 if (String.valueOf(projectTask.get("taskState")).equals("4")) {
 
@@ -579,7 +445,7 @@ public class MyProjectController {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目开发中详情页（基本信息+项目信息+参与组）错误信息：" + e.getMessage());
+            logger.error("我的项目开发中详情页（基本信息+项目信息+参与组）错误信息：" + e);
         }
         return result;
     }
@@ -629,7 +495,7 @@ public class MyProjectController {
         ApiResult<Integer> result = null;
         String reBoolean = ToolUtil.cacheExist(type);
         if (reBoolean.equals("full")) {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.AGAINCOMMIT_FAIL, null, null);
             return result;
         }
         int i = 0;
@@ -661,8 +527,8 @@ public class MyProjectController {
                         }
                     }
                 }
-                String handler2 ="";
-                for (Map handle :systemUserListNew) {
+                String handler2 = "";
+                for (Map handle : systemUserListNew) {
                     handler2 = String.valueOf(handle.get("UserName"));
 
                 }
@@ -778,7 +644,7 @@ public class MyProjectController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目参与组（添加+修改+删除）错误信息：" + e.getMessage());
+            logger.error("我的项目参与组（添加+修改+删除）错误信息：" + e);
         }
         return result;
 
@@ -822,7 +688,7 @@ public class MyProjectController {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目任务分配详情页（基本信息+项目信息+日志记录）错误信息：" + e.getMessage());
+            logger.error("我的项目任务分配详情页（基本信息+项目信息+日志记录）错误信息：" + e);
         }
         return result;
     }
@@ -888,29 +754,13 @@ public class MyProjectController {
                 } else {
                     projectSubtask.setDuty("组员");
                 }
-
                 if (projectSubtask.getSubtaskhandler().equals(user.getUserName())) {
                     projectSubtask.setDuty("项目发起人");
                 }
                 if (user.getDuty().equals("CEO")) {
                     projectSubtask.setDuty("CEO");
                 }
-
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date edate = sdf.parse(projectSubtask.getEdate());//预计完成时间
-
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(edate);
-                //当前时间
-                Date smdate = new Date();
-
-                smdate = sdf.parse(sdf.format(smdate));
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(smdate);
-                long time1 = cal.getTimeInMillis();
-                cal.setTime(calendar.getTime());
-                long time2 = cal.getTimeInMillis();
-                long between = (time2 - time1) / (1000 * 3600 * 24);
+                long between = ToolUtil.getBetweenTimes(projectSubtask.getEdate());
 
                 if (projectSubtask.getSubtaskstate().equals("4")) {
 
@@ -921,13 +771,11 @@ public class MyProjectController {
                         int i = myProjectService.updateProSubTask(projectSubtask1);
                     }
                 }
-
             }
-
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目任务分配详细页（子任务列表）错误信息：" + e.getMessage());
+            logger.error("我的项目任务分配详细页（子任务列表）错误信息：" + e);
         }
         return result;
 
@@ -970,7 +818,7 @@ public class MyProjectController {
         ApiResult<Integer> result = null;
         String reBoolean = ToolUtil.cacheExist(String.valueOf(taskId));
         if (reBoolean.equals("full")) {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.AGAINCOMMIT_FAIL, null, null);
             return result;
         }
         try {
@@ -990,7 +838,7 @@ public class MyProjectController {
                 projectSubtask.setSubtaskname(subtaskName);//任务名称
                 //projectSubtask.setIdd(idd);//编号
                 projectSubtask.setWorkDate(workDate);//预计工期
-                if (subtaskProgress == "" || subtaskProgress ==null) {
+                if (subtaskProgress == "" || subtaskProgress == null) {
                     projectSubtask.setSubtaskprogress("0");//进度
                 } else {
                     projectSubtask.setSubtaskprogress(subtaskProgress);//进度
@@ -1128,11 +976,10 @@ public class MyProjectController {
                 } else {
                     result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目任务分配详请页（子任务列表添加、修改、删除）错误信息：" + e.getMessage());
+            logger.error("我的项目任务分配详请页（子任务列表添加、修改、删除）错误信息：" + e);
         }
         return result;
     }
@@ -1172,7 +1019,7 @@ public class MyProjectController {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目子任务详情页（基本信息+项目信息+参与组）错误信息：" + e.getMessage());
+            logger.error("我的项目子任务详情页（基本信息+项目信息+参与组）错误信息：" + e);
         }
         return result;
     }
@@ -1212,7 +1059,7 @@ public class MyProjectController {
         ApiResult<Integer> result = null;
         String reBoolean = ToolUtil.cacheExist(explain);
         if (reBoolean.equals("full")) {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.AGAINCOMMIT_FAIL, null, null);
             return result;
         }
         try {
@@ -1220,7 +1067,6 @@ public class MyProjectController {
             if (addType == 1) {
                 ProDevelopLog proDevelopLog = new ProDevelopLog();
 
-                SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                 java.util.Date date = new java.util.Date();
@@ -1233,7 +1079,7 @@ public class MyProjectController {
                 proDevelopLog.setType(type);//类型 1：开始:2：需求调整:3：会议 4：更新 5：预验收
                 if (progress == "" || progress == null) {
                     proDevelopLog.setProgress("0");//进度
-                } else if (Integer.valueOf(type) == 5){//5：预验收
+                } else if (Integer.valueOf(type) == 5) {//5：预验收
                     proDevelopLog.setProgress("100");//进度
                 } else {
                     proDevelopLog.setProgress(progress);
@@ -1345,7 +1191,7 @@ public class MyProjectController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("添加开发日志错误信息：" + e.getMessage());
+            logger.error("添加开发日志错误信息：" + e);
         }
         return result;
 
@@ -1380,7 +1226,7 @@ public class MyProjectController {
         ApiResult<Integer> result = null;
         String reBoolean = ToolUtil.cacheExist(userName);
         if (reBoolean.equals("full")) {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.AGAINCOMMIT_FAIL, null, null);
             return result;
         }
         try {
@@ -1455,7 +1301,7 @@ public class MyProjectController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目详情页-提交任务错误信息：" + e.getMessage());
+            logger.error("我的项目详情页-提交任务错误信息：" + e);
         }
         return result;
 
@@ -1518,7 +1364,7 @@ public class MyProjectController {
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目开发中详情页（日志记录+开发日志）错误信息：" + e.getMessage());
+            logger.error("我的项目开发中详情页（日志记录+开发日志）错误信息：" + e);
         }
         return result;
 
@@ -1545,8 +1391,6 @@ public class MyProjectController {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
         try {
             if (type == 2) {
                 //任务
@@ -1574,7 +1418,7 @@ public class MyProjectController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("根据类型查询二级类型名称错误信息：" + e.getMessage());
+            logger.error("根据类型查询二级类型名称错误信息：" + e);
 
         }
         return result;
@@ -1600,12 +1444,11 @@ public class MyProjectController {
 
         String reBoolean = ToolUtil.cacheExist(String.valueOf(id));
         if (reBoolean.equals("full")) {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.AGAINCOMMIT_FAIL, null, null);
             return result;
         }
 
         try {
-            //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
             SystemUser user = systemUserService.selectByPrimaryKey(id);
             String department = user.getDepartment();
             department = department.substring(0, 2);
@@ -1638,7 +1481,7 @@ public class MyProjectController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("我的项目任务分配详情页子任务列表-添加（选择参与部门）错误信息：" + e.getMessage());
+            logger.error("我的项目任务分配详情页子任务列表-添加（选择参与部门）错误信息：" + e);
         }
         return result;
     }

@@ -300,4 +300,12 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return list;
     }
+
+    @Override
+    public List<ProjectInfo> getProjectInfoByZuzhang(Map<String, Object> map) {
+
+        List<ProjectInfo> list = projectInfoMapper.getProjectInfoByZuzhang(map);
+
+        return list;
+    }
 }

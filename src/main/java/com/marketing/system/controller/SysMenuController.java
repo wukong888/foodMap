@@ -69,12 +69,8 @@ public class SysMenuController {
 
         ApiResult<List<Map<String, Object>>> result = null;
 
-        //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-
         SystemUser user = systemUserService.selectByPrimaryKey(id);
-        //SystemUser user = new SystemUser();
 
-        //user.setDuty("CEO");
         Map<String, Object> map = new HashMap<>();
 
         //职位，当用户申请项目成功后，该用户成为项目发起人
@@ -93,8 +89,6 @@ public class SysMenuController {
                 name = "组员";
             }
         }
-
-
         map.put("Name", name);
         map.put("SystemId", SystemId);
 
@@ -102,7 +96,6 @@ public class SysMenuController {
 
         if (role != null) {
             Map<String, Object> mapMenu = new HashMap<>();
-            Map<String, Object> mapMenu2 = new HashMap<>();
             Map<String, Object> mapCreater = new HashMap<>();
 
             List<Map<String, Object>> listNew = new ArrayList<Map<String, Object>>();

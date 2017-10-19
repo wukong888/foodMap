@@ -240,9 +240,29 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
     @Override
     public int compareTo(ProjectInfo o) {
 
-        int flag = o.prostate.compareTo(this.prostate);
+        /*int flag = o.prostate.compareTo(this.prostate);
 
-        return flag;
+        return flag;*/
+        //先按项目状态排序
+        if (o.getProstate().compareTo(this.prostate) > 0) {
+
+            return 1;
+        }
+        if (o.getProstate().compareTo(this.prostate) < 0) {
+
+            return -1;
+        }
+
+        //按创建时间排序
+        if (o.getCreatedate().compareTo(this.createdate) > 0) {
+
+            return 1;
+        }
+        if (o.getCreatedate().compareTo(this.createdate) < 0) {
+
+            return -1;
+        }
+        return 0;
     }
 
     @Override
@@ -275,6 +295,7 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
         if (finishDate != null ? !finishDate.equals(that.finishDate) : that.finishDate != null) return false;
         if (rejectDate != null ? !rejectDate.equals(that.rejectDate) : that.rejectDate != null) return false;
         if (cancelDate != null ? !cancelDate.equals(that.cancelDate) : that.cancelDate != null) return false;
+        if (againState != null ? !againState.equals(that.againState) : that.againState != null) return false;
         if (duty != null ? !duty.equals(that.duty) : that.duty != null) return false;
         return betweenDays != null ? betweenDays.equals(that.betweenDays) : that.betweenDays == null;
     }
@@ -301,6 +322,7 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
         result = 31 * result + (finishDate != null ? finishDate.hashCode() : 0);
         result = 31 * result + (rejectDate != null ? rejectDate.hashCode() : 0);
         result = 31 * result + (cancelDate != null ? cancelDate.hashCode() : 0);
+        result = 31 * result + (againState != null ? againState.hashCode() : 0);
         result = 31 * result + (duty != null ? duty.hashCode() : 0);
         result = 31 * result + (betweenDays != null ? betweenDays.hashCode() : 0);
         return result;

@@ -25,7 +25,7 @@
 
   <select id="getMembers" resultType="java.util.HashMap">
     SELECT DISTINCT
-    id,squadId,member
+    id,squadId,member AS subtaskHandler
     FROM
     members
     WHERE

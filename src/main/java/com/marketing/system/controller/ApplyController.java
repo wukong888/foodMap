@@ -424,12 +424,12 @@ public class ApplyController {
         if (title.equals("")) {
             postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
                     + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
-                    + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"http://192.168.3.26:5826/index?username=王东&password=5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5\"}";
+                    + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
         } else {
             postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
                     + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
-                    + "\",\"AgentId\":1000011,\"Title\":"+title+",\"Url\":\"http://192.168.3.26:5826/index?username=王东&password=5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5\"}";
+                    + "\",\"AgentId\":1000011,\"Title\":"+title+",\"Url\":\"\"}";
 
         }
         try {
@@ -443,17 +443,19 @@ public class ApplyController {
             int i = 0;
             //项目-插入日志记录
             if (type == 1) {
-                ProLogRecord proLogRecord = new ProLogRecord();
+                if (proId != null && proId != "") {
+                    ProLogRecord proLogRecord = new ProLogRecord();
 
-                //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
-                proLogRecord.setType("10");//类型 回复
-                proLogRecord.setDate(str2);//创建时间
-                proLogRecord.setEmp(userName);//操作人
-                proLogRecord.setExplain(content);//说明
-                proLogRecord.setProid(Integer.valueOf(proId));//项目id
-                proLogRecord.setFilepath(filePath);//文件上传路径
+                    //日志类型(1:创建 2:立项待审批，3:提交上线，4:上线审批（完成），5:驳回，6:作废，7:分配，8:修改，9:删除，10:回复，11:附件)
+                    proLogRecord.setType("10");//类型 回复
+                    proLogRecord.setDate(str2);//创建时间
+                    proLogRecord.setEmp(userName);//操作人
+                    proLogRecord.setExplain(content);//说明
+                    proLogRecord.setProid(Integer.valueOf(proId));//项目id
+                    proLogRecord.setFilepath(filePath);//文件上传路径
 
-                i = applyService.insertProLogRecord(proLogRecord);
+                    i = applyService.insertProLogRecord(proLogRecord);
+                }
 
             //任务-插入日志记录
             } else if (type == 2) {

@@ -206,7 +206,7 @@ public class MyProjectController {
             //组长/经理其小组成员
             List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
 
-            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "member"));
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "subtaskHandler"));
 
             String[] Idsmember = menuLeafIdsmember.split(",");
 

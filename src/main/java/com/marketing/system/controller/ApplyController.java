@@ -397,6 +397,7 @@ public class ApplyController {
             @ApiImplicitParam(paramType = "query", name = "userName", value = "创建人", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "content", value = "回复内容", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "filePath", value = "上传附件路径", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "title", value = "推送消息标题", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "type", value = "类型1：项目 2：任务 3：子任务", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/messagePush", method = RequestMethod.POST)
@@ -408,6 +409,7 @@ public class ApplyController {
             @RequestParam(value = "userName", required = true) String userName,
             @RequestParam(value = "content", required = true) String content,
             @RequestParam(value = "filePath", required = false) String filePath,
+            @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "type", required = true) int type){
 
         ApiResult<String> result = null;
@@ -418,9 +420,18 @@ public class ApplyController {
             return result;
         }
 
-        String postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
-                + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
-                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"http://192.168.3.26:5826/index?username=王东&password=5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5\"}";
+        String postUrl = "";
+        if (title.equals("")) {
+            postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                    + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
+                    + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"http://192.168.3.26:5826/index?username=王东&password=5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5\"}";
+
+        } else {
+            postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                    + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
+                    + "\",\"AgentId\":1000011,\"Title\":"+title+",\"Url\":\"http://192.168.3.26:5826/index?username=王东&password=5994471ABB01112AFCC18159F6CC74B4F511B99806DA59B3CAF5A9C173CACFC5\"}";
+
+        }
         try {
             //消息推送-回复
             httpPostWithJSON(postUrl);

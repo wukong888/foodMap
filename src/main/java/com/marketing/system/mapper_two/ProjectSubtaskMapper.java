@@ -34,6 +34,6 @@ public interface ProjectSubtaskMapper {
 
     String getDepartment(Map<String,Object> map);
 
-
+    boolean updateSubtaskProgress(Map<String,Object> map);
 
 }

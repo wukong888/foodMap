@@ -231,4 +231,15 @@
       subtaskId = #{subtaskid,jdbcType=INTEGER}
     where subtaskId = #{subtaskId,jdbcType=INTEGER}
   </update>
+
+  <update id="updateSubtaskProgress" parameterType="com.marketing.system.entity.ProjectSubtask" >
+    update project_subtask
+    set
+    subtaskProgress = '100'
+    where
+    <foreach item="item" index="index" collection="mentIds"
+             open=" taskId IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
 </mapper>

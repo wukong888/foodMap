@@ -84,6 +84,10 @@ public interface OnlineProMapper {
     @Update("UPDATE project_info SET proState=4,onlineDate=#{onlineDate},proProgress=100 WHERE proId=#{proId}")
     boolean updateProPassState(@Param("proId")Integer proId,@Param("onlineDate")String onlineDate);
 
+    //项目上线审批通过，根据项目id更改其任务进度为100%
+    @Update("UPDATE project_task SET taskProgress=100 WHERE proId=#{proId}")
+    boolean updateTaskProgress(@Param("proId")Integer proId);
+
     //项目驳回功能，项目日志记录增加一条日志记录
     @Insert("INSERT INTO pro_LogRecord (proId,type,Date,squadId,Emp,explain,filePath) values (#{proid},#{type},#{date},#{squadid},#{emp},#{explain},#{filepath})")
     boolean insertProReturnLog(@Param("proid")Integer proid,@Param("type")String type,@Param("date")String date,@Param("squadid")String squadid,@Param("emp")String emp,

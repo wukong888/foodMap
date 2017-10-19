@@ -162,6 +162,9 @@ public class OnilneProServiceImpl implements OnlineProService{
         String filepath=null;
         boolean success1=OnProDao.insertProPassLog(proid,type,date,squadid,emp,explain,filepath);
         boolean success2=OnProDao.updateProPassState(proid,onlineDate);
+
+        boolean updateTaskProgress = OnProDao.updateTaskProgress(proid);
+
         return success1||success2;
     }
 

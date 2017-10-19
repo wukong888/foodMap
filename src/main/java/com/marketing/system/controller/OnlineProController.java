@@ -1,6 +1,7 @@
 package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper_two.ProjectSubtaskMapper;
 import com.marketing.system.service.MyProjectService;
 import com.marketing.system.service.OnlineProService;
 import com.marketing.system.service.SystemUserService;
@@ -41,6 +42,8 @@ public class OnlineProController {
     @Autowired
     private SystemUserService systemUserService;
 
+    @Autowired
+    private ProjectSubtaskMapper projectSubtaskMapper;
 
     /**
      * 查询上线审批列表
@@ -358,6 +361,19 @@ public class OnlineProController {
         String onlineDate=DateUtil.getYMDHMSDate();
         try {
             boolean success = OnProService.insertProPassLog(proId, explain,onlineDate);
+
+            List<Map<String,Object>> updateSubtaskProgress = projectSubtaskMapper.selectProSubtaskByProId(proId);
+
+            String mentIds = StringUtil.toString(MapUtil.collectProperty(updateSubtaskProgress, "taskId"));
+            String[] mIds = mentIds.split(",");
+            Map<String, Object> mapTid = new HashMap<>();
+
+            mapTid.put("mentIds", mIds);
+
+            //更新任务相关子任务进度为100
+            boolean updateSubtaskProgressResult = projectSubtaskMapper.updateSubtaskProgress(mapTid);
+
+
             if (success == true) {
                 result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过", "审批通过", null);
             } else {

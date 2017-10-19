@@ -421,7 +421,7 @@ public class ApplyController {
         }
 
         String postUrl = "";
-        if (title.equals("")) {
+        if (title == "" || title == null) {
             postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
                     + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
                     + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";

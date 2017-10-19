@@ -489,7 +489,7 @@ public class ApplyController {
 
             }
 
-            if (i > 0) {
+            if (i > 0 || proId == null || proId == "") {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,null,null);
             } else {
                 result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.OPERATION_FAIL,null,null);

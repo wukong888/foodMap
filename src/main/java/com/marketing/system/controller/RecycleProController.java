@@ -111,7 +111,7 @@ public class RecycleProController {
         }
         if(prostate==null||prostate==""){
             //所有项目集合
-            RecProMapAll=RecProService.selectRecPro(current,1000,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
+            RecProMapAll=RecProService.selectRecPro(1,1000,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);
         }else if(prostate.equals("5")){
             //驳回项目集合
             RecProMapAll=RecProService.selectRecProState5(current,pageSize,creatersquadid,creater,createdate1,createdate2,plansdate1,plansdate2,protype,param);

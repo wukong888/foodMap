@@ -1,5 +1,7 @@
 package com.marketing.system.util;
 
+import com.marketing.system.cache.Cache;
+import com.marketing.system.cache.CacheManager;
 import com.marketing.system.entity.ProjectInfo;
 import org.apache.http.HttpResponse;
 
@@ -106,5 +108,23 @@ public class ToolUtil {
         }
 
         return betweenDays;
+    }
+
+    /**
+     * 判断缓存是否存在
+     */
+    public static String cacheExist(String user_id) {
+        String key = user_id;
+        Cache cache = CacheManager.getCacheInfo(key);
+        if (null == cache || cache.getValue() == null) {
+            cache = new Cache();
+            cache.setKey(key);
+            cache.setValue(1);
+            CacheManager.putCache(key, cache);
+
+            return "empty";
+        } else {
+            return "full";
+        }
     }
 }

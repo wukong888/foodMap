@@ -624,10 +624,14 @@ public class MyProjectController {
 
         Integer Type = Integer.parseInt(type);
         Integer ProId = Integer.parseInt(proId);
-        Integer TaskId = Integer.parseInt(taskId);
+
         Map<String, Object> map = new HashMap<>();
         ApiResult<Integer> result = null;
-
+        String reBoolean = ToolUtil.cacheExist(type);
+        if (reBoolean.equals("full")) {
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            return result;
+        }
         int i = 0;
         Map<String, Object> map1 = new HashMap<>();
         try {
@@ -669,7 +673,7 @@ public class MyProjectController {
                 String str = sdf.format(date);
 
                 projectTask.setCreateDate(str);//创建时间
-                projectTask.setTaskId(TaskId);//项目编号
+                //projectTask.setTaskId(TaskId);//项目编号
                 projectTask.setTaskprogress("0");//任务进度
                 projectTask.setTaskstate("1");//任务状态 1:未开始  2:开发中 3:预验收  4:完成
 
@@ -697,6 +701,7 @@ public class MyProjectController {
 
                 //修改
             } else if (Type == 2) {
+                Integer TaskId = Integer.parseInt(taskId);
                 ProjectTask projectTask = new ProjectTask();
                 projectTask.setTaskId(TaskId);
                 projectTask.setProid(ProId);//项目Id
@@ -744,7 +749,7 @@ public class MyProjectController {
 
                 //删除 可删除当前任务，删除后该任务内容全部清零
             } else {
-
+                Integer TaskId = Integer.parseInt(taskId);
                 i = myProjectService.deleteTaskById(TaskId);
 
                 //任务下的子任务全部清空
@@ -963,7 +968,11 @@ public class MyProjectController {
             @RequestParam(value = "subtaskState", required = false) String subtaskState) {
 
         ApiResult<Integer> result = null;
-
+        String reBoolean = ToolUtil.cacheExist(String.valueOf(taskId));
+        if (reBoolean.equals("full")) {
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            return result;
+        }
         try {
             //1:添加
             if (type == 1) {
@@ -1201,7 +1210,11 @@ public class MyProjectController {
                                             @RequestParam(value = "addType") int addType) {
 
         ApiResult<Integer> result = null;
-
+        String reBoolean = ToolUtil.cacheExist(explain);
+        if (reBoolean.equals("full")) {
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            return result;
+        }
         try {
             //1：项目开发日志
             if (addType == 1) {
@@ -1365,7 +1378,11 @@ public class MyProjectController {
             @RequestParam(value = "type") int type) {
 
         ApiResult<Integer> result = null;
-
+        String reBoolean = ToolUtil.cacheExist(userName);
+        if (reBoolean.equals("full")) {
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            return result;
+        }
         try {
             //提交任务
             if (type == 1) {
@@ -1580,6 +1597,12 @@ public class MyProjectController {
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        String reBoolean = ToolUtil.cacheExist(String.valueOf(id));
+        if (reBoolean.equals("full")) {
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            return result;
+        }
 
         try {
             //SystemUser user = (SystemUser) SecurityUtils.getSubject().getPrincipal();

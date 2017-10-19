@@ -37,7 +37,9 @@ public class Constant {
 	public static final String OPERATION_SUCCESS = "操作成功";
 	
 	public static final String OPERATION_FAIL = "操作失败";
-	
+
+	public static final String AGAINCOMMIT_FAIL = "请求已提交，网络原因，请稍后。。。";
+
 	public static final int SIGN_FAIL = 99; // 验签失败
 
 	public static final int SUCCEED_CODE_VALUE = 200; // 成功 插入 、删除 更新 修改

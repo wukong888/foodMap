@@ -4,10 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.marketing.system.entity.*;
 import com.marketing.system.service.*;
-import com.marketing.system.util.ApiResult;
-import com.marketing.system.util.Constant;
-import com.marketing.system.util.MapUtil;
-import com.marketing.system.util.StringUtil;
+import com.marketing.system.util.*;
 import io.swagger.annotations.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -85,6 +82,11 @@ public class ApplyController {
                                            HttpServletRequest request,HttpSession session2
                                            ) throws IOException {
 
+        String reBoolean = ToolUtil.cacheExist(proName);
+        if (reBoolean.equals("full")) {
+            ApiResult<Integer> r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            return r;
+        }
         ApiResult<Integer> r = null;
         ProjectInfo projectInfo = new ProjectInfo();
 
@@ -325,6 +327,7 @@ public class ApplyController {
     public ApiResult<Map<String, String>> uploadFile(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 
         ApiResult<Map<String, String>> r = null;
+
         if (ServletFileUpload.isMultipartContent(request)) {
 
             try {
@@ -404,6 +407,12 @@ public class ApplyController {
             @RequestParam(value = "type", required = true) int type){
 
         ApiResult<String> result = null;
+
+        String reBoolean = ToolUtil.cacheExist(content);
+        if (reBoolean.equals("full")) {
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            return result;
+        }
 
         String postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
                 + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content

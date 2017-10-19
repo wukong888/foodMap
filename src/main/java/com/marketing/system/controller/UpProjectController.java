@@ -183,6 +183,11 @@ public class UpProjectController {
 
         ApiResult<String> result = null;
 
+        String reBoolean = ToolUtil.cacheExist(explain);
+        if (reBoolean.equals("full")) {
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            return result;
+        }
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("id", id);

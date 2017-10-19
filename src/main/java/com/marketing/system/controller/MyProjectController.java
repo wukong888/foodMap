@@ -220,6 +220,9 @@ public class MyProjectController {
                 objectMap.put("proType", proType);//项目类型
                 objectMap.put("proName", proName);//项目名称
                 projectInfosNew3 = myProjectService.getProjectInfoByZuzhang(objectMap);
+
+
+
             }
 
             List<Map<String, Object>> taskString = new ArrayList<>();
@@ -249,6 +252,27 @@ public class MyProjectController {
                     pro = ToolUtil.setDuty(pro, userName, user, new HashMap());
                 }
 
+                if (projectInfosNew3.size() > 0) {
+                    for (ProjectInfo map1 : projectInfosNew3) {
+                        map1.getCreater();
+                        //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
+                        if (userName.equals(map1.getCreater()) && !user.getDuty().equals("CEO")) {
+                            map1.setDuty("项目发起人");
+                            //
+                        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
+                            map1.setDuty("组员");
+                        } else if (user.getDuty().equals("CEO")) {
+                            map1.setDuty("CEO");
+                        } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !map1.getCreater().equals("陈冬和") ) {
+                            map1.setDuty("经理/组长");
+                        } else if (map1.getCreater().equals("陈冬和")) {
+                            map1.setDuty("组员");
+                        }
+                        else {
+                            map1.setDuty("项目无关人员");
+                        }
+                    }
+                }
                 for (Map map1 : taskList) {
                     if (map1.get("proId") == (Integer.valueOf(pro.getProid()))) {
                         projectInfosNew.add(pro);
@@ -292,6 +316,7 @@ public class MyProjectController {
                 if (!creater.equals("")) {
                     projectInfosNew3 = projectInfosNew3.stream().filter(lin -> lin.getCreater().equals(creater)).collect(Collectors.toList());
                 }
+
                 projectInfosNew = projectInfosNew3;
                 //Collections.sort(projectInfosNew);
 

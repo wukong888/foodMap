@@ -259,4 +259,54 @@ public class LoginController {
         ApiResult<String> r = null;
         return "没权限2222";
     }
+
+    /**
+     * 第三方登录;
+     *
+     * @return
+     */
+  /*  @RequestMapping("/loginAuto.do")
+    public  void loginAuto(String id,String password,HttpServletRequest request,HttpServletResponse response){
+        JsoupUtil.SetHttpServletResponse(response);
+        User user = userService.loginAuto(id,password);
+
+        //设置session
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+        //设置cookies
+
+        Cookie cookieId = new Cookie("id",id);
+        cookieId.setMaxAge(3600);
+        cookieId.setPath("/");
+        response.addCookie(cookieId);
+
+        String username=user.getName();
+        try {
+            username=URLEncoder.encode(username,"utf-8");
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+        Cookie cookieUsername = new Cookie("username",username);
+        cookieUsername.setMaxAge(3600);
+        cookieUsername.setPath("/");
+        response.addCookie(cookieUsername);
+
+        String power=String.valueOf(user.getPower());
+        Cookie cookiePower = new Cookie("power",power);
+        cookiePower.setMaxAge(3600);
+        cookiePower.setPath("/");
+        response.addCookie(cookiePower);
+
+
+        String group=String.valueOf(user.getDeptno());
+        Cookie cookieGroup = new Cookie("group",group);
+        cookieGroup.setMaxAge(3600);
+        cookieGroup.setPath("/");
+        response.addCookie(cookieGroup);
+        try {
+            response.sendRedirect("../index.html");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
 }

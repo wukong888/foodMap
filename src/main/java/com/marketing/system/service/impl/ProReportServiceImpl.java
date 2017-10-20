@@ -43,7 +43,7 @@ public class ProReportServiceImpl implements ProReportService{
         Group.add(19,"84");
         Group.add(20,"91");
         Group.add(21,"122");
-        Group.add(22,"123");
+        Group.add(22,"41");
         Group.add(23,"131");
         Group.add(24,"161");
         Group.add(25,"141");

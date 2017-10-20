@@ -429,7 +429,7 @@ public class ApplyController {
         } else {
             postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
                     + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
-                    + "\",\"AgentId\":1000011,\"Title\":"+title+",\"Url\":\"\"}";
+                    + "\",\"AgentId\":1000011,\"Url\":\"\"}";
 
         }
         try {

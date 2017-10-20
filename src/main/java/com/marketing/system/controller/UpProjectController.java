@@ -276,12 +276,12 @@ public class UpProjectController {
             //参与组
             List<ProjectTask> taskList = upProjectService.getProjectTaskList(proId);
 
-            int sum = 0;
+            Double sum = 0.0;
             for (ProjectTask projectTask : taskList) {
                 projectTask.getWorkDate();
                 if (projectTask.getWorkDate() != "" && projectTask.getWorkDate() != null)
-                    sum += Integer.valueOf(projectTask.getWorkDate());
-
+                    //sum += Integer.valueOf(projectTask.getWorkDate());
+                    sum += Double.parseDouble(String.valueOf(projectTask.getWorkDate()));
                 Group group = groupService.getGroupBySquadId(Integer.valueOf(projectTask.getSquadId()));
 
                 projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名

@@ -33,11 +33,12 @@ public class FinishProServiceImpl implements FinishProService {
     public ProjectInfo selectFinProInfo(Integer id,Integer proId){
         ProjectInfo FinProInfo=FinProDao.selectFinProInfo(id);
         List<Map> FinTasks=FinProDao.selectFinTask(proId);
-        int sum = 0;
+        Double sum = 0.0;
         for (Map<String,Object> FinTask:FinTasks) {
             FinTask.get("workDate");
             if (FinTask.get("workDate") !="" && FinTask.get("workDate") != null)
-                sum +=Integer.valueOf((String) FinTask.get("workDate"));
+                //sum +=Integer.valueOf((String) FinTask.get("workDate"));
+                sum += Double.parseDouble(String.valueOf(FinTask.get("workDate")));
 
 
         }

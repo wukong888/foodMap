@@ -66,11 +66,12 @@ public class RecycleProServiceImpl implements RecycleProService{
     public ProjectInfo selectRecProInfo(Integer id,Integer proId){
         ProjectInfo RecProInfo=RecProDao.selectRecProInfo(id);
         List<ProjectTask> RecTasks=RecProDao.selectRecTask(proId);
-        int sum = 0;
+        Double sum = 0.0;
         for (ProjectTask RecTask:RecTasks) {
             RecTask.getWorkDate();
             if (RecTask.getWorkDate() !="" && RecTask.getWorkDate() != null)
-                sum +=Integer.valueOf(RecTask.getWorkDate());
+                //sum +=Integer.valueOf(RecTask.getWorkDate());
+                sum += Double.parseDouble(RecTask.getWorkDate());
 
         }
         RecProInfo.setWorkTatalDay(String.valueOf(sum));//项目预计工期（任务工期之和）

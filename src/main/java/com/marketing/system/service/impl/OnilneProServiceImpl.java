@@ -40,11 +40,12 @@ public class OnilneProServiceImpl implements OnlineProService{
 
         ProjectInfo OnProInfo=OnProDao.selectOnProInfo(id);
         List<Map> OnTasks=OnProDao.selectOnTask(proId);
-        int sum = 0;
+        Double sum = 0.0;
         for (Map<String,Object> OnTask:OnTasks) {
             OnTask.get("workDate");
             if (OnTask.get("workDate") !="" && OnTask.get("workDate") != null)
-                sum +=Integer.valueOf((String) OnTask.get("workDate"));
+                //sum +=Integer.valueOf((String) OnTask.get("workDate"));
+                sum += Double.parseDouble(String.valueOf(OnTask.get("workDate")));
         }
         OnProInfo.setWorkTatalDay(String.valueOf(sum));//项目预计工期（任务工期之和）
         return OnProInfo;

@@ -117,6 +117,7 @@ public class MyProjectController {
             }
 
             List<ProjectInfo> projectInfosNew = new ArrayList<>();
+            List<ProjectInfo> projectInfosNew2 = new ArrayList<>();
             List<ProjectInfo> projectInfosNew3 = new ArrayList<>();
             //项目相关人员集合
 
@@ -329,6 +330,15 @@ public class MyProjectController {
                 sum = projectInfos.size();
                 projectInfos = ToolUtil.listSplit2(current, pageSize, projectInfos);
             } else {
+
+                Iterator it = projectInfosNew.iterator();
+                while (it.hasNext()) {
+                    ProjectInfo obj = (ProjectInfo) it.next();
+                    if (!projectInfosNew2.contains(obj)) {                //不包含就添加
+                        projectInfosNew2.add(obj);
+                    }
+                }
+                projectInfosNew = projectInfosNew2;
                 sum = projectInfosNew.size();
                 projectInfosNew = ToolUtil.listSplit2(current, pageSize, projectInfosNew);
             }

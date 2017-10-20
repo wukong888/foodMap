@@ -135,6 +135,8 @@ public class ApplyController {
 
         Members members = applyService.selectSquadIdByMember(creatName);
 
+        SystemUser systemUser = systemUserService.selectIdByName(creatName);
+
         projectInfo.setProid(Integer.valueOf(code));//任务id
         projectInfo.setProname(proName);//项目名称
         projectInfo.setProtype(proType);//项目类型
@@ -144,6 +146,7 @@ public class ApplyController {
         projectInfo.setCreater(creatName);//创建人
         projectInfo.setProprogress("0");//项目进度
         projectInfo.setProstate("1");//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废,7:逾期)
+        projectInfo.setUserId(systemUser.getId());
 
         projectInfo.setCreaterSquadId(members.getSquadid());//小组id
 

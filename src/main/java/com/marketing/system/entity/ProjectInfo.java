@@ -59,6 +59,16 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
      */
     private Long betweenDays;
 
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     public Integer getAgainState() {
         return againState;
     }
@@ -297,7 +307,8 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
         if (cancelDate != null ? !cancelDate.equals(that.cancelDate) : that.cancelDate != null) return false;
         if (againState != null ? !againState.equals(that.againState) : that.againState != null) return false;
         if (duty != null ? !duty.equals(that.duty) : that.duty != null) return false;
-        return betweenDays != null ? betweenDays.equals(that.betweenDays) : that.betweenDays == null;
+        if (betweenDays != null ? !betweenDays.equals(that.betweenDays) : that.betweenDays != null) return false;
+        return userId != null ? userId.equals(that.userId) : that.userId == null;
     }
 
     @Override
@@ -325,6 +336,7 @@ public class ProjectInfo implements Comparable<ProjectInfo>{
         result = 31 * result + (againState != null ? againState.hashCode() : 0);
         result = 31 * result + (duty != null ? duty.hashCode() : 0);
         result = 31 * result + (betweenDays != null ? betweenDays.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
     }
 }

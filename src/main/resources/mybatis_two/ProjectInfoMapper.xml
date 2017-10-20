@@ -23,6 +23,7 @@
         <result column="rejectDate" property="rejectDate" jdbcType="VARCHAR"/>
         <result column="cancelDate" property="cancelDate" jdbcType="VARCHAR"/>
         <result column="againState" property="againState" jdbcType="INTEGER"/>
+        <result column="userId" property="userId" jdbcType="INTEGER"/>
     </resultMap>
 
     <resultMap type="java.util.HashMap" id="taskHashMap">
@@ -42,7 +43,7 @@
     <sql id="Base_Column_List">
     id, proId, proName, proType, planSDate, planEDate, proDeclare, proFilePath,
     createDate, proState, creater, proLogRecordId, proDevelopLogId, proProgress,
-    createrSquadId,betweenDays,finishDate,onlineDate,rejectDate,cancelDate,againState
+    createrSquadId,betweenDays,finishDate,onlineDate,rejectDate,cancelDate,againState,userId
   </sql>
 
     <!-- 基本的sql查询条件公共引用 -->
@@ -386,7 +387,7 @@
       proType, planSDate, planEDate, 
       proDeclare, proFilePath,
       createDate, proState, creater, 
-      proLogRecordId, proDevelopLogId,
+      proLogRecordId, proDevelopLogId,userId
       proProgress, createrSquadId,finishDate,onlineDate,rejectDate,cancelDate)
     values (#{proid,jdbcType=VARCHAR}, #{proname,jdbcType=VARCHAR},
       #{protype,jdbcType=VARCHAR}, #{plansdate,jdbcType=VARCHAR}, #{planedate,jdbcType=VARCHAR}, 
@@ -394,7 +395,7 @@
       #{createdate,jdbcType=VARCHAR}, #{prostate,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
       #{prologrecordid,jdbcType=INTEGER}, #{prodeveloplogid,jdbcType=INTEGER},
       #{proprogress,jdbcType=VARCHAR}, #{createrSquadId,jdbcType=VARCHAR},#{finishDate,jdbcType=VARCHAR},#{onlineDate,jdbcType=VARCHAR},
-      #{rejectDate,jdbcType=VARCHAR},#{cancelDate,jdbcType=VARCHAR})
+      #{rejectDate,jdbcType=VARCHAR},#{cancelDate,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectInfo">
         insert into project_info
@@ -455,6 +456,10 @@
             <if test="cancelDate != null">
                 cancelDate,
             </if>
+            <if test="userId != null">
+                userId,
+            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="proid != null">
@@ -511,6 +516,10 @@
             <if test="cancelDate != null">
                 #{cancelDate,jdbcType=VARCHAR},
             </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+
         </trim>
     </insert>
 

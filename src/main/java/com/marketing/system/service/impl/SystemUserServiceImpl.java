@@ -46,4 +46,10 @@ public class SystemUserServiceImpl implements SystemUserService{
 
         return list;
     }
+
+    @Override
+    public SystemUser selectIdByName(String UserName) {
+
+        return systemUserMapper.selectIdByName(UserName);
+    }
 }

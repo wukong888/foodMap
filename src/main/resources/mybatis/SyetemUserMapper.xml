@@ -9,6 +9,9 @@
         select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser
     </select>
 
+    <select id="selectIdByName" resultType="com.marketing.system.entity.SystemUser" parameterType="java.lang.String">
+        select id,UserName,Password,Department,UserGroup from SystemUser where UserName = #{UserName}
+    </select>
     <select id="selectByPrimaryKey" resultType="com.marketing.system.entity.SystemUser" parameterType="com.marketing.system.entity.SystemUser">
         select id,UserName,Password,Department,UserGroup,WorkWeixinId,mobile,email,duty,isAdmin,UserGroupId,job from SystemUser WHERE id = #{id,jdbcType=BIGINT}
     </select>

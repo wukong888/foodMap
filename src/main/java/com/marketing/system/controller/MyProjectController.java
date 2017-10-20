@@ -396,11 +396,12 @@ public class MyProjectController {
             ProjectTask projectTaskNew = new ProjectTask();
 
             Map<String, Object> map1 = new HashMap<>();
-            int sum = 0;
+            Double sum = 0.0;
 
             for (Map<String, Object> projectTask : taskList) {
                 if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null) {
-                    sum += Integer.valueOf((String) projectTask.get("workDate"));
+                    sum += Double.parseDouble(String.valueOf(projectTask.get("workDate")));
+                    //dbnum1 = Double.parseDouble(String.valueOf(projectTask.get("workDate")));
                 }
 
                 Group group = groupService.getGroupBySquadId(Integer.valueOf((String) projectTask.get("squadId")));

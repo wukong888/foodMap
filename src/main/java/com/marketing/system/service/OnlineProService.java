@@ -49,4 +49,7 @@ public interface OnlineProService {
 
     //驳回操作，项目日志添加记录
     boolean insertProReturnLog(Integer proid,String explain);
+
+    //根据proid查找项目信息
+    ProjectInfo selectProByProId(Integer proId);
 }

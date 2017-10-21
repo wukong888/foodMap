@@ -185,6 +185,12 @@ public class OnilneProServiceImpl implements OnlineProService{
         return success1||success2;
     }
 
+    //根据proid查找项目信息
+    public ProjectInfo selectProByProId(Integer proId){
+        ProjectInfo ProInfo=OnProDao.selectProByProId(proId);
+        return ProInfo;
+    }
+
 
 
 }

@@ -101,5 +101,9 @@ public interface OnlineProMapper {
     @Select("select departmentId from projectManage.dbo.[group] where squadId=#{squadId}")
     String selectDepartmentIdBySquadId(@Param("squadId")String squadId);
 
+    //根据项目Id查找项目信息
+    @Select("select * from project_info where proId=#{proId}")
+    ProjectInfo selectProByProId(@Param("proId")Integer proId);
+
 
 }

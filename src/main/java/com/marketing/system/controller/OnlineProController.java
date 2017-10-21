@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.marketing.system.util.WeiXinPushUtil.httpPostWithJSON;
+
 @Api(description = "上线待审批接口", value = "上线待审批接口")
 @Scope("prototype")
 @RestController
@@ -373,9 +375,22 @@ public class OnlineProController {
             //更新任务相关子任务进度为100
             boolean updateSubtaskProgressResult = projectSubtaskMapper.updateSubtaskProgress(mapTid);
 
+            ProjectInfo ProInfo=OnProService.selectProByProId(proId);
 
             if (success == true) {
                 result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过", "审批通过", null);
+
+
+                    String postUrl = "{\"Uid\":" + ProInfo.getUserId() + ",\"Content\":\"创建人:" + ProInfo.getCreater()
+                            + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+
+                try {
+                    //消息推送-回复
+                    httpPostWithJSON(postUrl);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过操作失败", "审批通过操作失败", null);
             }
@@ -409,6 +424,19 @@ public class OnlineProController {
                 boolean success = OnProService.insertProReturnLog(proId, explain);
                 if (success == true) {
                     result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批驳回", "审批驳回", null);
+
+                    ProjectInfo ProInfo=OnProService.selectProByProId(proId);
+
+                        String postUrl = "{\"Uid\":" + ProInfo.getUserId() + ",\"Content\":\"创建人:" + ProInfo.getCreater()
+                                + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
+                                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+
+                        try {
+                            //消息推送-回复
+                            httpPostWithJSON(postUrl);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                 } else {
                     result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批驳回操作失败", "审批驳回操作失败", null);
                 }

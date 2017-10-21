@@ -226,6 +226,18 @@ public class ApplyController {
 
         if (v > 0 && ilog > 0 && ap > 0) {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
+            String postUrl = "";
+                postUrl = "{\"Uid\":" + 166 + ",\"Content\":\"创建人:" + creatName
+                        + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + "项目申请"
+                        + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+
+            try {
+                //消息推送-回复
+                httpPostWithJSON(postUrl);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else {
             r = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
         }

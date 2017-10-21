@@ -1,10 +1,12 @@
 package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper_two.ProjectInfoMapper;
 import com.marketing.system.mapper_two.ProjectSubtaskMapper;
 import com.marketing.system.mapper_two.ProjectTaskMapper;
 import com.marketing.system.service.GroupService;
 import com.marketing.system.service.MembersService;
+import com.marketing.system.service.SystemUserService;
 import com.marketing.system.service.UpProjectService;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
@@ -23,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.marketing.system.util.WeiXinPushUtil.httpPostWithJSON;
 
 @Api(description = "立项待审批接口", value = "立项待审批接口")
 @Scope("prototype")
@@ -47,6 +51,12 @@ public class UpProjectController {
 
     @Autowired
     ProjectTaskMapper projectTaskMapper;
+
+    @Autowired
+    SystemUserService systemUserService;
+
+    @Autowired
+    ProjectInfoMapper projectInfoMapper;
 
     /**
      * 查询立项待审批列表
@@ -228,8 +238,30 @@ public class UpProjectController {
             //插入日志
             int ilog = upProjectService.insertProLogRecord(proLogRecord);
 
+            SystemUser systemUser = systemUserService.selectIdByName(creatName);
             if (i > 0 && ilog > 0) {
                 result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "操作成功！", null, null);
+
+                ProjectInfo projectInfo = projectInfoMapper.selectByPrimaryKey(id);
+                String postUrl = "";
+                //(1:立项待审批，2：开发中，3：上线待审批，4：完成，5：驳回，6：作废)
+                if (Integer.valueOf(proState) == 2 || Integer.valueOf(proState) == 4 || Integer.valueOf(proState) == 5) {
+                    postUrl = "{\"Uid\":" + projectInfo.getUserId() + ",\"Content\":\"创建人:" + creatName
+                            + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+                } else if (Integer.valueOf(proState) == 3) {
+                    postUrl = "{\"Uid\":" + 166 + ",\"Content\":\"创建人:" + creatName
+                            + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+                }
+
+                try {
+                    //消息推送-回复
+                    httpPostWithJSON(postUrl);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             } else {
                 result = new ApiResult<String>(Constant.FAIL_CODE_VALUE, "操作失败,请检查是否是立项待审批项目！", null, null);
             }

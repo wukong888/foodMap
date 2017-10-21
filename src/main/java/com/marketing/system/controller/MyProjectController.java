@@ -2,6 +2,7 @@ package com.marketing.system.controller;
 
 
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper_two.GroupMapper;
 import com.marketing.system.service.*;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
@@ -45,6 +46,9 @@ public class MyProjectController {
 
     @Autowired
     private SystemUserService systemUserService;
+
+    @Autowired
+    private GroupMapper groupMapper;
 
     /**
      * 查询我的项目列表
@@ -710,6 +714,10 @@ public class MyProjectController {
         try {
             //基本信息+任务信息Basic Information
             ProjectTask projectTask = myProjectService.getProjectTaskByTaskId(taskId);
+
+            Group group = groupMapper.getGroupBySquadId(Integer.valueOf(projectTask.getSquadId()));
+            //对应组名称
+            projectTask.setSquad(group.getSquad());
 
             map.put("projectTask", projectTask);
 

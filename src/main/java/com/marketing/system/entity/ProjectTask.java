@@ -34,6 +34,16 @@ public class ProjectTask {
 
     private String createDate;
 
+    private String squad;
+
+    public String getSquad() {
+        return squad;
+    }
+
+    public void setSquad(String squad) {
+        this.squad = squad;
+    }
+
     public String getCreateDate() {
         return createDate;
     }

@@ -482,8 +482,10 @@ public class MyProjectController {
                 } else {
                     projectTask.put("duty", "组员");
                 }
-                if (user.getDuty().equals("CEO")) {
-                    projectTask.put("duty", "CEO");
+                if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+                    if (user.getDuty().equals("CEO")) {
+                        projectTask.put("duty", "CEO");
+                    }
                 }
                 if (projectInfo.getCreater().equals(user.getUserName())) {
                     projectTask.put("duty", "项目发起人");

@@ -226,44 +226,50 @@ public class ToolUtil {
      * @return
      */
     public static ProjectInfo setDuty(ProjectInfo pro,String userName,SystemUser user,Map map1){
-        if (map1 != null) {
-            if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
-                pro.setDuty("项目发起人");
-            } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.get("subtaskHandler"))) {
-                pro.setDuty("组员");
-            } else if (user.getDuty().equals("CEO")) {
-                pro.setDuty("CEO");
-            } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
-                pro.setDuty("经理/组长");
+        if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+            if (map1 != null) {
+                if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                    pro.setDuty("项目发起人");
+                } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.get("subtaskHandler"))) {
+                    pro.setDuty("组员");
+                } else if (user.getDuty().equals("CEO")) {
+                    pro.setDuty("CEO");
+                } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                    pro.setDuty("经理/组长");
+                } else {
+                    pro.setDuty("项目无关人员");
+                }
             } else {
-                pro.setDuty("项目无关人员");
+                if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                    pro.setDuty("项目发起人");
+                } else if (user.getDuty().equals("CEO")) {
+                    pro.setDuty("CEO");
+                } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                    pro.setDuty("经理/组长");
+                } else {
+                    pro.setDuty("项目无关人员");
+                }
             }
         } else {
-            if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
-                pro.setDuty("项目发起人");
-            } else if (user.getDuty().equals("CEO")) {
-                pro.setDuty("CEO");
-            } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
-                pro.setDuty("经理/组长");
-            } else {
-                pro.setDuty("项目无关人员");
-            }
+            pro.setDuty("项目无关人员");
         }
         return pro;
     }
 
     public static ProjectInfo setDutyProInfo(ProjectInfo pro,String userName,SystemUser user,ProjectInfo map1){
-        if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
-            map1.setDuty("项目发起人");
-            //
-        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
-            map1.setDuty("组员");
-        } else if (user.getDuty().equals("CEO")) {
-            map1.setDuty("CEO");
-        } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
-            map1.setDuty("经理/组长");
-        } else {
-            map1.setDuty("项目无关人员");
+        if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+            if (userName.equals(pro.getCreater()) && !user.getDuty().equals("CEO")) {
+                map1.setDuty("项目发起人");
+                //
+            } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
+                map1.setDuty("组员");
+            } else if (user.getDuty().equals("CEO")) {
+                map1.setDuty("CEO");
+            } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                map1.setDuty("经理/组长");
+            } else {
+                map1.setDuty("项目无关人员");
+            }
         }
 
         return map1;

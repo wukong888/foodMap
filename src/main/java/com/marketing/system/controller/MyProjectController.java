@@ -175,10 +175,15 @@ public class MyProjectController {
             List<Map<String, Object>> subtaskList = new ArrayList<>();
             List<ProjectInfo> subtaskListProject = new ArrayList<>();
 
-            if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
-                //当前登录用户并其成员包含所涉及子任务
-                subtaskList = myProjectService.getSubTaskIdByHanderMap(mapTmem);
+            if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+                if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
+                    //当前登录用户并其成员包含所涉及子任务
+                    subtaskList = myProjectService.getSubTaskIdByHanderMap(mapTmem);
 
+                } else {
+                    //当前登录用户所涉及子任务
+                    subtaskList = myProjectService.getSubTaskIdByHander(userName);
+                }
             } else {
                 //当前登录用户所涉及子任务
                 subtaskList = myProjectService.getSubTaskIdByHander(userName);
@@ -195,43 +200,44 @@ public class MyProjectController {
             //根据taskId查找proId
             List<Map<String, Object>> taskList = myProjectService.getproIdByTaskId(mapT);
 
-            if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
-                Map<String,Object> objectMap = new HashMap<>();
-                objectMap.put("Idsmember",Idsmember);//小组成员
-                objectMap.put("Ids",Ids);//taskId集合
-                objectMap.put("handler",userName);
-                objectMap.put("createrSquadId", createrSquadId);//项目发起部门
-                objectMap.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
-                if (createDateStart == "" || createDateStart == null) {
-                    objectMap.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
-                } else {
-                    objectMap.put("createDateStart", createDateStart);//项目发起开始时间
+            if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+                if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
+                    Map<String, Object> objectMap = new HashMap<>();
+                    objectMap.put("Idsmember", Idsmember);//小组成员
+                    objectMap.put("Ids", Ids);//taskId集合
+                    objectMap.put("handler", userName);
+                    objectMap.put("createrSquadId", createrSquadId);//项目发起部门
+                    objectMap.put("proState", proState);//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废）
+                    if (createDateStart == "" || createDateStart == null) {
+                        objectMap.put("createDateStart", "1980-01-01 00:00:00");//项目发起开始时间
+                    } else {
+                        objectMap.put("createDateStart", createDateStart);//项目发起开始时间
+                    }
+
+                    if (createDateEnd == "" || createDateEnd == null) {
+                        objectMap.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
+                    } else {
+                        objectMap.put("createDateEnd", createDateEnd);//项目发起结束时间
+                    }
+
+                    if (planSDateStart == "" || planSDateStart == null) {
+                        objectMap.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
+                    } else {
+                        objectMap.put("planSDateStart", planSDateStart);//预计上线开始时间
+                    }
+
+                    if (planSDateEnd == "" || planSDateEnd == null) {
+                        objectMap.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
+                    } else {
+                        objectMap.put("planSDateEnd", planSDateEnd);//预计上线结束时间
+                    }
+
+                    objectMap.put("proType", proType);//项目类型
+                    objectMap.put("proName", proName);//项目名称
+                    projectInfosNew3 = myProjectService.getProjectInfoByZuzhang(objectMap);
+
+
                 }
-
-                if (createDateEnd == "" || createDateEnd == null) {
-                    objectMap.put("createDateEnd", "2999-01-01 00:00:00");//项目发起结束时间
-                } else {
-                    objectMap.put("createDateEnd", createDateEnd);//项目发起结束时间
-                }
-
-                if (planSDateStart == "" || planSDateStart == null) {
-                    objectMap.put("planSDateStart", "1980-01-01 00:00:00");//预计上线开始时间
-                } else {
-                    objectMap.put("planSDateStart", planSDateStart);//预计上线开始时间
-                }
-
-                if (planSDateEnd == "" || planSDateEnd == null) {
-                    objectMap.put("planSDateEnd", "2999-01-01 00:00:00");//预计上线结束时间
-                } else {
-                    objectMap.put("planSDateEnd", planSDateEnd);//预计上线结束时间
-                }
-
-                objectMap.put("proType", proType);//项目类型
-                objectMap.put("proName", proName);//项目名称
-                projectInfosNew3 = myProjectService.getProjectInfoByZuzhang(objectMap);
-
-
-
             }
 
             List<Map<String, Object>> taskString = new ArrayList<>();
@@ -264,20 +270,23 @@ public class MyProjectController {
                 if (projectInfosNew3.size() > 0) {
                     for (ProjectInfo map1 : projectInfosNew3) {
                         map1.getCreater();
-                        //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
-                        if (userName.equals(map1.getCreater()) && !user.getDuty().equals("CEO")) {
-                            map1.setDuty("项目发起人");
-                            //
-                        } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
-                            map1.setDuty("组员");
-                        } else if (user.getDuty().equals("CEO")) {
-                            map1.setDuty("CEO");
-                        } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !map1.getCreater().equals("陈冬和") ) {
-                            map1.setDuty("经理/组长");
-                        } else if (map1.getCreater().equals("陈冬和")) {
-                            map1.setDuty("组员");
-                        }
-                        else {
+                        if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+                            //如果当前登录用户为该项目发起人并且是或者不是该项目子任务负责人都是项目发起人
+                            if (userName.equals(map1.getCreater()) && !user.getDuty().equals("CEO")) {
+                                map1.setDuty("项目发起人");
+                                //
+                            } else if (!userName.equals(pro.getCreater()) && userName.equals(map1.getCreater())) {
+                                map1.setDuty("组员");
+                            } else if (user.getDuty().equals("CEO")) {
+                                map1.setDuty("CEO");
+                            } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !map1.getCreater().equals("陈冬和")) {
+                                map1.setDuty("经理/组长");
+                            } else if (map1.getCreater().equals("陈冬和")) {
+                                map1.setDuty("组员");
+                            } else {
+                                map1.setDuty("项目无关人员");
+                            }
+                        } else{
                             map1.setDuty("项目无关人员");
                         }
                     }
@@ -321,24 +330,38 @@ public class MyProjectController {
                     }
                 }
             }
-            if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
-                if (!creater.equals("")) {
-                    projectInfosNew3 = projectInfosNew3.stream().filter(lin -> lin.getCreater().equals(creater)).collect(Collectors.toList());
+            if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+                if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
+                    if (!creater.equals("")) {
+                        projectInfosNew3 = projectInfosNew3.stream().filter(lin -> lin.getCreater().equals(creater)).collect(Collectors.toList());
+                    }
+
+                    projectInfosNew = projectInfosNew3;
+                    //Collections.sort(projectInfosNew);
+
                 }
-
-                projectInfosNew = projectInfosNew3;
-                //Collections.sort(projectInfosNew);
-
             }
             RdPage rdPage = new RdPage();
 
             int sum = 0;
+            if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+                if (user.getDuty().equals("CEO")) {
+                    sum = projectInfos.size();
+                    projectInfos = ToolUtil.listSplit2(current, pageSize, projectInfos);
+                } else {
 
-            if (user.getDuty().equals("CEO")) {
-                sum = projectInfos.size();
-                projectInfos = ToolUtil.listSplit2(current, pageSize, projectInfos);
+                    Iterator it = projectInfosNew.iterator();
+                    while (it.hasNext()) {
+                        ProjectInfo obj = (ProjectInfo) it.next();
+                        if (!projectInfosNew2.contains(obj)) {                //不包含就添加
+                            projectInfosNew2.add(obj);
+                        }
+                    }
+                    projectInfosNew = projectInfosNew2;
+                    sum = projectInfosNew.size();
+                    projectInfosNew = ToolUtil.listSplit2(current, pageSize, projectInfosNew);
+                }
             } else {
-
                 Iterator it = projectInfosNew.iterator();
                 while (it.hasNext()) {
                     ProjectInfo obj = (ProjectInfo) it.next();
@@ -357,8 +380,12 @@ public class MyProjectController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            if (user.getDuty().equals("CEO")) {
-                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, projectInfos, rdPage);
+            if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+                if (user.getDuty().equals("CEO")) {
+                    result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, projectInfos, rdPage);
+                } else {
+                    result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, projectInfosNew, rdPage);
+                }
             } else {
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, projectInfosNew, rdPage);
             }

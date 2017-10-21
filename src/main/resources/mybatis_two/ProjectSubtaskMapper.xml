@@ -81,6 +81,14 @@
     </foreach>
   </select>
 
+  <select id="selectProSubtaskByMap" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    project_subtask
+    WHERE
+    taskId = #{taskId} AND subtaskName = #{subtaskName} AND subtaskHandler = #{subtaskHandler}
+  </select>
 
 
 

@@ -3,6 +3,7 @@ package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
 import com.marketing.system.mapper_two.GroupMapper;
+import com.marketing.system.mapper_two.ProjectSubtaskMapper;
 import com.marketing.system.service.*;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
@@ -49,6 +50,9 @@ public class MyProjectController {
 
     @Autowired
     private GroupMapper groupMapper;
+
+    @Autowired
+    private ProjectSubtaskMapper projectSubtaskMapper;
 
     /**
      * 查询我的项目列表
@@ -902,7 +906,16 @@ public class MyProjectController {
                 subtaskLogRecord.setDate(str2);//创建时间
                 subtaskLogRecord.setEmp(subtaskHandler);//操作人
                 subtaskLogRecord.setExplain("添加任务");//说明
-                subtaskLogRecord.setSubtaskid(Integer.valueOf(subtaskId));//项目id
+
+                Map<String,Object> map = new HashMap<>();
+                map.put("taskId",taskId);
+                map.put("subtaskHandler",subtaskHandler);
+                map.put("subtaskName",subtaskName);
+
+                //取subtaskId
+                ProjectSubtask projectSubtask1 = projectSubtaskMapper.selectProSubtaskByMap(map);
+
+                subtaskLogRecord.setSubtaskid(projectSubtask1.getSubtaskId());//项目id
 
                 //插入子任务日志
                 int ilog = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);

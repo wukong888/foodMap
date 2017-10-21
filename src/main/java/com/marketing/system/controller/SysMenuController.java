@@ -9,6 +9,7 @@ import com.marketing.system.service.SystemUserService;
 import com.marketing.system.util.ApiResult;
 import com.marketing.system.util.Constant;
 import com.marketing.system.util.ListUtil;
+import com.marketing.system.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -77,18 +78,22 @@ public class SysMenuController {
         String name = user.getDuty();
 
         List<String> list = applyService.getCreaterByName(user.getUserName());
-
-        if (list.size() > 0 && !user.getDuty().equals("CEO")) {
-            name = "项目发起人";
-        } else {
-            if (name.contains("组长") || name.contains("经理")) {
-                name = "经理/组长";
-            }else if(name.contains("CEO")){
-                name = "CEO";
+        if (!StringUtil.isEmpty(name) && name != "") {
+            if (list.size() > 0 && !user.getDuty().equals("CEO")) {
+                name = "项目发起人";
             } else {
-                name = "组员";
+                if (name.contains("组长") || name.contains("经理")) {
+                    name = "经理/组长";
+                }else if(name.contains("CEO")){
+                    name = "CEO";
+                } else {
+                    name = "组员";
+                }
             }
+        } else {
+            name = "组员";
         }
+
         map.put("Name", name);
         map.put("SystemId", SystemId);
 

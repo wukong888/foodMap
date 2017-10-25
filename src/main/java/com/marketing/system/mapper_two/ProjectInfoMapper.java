@@ -59,4 +59,6 @@ public interface ProjectInfoMapper {
     List<ProjectInfo> getgetMyProjectInfoListByProId(Map<String,Object> map);
 
     List<ProjectInfo> getProjectInfoByZuzhang(Map<String,Object> map);
+
+    ProjectInfo getProjectInfoByProId(Integer proId);
 }

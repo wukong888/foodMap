@@ -88,6 +88,12 @@
     WHERE  proState = #{prostate}
   </select>
 
+    <select id="getProjectInfoByProId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from project_info
+        WHERE  proId = #{proId}
+    </select>
     <select id="getProjectInfoList" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         id,proId,proName,planSDate,creater,proProgress,proState

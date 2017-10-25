@@ -648,7 +648,7 @@ public class MyProjectController {
                 projectTask.setSdate(sDate);//任务开始时间
                 projectTask.setEdate(eDate);//任务结束时间
                 projectTask.setWorkDate(workDate);//任务工时
-                projectTask.setHandler(handler);//操作人
+                //projectTask.setHandler(handler);//操作人
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -733,20 +733,92 @@ public class MyProjectController {
     @ApiOperation(value = "我的项目任务分配详情页（基本信息+项目信息+日志记录）")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getTaskDetails", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getTaskDetails(
             @RequestParam(value = "taskId") int taskId,
-            @RequestParam(value = "proId") int proId) {
+            @RequestParam(value = "proId") int proId,
+            @RequestParam(value = "userId") int userId) {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
+            ProjectInfo projectInfo = myProjectService.getProjectInfoByProId(proId);
+
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
+            //参与组
+            List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
+            ProjectTask projectTaskNew = new ProjectTask();
+
+            Map<String, Object> map1 = new HashMap<>();
+            Double sum = 0.0;
+            String menuLeafIds = "";
+            for (Map<String, Object> projectTask : taskList) {
+                if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null) {
+                    sum += Double.parseDouble(String.valueOf(projectTask.get("workDate")));
+                    //dbnum1 = Double.parseDouble(String.valueOf(projectTask.get("workDate")));
+                }
+
+                Group group = groupService.getGroupBySquadId(Integer.valueOf((String) projectTask.get("squadId")));
+                String squad = group.getSquad();
+                //projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
+                projectTask.put("squad", squad);//根据id取对应小组中文名
+                String squadId = (String) projectTask.get("squadId");
+
+                String departmentId = upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
+                projectTask.put("departmentId", departmentId);//根据squadid取对应部门Id
+
+                String department = upProjectService.selectDepartmentByDId(departmentId);
+
+                if (department.length() > 1) {
+                    department = department.substring(0, 2);
+                }
+
+                map1.put("department", department);
+
+                //对应组所有人信息
+                List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+                List<Map<String, Object>> systemUserListNew = new ArrayList<>();
+
+
+                for (Map sys : systemUserList) {
+                    if (sys.get("duty") != "" && sys.get("duty") != null) {
+                        if (String.valueOf(sys.get("duty")).contains("组长") || String.valueOf(sys.get("duty")).contains("经理")) {
+                            systemUserListNew.add(sys);
+                        }
+                    } else {
+                        projectTask.put("duty", "组员");
+                    }
+
+                }
+                menuLeafIds = StringUtil.toString(MapUtil.collectProperty(systemUserListNew, "UserName"));
+
+                String[] Ids = menuLeafIds.split(",");
+
+                Map<String, Object> mapT = new HashMap<>();
+
+                mapT.put("menuLeafIds", Ids);
+            }
             //基本信息+任务信息Basic Information
             ProjectTask projectTask = myProjectService.getProjectTaskByTaskId(taskId);
+
+            if (menuLeafIds.contains(user.getUserName())) {
+                projectTask.setDuty("经理/组长");
+            } else {
+                projectTask.setDuty("组员");
+            }
+            if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
+                if (user.getDuty().equals("CEO")) {
+                    projectTask.setDuty("CEO");
+                }
+            }
+            if (projectInfo.getCreater().equals(user.getUserName())) {
+                projectTask.setDuty("项目发起人");
+            }
 
             Group group = groupMapper.getGroupBySquadId(Integer.valueOf(projectTask.getSquadId()));
             //对应组名称

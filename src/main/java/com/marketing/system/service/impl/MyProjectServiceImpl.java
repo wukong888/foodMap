@@ -308,4 +308,10 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return list;
     }
+
+    @Override
+    public ProjectInfo getProjectInfoByProId(int proId) {
+
+        return projectInfoMapper.getProjectInfoByProId(proId);
+    }
 }

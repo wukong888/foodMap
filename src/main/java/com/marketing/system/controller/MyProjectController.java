@@ -426,6 +426,20 @@ public class MyProjectController {
             ProjectInfo projectInfo = upProjectService.selectByPrimaryKey(id);
 
             SystemUser user = systemUserService.selectByPrimaryKey(userId);
+
+            List<Map<String, Object>> projectSubtaskList = applyService.selectProSubtaskByProId(proId);
+            for (Map map1 : projectSubtaskList) {
+
+                if (user.getUserName().equals(projectInfo.getCreater()) && !user.getDuty().equals("CEO")) {
+                    projectInfo.setDuty("项目发起人");
+                } else if (!user.getUserName().equals(projectInfo.getCreater()) && user.getUserName().equals(map1.get("subtaskHandler"))) {
+                    projectInfo.setDuty("组员");
+                } else if (user.getDuty().equals("CEO")) {
+                    projectInfo.setDuty("CEO");
+                } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                    projectInfo.setDuty("经理/组长");
+                }
+            }
             //参与组
             List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
             ProjectTask projectTaskNew = new ProjectTask();

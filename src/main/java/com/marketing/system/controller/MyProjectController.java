@@ -428,25 +428,37 @@ public class MyProjectController {
             SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
             List<Map<String, Object>> projectSubtaskList = applyService.selectProSubtaskByProId(proId);
-            for (Map map1 : projectSubtaskList) {
+            if (projectSubtaskList.size() > 0) {
+                for (Map map1 : projectSubtaskList) {
 
+                    if (user.getUserName().equals(projectInfo.getCreater()) && !user.getDuty().equals("CEO")) {
+                        projectInfo.setDuty("项目发起人");
+                    } else if (!user.getUserName().equals(projectInfo.getCreater()) && user.getUserName().equals(map1.get("subtaskHandler"))) {
+                        projectInfo.setDuty("组员");
+                    } else if (user.getDuty().equals("CEO")) {
+                        projectInfo.setDuty("CEO");
+                    } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                        projectInfo.setDuty("经理/组长");
+                    }
+                }
+            } else {
                 if (user.getUserName().equals(projectInfo.getCreater()) && !user.getDuty().equals("CEO")) {
                     projectInfo.setDuty("项目发起人");
-                } else if (!user.getUserName().equals(projectInfo.getCreater()) && user.getUserName().equals(map1.get("subtaskHandler"))) {
-                    projectInfo.setDuty("组员");
-                } else if (user.getDuty().equals("CEO")) {
+                }  else if (user.getDuty().equals("CEO")) {
                     projectInfo.setDuty("CEO");
                 } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
                     projectInfo.setDuty("经理/组长");
+                } else {
+                    projectInfo.setDuty("组员");
                 }
             }
+
             //参与组
             List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
             ProjectTask projectTaskNew = new ProjectTask();
 
             Map<String, Object> map1 = new HashMap<>();
             Double sum = 0.0;
-
             for (Map<String, Object> projectTask : taskList) {
                 if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null) {
                     sum += Double.parseDouble(String.valueOf(projectTask.get("workDate")));

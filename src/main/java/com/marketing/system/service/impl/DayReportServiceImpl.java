@@ -60,9 +60,7 @@ public class DayReportServiceImpl implements DayReportService{
     }
 
     //模糊查询任务日报
-    public Map<String,Object> selectTaskReport(Integer current, Integer pageSize, String Date){
-
-
+    public Map<String,Object> selectTaskReport(Integer current, Integer pageSize, String Date,Integer proId){
 
         String date=null;
         if(Date==null||Date==""){
@@ -77,18 +75,24 @@ public class DayReportServiceImpl implements DayReportService{
         List<Map> taskReports=new ArrayList<Map>();
 
         //得到所有需要展示的项目的id
-        List<Integer> proIds=new ArrayList<Integer>();
-        List<Map> Pros=DayReportDao.selectProReport(1,200,startDate,endDate);
+        List<Integer> ProIds=new ArrayList<Integer>();
+        List<Map> Pros=null;
+        if(proId==null){
+            Pros=DayReportDao.selectProReport(1,200,startDate,endDate);
+        }else{
+            Pros=DayReportDao.selectProReport1(1,200,startDate,endDate,proId);
+        }
+
         for(Map<String,Object> Pro:Pros){
-            Integer proId=(Integer)Pro.get("proId");
-            proIds.add(proId);
+            Integer ProId=(Integer)Pro.get("proId");
+            ProIds.add(ProId);
         }
 
         //得到展示项目中的所有任务
         List<Map> TaskReport=null;
         List<Map> TaskReports=new ArrayList<Map>();
-        for(Integer proId:proIds){
-            TaskReport=DayReportDao.selectTaskReport(1,200,proId);
+        for(Integer ProId:ProIds){
+            TaskReport=DayReportDao.selectTaskReport(1,200,ProId);
             TaskReports.addAll(TaskReport);
         }
 
@@ -125,7 +129,7 @@ public class DayReportServiceImpl implements DayReportService{
     }
 
     //模糊查询子任务日报
-    public Map<String,Object> selectSubtaskReport(Integer current, Integer pageSize, String Date){
+    public Map<String,Object> selectSubtaskReport(Integer current, Integer pageSize, String Date,Integer proId,Integer taskId){
 
         String date=null;
         if(Date==null||Date==""){
@@ -142,24 +146,39 @@ public class DayReportServiceImpl implements DayReportService{
         //得到所有展示项目id
         //得到所有需要展示的项目的id
         List<Integer> proIds=new ArrayList<Integer>();
-        List<Map> Pros=DayReportDao.selectProReport(1,200,startDate,endDate);
+        List<Map> Pros=null;
+        if(proId==null){
+            Pros=DayReportDao.selectProReport(1,200,startDate,endDate);
+        }else{
+            Pros=DayReportDao.selectProReport1(1,200,startDate,endDate,proId);
+        }
+
         for(Map<String,Object> Pro:Pros){
-            Integer proId=(Integer)Pro.get("proId");
-            proIds.add(proId);
+            Integer ProId=(Integer)Pro.get("proId");
+            proIds.add(ProId);
         }
         //得到展示项目中的所有任务
         List<Map> TaskReport=null;
         List<Map> TaskReports=new ArrayList<Map>();
-        for(Integer proId:proIds){
-            TaskReport=DayReportDao.selectTaskReport(1,200,proId);
-            TaskReports.addAll(TaskReport);
+        if(taskId==null){
+            for(Integer ProId:proIds){
+                TaskReport=DayReportDao.selectTaskReport(1,200,ProId);
+                TaskReports.addAll(TaskReport);
+            }
+        }else{
+              TaskReport=DayReportDao.selectTaskReportByTaskId(1,200,taskId);
+              TaskReports.addAll(TaskReport);
         }
+        /*for(Integer ProId:proIds){
+            TaskReport=DayReportDao.selectTaskReport(1,200,ProId);
+            TaskReports.addAll(TaskReport);
+        }*/
         //得到展示任务中的任务id
         List<Map> SubtaskReport=null;
         List<Map> SubtaskReports=new ArrayList<Map>();
         for (Map<String,Object> task:TaskReports){
-            Integer taskId=(Integer)task.get("taskId");
-            SubtaskReport=DayReportDao.selectSubtaskReport(1,200,taskId);
+            Integer TaskId=(Integer)task.get("taskId");
+            SubtaskReport=DayReportDao.selectSubtaskReport(1,200,TaskId);
             SubtaskReports.addAll(SubtaskReport);
         }
 

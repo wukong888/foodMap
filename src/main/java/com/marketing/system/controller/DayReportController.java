@@ -102,18 +102,23 @@ public class DayReportController {
     @ApiOperation(value = "模糊查询任务日报")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = false, dataType = "Integer"),
 
     })
     @RequestMapping(value = "/selectTaskReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectTaskReport(
-            @RequestParam(value = "current") int current,
-            @RequestParam(value = "pageSize") int pageSize) {
+            @RequestParam(value = "current") Integer current,
+            @RequestParam(value = "pageSize") Integer pageSize,
+            @RequestParam(value = "proId" ,required = false) Integer proId) {
 
         ApiResult<List<Map>> result =null;
-        try {
+        Map<String,Object> Report=null;
         String Date=null;
-        Map<String,Object> Report=DayReportService.selectTaskReport(current,pageSize,Date);
+            Report=DayReportService.selectTaskReport(current,pageSize,Date,proId);
+        try {
+
+
         List<Map> TaskReport=(List<Map>)Report.get("taskReports");
         Integer sum=(Integer)Report.get("taskReportsNum");
 
@@ -149,19 +154,23 @@ public class DayReportController {
     @ApiOperation(value = "模糊查询子任务日报")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目Id", required = false, dataType = "Integer" ),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务Id", required = false, dataType = "Integer")
 
     })
     @RequestMapping(value = "/selectSubtaskReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectSubtaskReport(
             @RequestParam(value = "current") int current,
-            @RequestParam(value = "pageSize") int pageSize) {
+            @RequestParam(value = "pageSize") int pageSize,
+            @RequestParam(value = "proId",required = false) Integer proId,
+            @RequestParam(value = "taskId",required = false) Integer taskId) {
 
         ApiResult<List<Map>> result =null;
 
         try {
         String Date=null;
-        Map<String,Object> Report=DayReportService.selectSubtaskReport(current,pageSize,Date);
+        Map<String,Object> Report=DayReportService.selectSubtaskReport(current,pageSize,Date,proId,taskId);
         List<Map> SubtaskReport=(List<Map>)Report.get("subtaskReports");
         Integer sum=(Integer)Report.get("subtaskReportsNum");
 
@@ -261,48 +270,14 @@ public class DayReportController {
 
         try {
        if(type==1){
-       /*   // String proFile="static//"+Date+" ProjectReport.xlsx";
-           String proFile="http://192.168.3.26:5826//static//"+Date+" ProjectReport.xlsx";
-           File file=new File(proFile);
-           response.setContentType("application/force-download");// 设置强制下载不打开
-           response.addHeader("Content-Disposition",
-                   "attachment;fileName="+Date+" ProjectReport.xlsx");// 设置文件名
 
-           try {
-                       OutputStream out = response.getOutputStream();
-                       ToolUtil.downloadFile(file, out);
-                   } catch (Exception e) {
-                       e.printStackTrace();
-                   }*/
        return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" ProjectReport.xls",null);
 
        }else if(type==2){
-          /* String taskFile="static//"+Date+" TaskReport.xlsx";
-           File file=new File(taskFile);
-           response.setContentType("application/force-download");// 设置强制下载不打开
-           response.addHeader("Content-Disposition",
-                   "attachment;fileName="+Date+" TaskReport.xlsx");// 设置文件名
 
-           try {
-                   OutputStream out = response.getOutputStream();
-                   ToolUtil.downloadFile(file, out);
-               } catch (Exception e) {
-                   e.printStackTrace();
-               }
-*/
            return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" TaskReport.xls",null);
       }else if(type==3){
-         /* // String subtaskFile="static//"+Date+" SubtaskReport.xlsx";
-          String subtaskFile="E://工作空间projectManage//static//"+Date+" SubtaskReport.xlsx";
-           File file=new File(subtaskFile);
-           response.setContentType("application/force-download");// 设置强制下载不打开
-           response.addHeader("Content-Disposition","attachment;fileName="+Date+" SubtaskReport.xlsx");// 设置文件名
-           try {
-               OutputStream out = response.getOutputStream();
-               ToolUtil.downloadFile(file,out);
-           } catch (Exception e) {
-               e.printStackTrace();
-           }*/
+
            return new ApiResult<String>(Constant.SUCCEED_CODE_VALUE,"","192.168.3.26:5826/"+Date+" SubtaskReport.xls",null);
 
        }

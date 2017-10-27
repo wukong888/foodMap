@@ -46,15 +46,6 @@
     createrSquadId,betweenDays,finishDate,onlineDate,rejectDate,cancelDate,againState,userId
   </sql>
 
-    <!-- 基本的sql查询条件公共引用 -->
-    <sql id="searchBy">
-        <trim prefix="where" prefixOverrides="and|or">
-            <!--<if test="creater != null and creater != '' ">-->
-            creater = #{creater}
-            <!--</if>-->
-        </trim>
-    </sql>
-
     <sql id="searchByTask">
         <trim prefix="where" prefixOverrides="and|or">
             info.creater = #{creater}
@@ -75,43 +66,116 @@
     </select>
 
     <select id="getMyApplyProject" resultType="java.lang.Integer" parameterType="java.lang.String">
-  select
-  COUNT (creater)
-  from project_info
-  where creater = #{creater} AND proState IN (1,2,3,7)
-</select>
+      select
+      COUNT (creater)
+      from project_info
+      where creater = #{creater} AND proState IN (1,2,3,7)
+    </select>
+
+    <!-- 首页：开发中的项目数量 （CEO）-->
+    <select id="getDevelopProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '1' AND proState = '2'
+    </select>
+
+    <!-- 首页：立项待审批项目数量 （CEO）-->
+    <select id="getLxProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '1' AND proState = '1'
+    </select>
+
+    <!-- 首页：上线待审批项目数量 （CEO）-->
+    <select id="getSxProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '1' AND proState = '3'
+    </select>
+
+
+    <!-- 首页：开发中的项目数量 （CEO）活动-->
+    <select id="getHdDevelopProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '2' AND proState = '2'
+    </select>
+
+    <!-- 首页：立项待审批项目数量 （CEO）活动-->
+    <select id="getHdLxProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '2' AND proState = '1'
+    </select>
+
+    <!-- 首页：上线待审批项目数量 （CEO）活动-->
+    <select id="getHdSxProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '2' AND proState = '3'
+    </select>
 
     <select id="getUpApplyProject" resultType="java.lang.Integer" parameterType="java.lang.String">
-    select
-    COUNT (id)
-    from project_info
-    WHERE  proState = #{prostate}
-  </select>
+        select
+        COUNT (id)
+        from project_info
+        WHERE  proState = #{prostate}
+    </select>
 
     <select id="getProjectInfoByProId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from project_info
-        WHERE  proId = #{proId}
+        WHERE proId = #{proId}
     </select>
+
+    <!-- 基本的sql查询条件公共引用 -->
+    <sql id="searchBy">
+        <trim prefix="where" prefixOverrides="and|or">
+            <!--<if test="creater != null and creater != '' ">-->
+            creater = #{creater}
+            <!--</if>-->
+        </trim>
+    </sql>
     <select id="getProjectInfoList" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         id,proId,proName,planSDate,creater,proProgress,proState
-        from project_info
-        <include refid="searchBy"/>
+        from project_info WHERE proState = '2' AND creater = #{creater}
         ORDER BY
         planSDate
         DESC
-
     </select>
+
     <select id="getProjectInfoListNull" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select
-    id,proId,proName,planSDate,creater,proProgress,proState
-    from project_info
-    ORDER BY
-    planSDate
-    DESC
+        select
+        id,proId,proName,planSDate,creater,proProgress,proState
+        from project_info WHERE proState = '2'
+        ORDER BY
+        planSDate
+        DESC
   </select>
+
+    <!-- 项目概况 -->
+    <select id="getProjectInfoListNew" resultMap="BaseResultMap" >
+        select
+        TOP ${pageSize}
+        <include refid="Base_Column_List"/>
+        from project_info
+        where id
+        IN(SELECT TOP (${current}*${pageSize}) id FROM project_info)
+        AND proState = '2'
+        AND creater = #{creater}
+        ORDER BY
+        planSDate
+        ASC
+    </select>
+
+    <select id="getProjectInfoListNullNew" resultMap="BaseResultMap" >
+        select
+        TOP ${pageSize}
+        <include refid="Base_Column_List"/>
+        from project_info
+        where id
+        IN (select TOP (${current}*${pageSize}) id from project_info)
+        AND proState = '2'
+        ORDER BY
+        planSDate
+        ASC
+    </select>
 
     <select id="getProjectTaskList" resultMap="taskHashMap" parameterType="java.lang.String">
         select
@@ -121,6 +185,7 @@
         eDate
         DESC
     </select>
+
     <select id="getProjectTaskListNull" resultMap="taskHashMap" parameterType="java.lang.String">
         select
         task.taskId,task.proId,task.taskName,task.eDate,task.handler,task.taskProgress,task.taskState
@@ -206,16 +271,13 @@
     </select>
 
     <select id="getProjectInfoByZuzhang" resultMap="BaseResultMap">
-
         select
         <include refid="Base_Column_List"/>
-
         from project_info
         where proState in (1,2,3,7)
         <if test="createrSquadId != null and createrSquadId != '' ">
             AND createrSquadId = #{createrSquadId}
         </if>
-
         <if test="creater != null and creater != '' ">
             AND creater = #{creater}
         </if>
@@ -228,7 +290,7 @@
         <if test="proState != null and proState != '' ">
             AND proState = #{proState}
         </if>
-         AND (
+        AND (
         <foreach item="item" index="index" collection="Idsmember"
                  open=" creater IN (" separator="," close=")">
             #{item}
@@ -240,12 +302,41 @@
                  open=" subtaskHandler IN (" separator="," close=")">
             #{item}
         </foreach>)))
-
         ORDER BY
         case proState
         when 7 then 1
         end
         DESC,createDate DESC
+    </select>
+
+    <!-- 首页获取项目概况 -组长/经理 -->
+    <select id="getZuZhangProjectInfos" resultMap="BaseResultMap">
+        select
+        TOP ${pageSize}
+        <include refid="Base_Column_List"/>
+        from project_info
+        where id
+        IN (select TOP (${current}*${pageSize}) id from project_info)
+        AND proState = '2'
+
+        <if test="creater != null and creater != '' ">
+            AND creater = #{creater}
+        </if>
+
+        AND (
+        <foreach item="item" index="index" collection="Idsmember"
+                 open=" creater IN (" separator="," close=")">
+            #{item}
+        </foreach>
+        or proId in (
+        SELECT proId from project_task where handler = #{handler} or taskId IN
+        (select taskId from project_subtask where
+        <foreach item="item" index="index" collection="Idsmember"
+                 open=" subtaskHandler IN (" separator="," close=")">
+            #{item}
+        </foreach>)))
+        ORDER BY
+        planSDate ASC
     </select>
 
     <select id="getMyProjectInfoList" resultMap="BaseResultMap">

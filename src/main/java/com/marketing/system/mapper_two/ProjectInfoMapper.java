@@ -28,6 +28,9 @@ public interface ProjectInfoMapper {
     List<ProjectInfo> getProjectInfoList(String name);
     List<ProjectInfo> getProjectInfoListNull();
 
+    List<ProjectInfo> getProjectInfoListNew(Map<String,Object> map);
+    List<ProjectInfo> getProjectInfoListNullNew(Map<String,Object> map);
+
     List<Map<String, Object>> getProjectTaskList(String name);
     List<Map<String, Object>> getProjectTaskListNull();
 
@@ -61,4 +64,30 @@ public interface ProjectInfoMapper {
     List<ProjectInfo> getProjectInfoByZuzhang(Map<String,Object> map);
 
     ProjectInfo getProjectInfoByProId(Integer proId);
+
+    Integer getDevelopProjects(String creater);
+
+    Integer getDevelopProjectsAll();
+
+    Integer getLxProjects(String creater);
+
+    Integer getLxProjectsAll();
+
+    Integer getSxProjects(String creater);
+
+    Integer getSxProjectsAll();
+
+    Integer getHdDevelopProjects(String creater);
+
+    Integer getHdDevelopProjectsAll();
+
+    Integer getHdLxProjects(String creater);
+
+    Integer getHdLxProjectsAll();
+
+    Integer getHdSxProjects(String creater);
+
+    Integer getHdSxProjectsAll();
+
+    List<ProjectInfo> getZuZhangProjectInfos(Map<String,Object> map);
 }

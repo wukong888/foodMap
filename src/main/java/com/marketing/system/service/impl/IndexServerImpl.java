@@ -145,12 +145,14 @@ public class IndexServerImpl implements IndexService {
     }
 
     @Override
-    public List<ProjectInfo> getProjectInfoList(String creater) throws ParseException {
+    public List<ProjectInfo> getProjectInfoList(Map<String,Object> map) throws ParseException {
         List<ProjectInfo> infoList = new ArrayList<>();
-        if (creater != "") {
-            infoList = projectInfoMapper.getProjectInfoList(creater);
+        if (String.valueOf(map.get("creater")) != "") {
+            //查看自己的项目
+            infoList = projectInfoMapper.getProjectInfoListNew(map);
         } else {
-            infoList = projectInfoMapper.getProjectInfoListNull();
+            //ceo
+            infoList = projectInfoMapper.getProjectInfoListNullNew(map);
         }
 
         ProjectInfo projectInfo = new ProjectInfo();
@@ -163,7 +165,7 @@ public class IndexServerImpl implements IndexService {
             projectInfo.setBetweenDays(betweenDays);
 
         }
-        infoList = infoList.stream().filter(t -> Integer.valueOf(t.getProstate()) == 2).collect(Collectors.toList());
+        //infoList = infoList.stream().filter(t -> Integer.valueOf(t.getProstate()) == 2).collect(Collectors.toList());
 
         infoList = infoList.stream().filter(t -> t.getBetweenDays() <= 6).collect(Collectors.toList());
 
@@ -239,5 +241,97 @@ public class IndexServerImpl implements IndexService {
         infoList = infoList.stream().filter(t -> Integer.valueOf(String.valueOf(t.getBetweenHours())) <= 24).collect(Collectors.toList());
 
         return infoList;
+    }
+
+    @Override
+    public Integer getDevelopProjects(String creater) {
+
+        Integer kf = 0;
+        /*if (creater != "") {
+            kf = projectInfoMapper.getDevelopProjects(creater);
+        }else {
+            kf = projectInfoMapper.getDevelopProjectsAll();
+        }*/
+        kf = projectInfoMapper.getDevelopProjectsAll();
+
+        return kf;
+    }
+
+    @Override
+    public Integer getLxProjects(String creater) {
+
+        Integer lx = 0;
+        /*if (creater != "") {
+            lx = projectInfoMapper.getLxProjects(creater);
+        }else {
+            lx = projectInfoMapper.getLxProjectsAll();
+        }*/
+        lx = projectInfoMapper.getLxProjectsAll();
+
+        return lx;
+    }
+
+    @Override
+    public Integer getSxProjects(String creater) {
+
+        Integer sx = 0;
+        /*if (creater != "") {
+            sx = projectInfoMapper.getSxProjects(creater);
+        }else {
+            sx = projectInfoMapper.getSxProjectsAll();
+        }*/
+        sx = projectInfoMapper.getSxProjectsAll();
+
+        return sx;
+    }
+
+
+    @Override
+    public Integer getHdDevelopProjects(String creater) {
+
+        Integer kf = 0;
+        /*if (creater != "") {
+            kf = projectInfoMapper.getHdDevelopProjects(creater);
+        }else {
+            kf = projectInfoMapper.getHdDevelopProjectsAll();
+        }*/
+        kf = projectInfoMapper.getHdDevelopProjectsAll();
+
+        return kf;
+    }
+
+    @Override
+    public Integer getHdLxProjects(String creater) {
+
+        Integer lx = 0;
+        /*if (creater != "") {
+            lx = projectInfoMapper.getHdLxProjects(creater);
+        }else {
+            lx = projectInfoMapper.getHdLxProjectsAll();
+        }*/
+        lx = projectInfoMapper.getHdLxProjectsAll();
+        return lx;
+    }
+
+    @Override
+    public Integer getHdSxProjects(String creater) {
+
+        Integer sx = 0;
+        /*if (creater != "") {
+            sx = projectInfoMapper.getHdSxProjects(creater);
+        }else {
+            sx = projectInfoMapper.getHdSxProjectsAll();
+        }*/
+        sx = projectInfoMapper.getHdSxProjectsAll();
+
+        return sx;
+    }
+
+    @Override
+    public List<ProjectInfo> getZuZhangProjectInfos(Map<String, Object> map) throws ParseException {
+
+        List<ProjectInfo> list = projectInfoMapper.getZuZhangProjectInfos(map);
+
+        return list;
     }
 }

@@ -160,35 +160,7 @@ public class IndexController {
             } else {
                 creater = user.getUserName();
             }
-            /**
-             * 项目推送-产品
-             */
-            //1、开发中的项目
-            Integer kf_cp = indexService.getDevelopProjects(creater);
-            map.put("kf_cp", kf_cp);
 
-            //2、立项待审批L
-            Integer lx_cp = indexService.getLxProjects(creater);
-            map.put("lx_cp", lx_cp);
-
-            //3、上线待审批
-            Integer sx_cp = indexService.getSxProjects(creater);
-            map.put("sx_cp", sx_cp);
-
-            /**
-             * 项目推送-活动
-             */
-            //1、开发中的项目
-            Integer kf_hd = indexService.getHdDevelopProjects(creater);
-            map.put("kf_hd",kf_hd);
-
-            //2、立项待审批L
-            Integer lx_hd = indexService.getHdLxProjects(creater);
-            map.put("lx_hd",lx_hd);
-
-            //3、上线待审批
-            Integer sx_hd = indexService.getHdSxProjects(creater);
-            map.put("sx_hd",sx_hd);
 
             /**
              * 项目概况
@@ -200,6 +172,8 @@ public class IndexController {
             map1.put("pageSize",1000);
 
             List<ProjectInfo> infoList = new ArrayList<>();
+            Integer kf_cp_zz = 0;
+            Integer kf_hd_zz = 0;
             if (creater != "" && !dutyName.contains("组长") && !dutyName.contains("经理")) {
                 //组员 看自己的项目概况
                 infoList = indexService.getProjectInfoList(map1);
@@ -235,10 +209,58 @@ public class IndexController {
                 //组长/经理 查看自己和其组员涉及项目
                 infoList = indexService.getZuZhangProjectInfos(objectMap);
 
+                List<ProjectInfo> infoListNumCp = new ArrayList<>();
+                List<ProjectInfo> infoListNumHd = new ArrayList<>();
+
+                //项目类型(1:产品，2：活动)
+                infoListNumCp = infoList.stream().filter(t -> Integer.valueOf(t.getProtype()) == 1).collect(Collectors.toList());
+                kf_cp_zz= infoListNumCp.size();
+
+                infoListNumHd = infoList.stream().filter(t -> Integer.valueOf(t.getProtype()) == 2).collect(Collectors.toList());
+                kf_hd_zz= infoListNumHd.size();
             } else {
                 //ceo项目概况
                 infoList = indexService.getProjectInfoList(map1);
             }
+
+            /**
+             * 项目推送-产品
+             */
+            //1、开发中的项目
+            Integer kf_cp = indexService.getDevelopProjects(creater);
+            if (dutyName.contains("组长") || dutyName.contains("经理")) {
+                map.put("kf_cp", kf_cp_zz);
+            } else {
+                map.put("kf_cp", kf_cp);
+            }
+
+            //2、立项待审批
+            Integer lx_cp = indexService.getLxProjects(creater);
+            map.put("lx_cp", lx_cp);
+
+            //3、上线待审批
+            Integer sx_cp = indexService.getSxProjects(creater);
+            map.put("sx_cp", sx_cp);
+
+            /**
+             * 项目推送-活动
+             */
+            //1、开发中的项目
+            Integer kf_hd = indexService.getHdDevelopProjects(creater);
+            if (dutyName.contains("组长") || dutyName.contains("经理")) {
+                map.put("kf_hd",kf_hd_zz);
+            } else {
+                map.put("kf_hd",kf_hd);
+            }
+
+
+            //2、立项待审批L
+            Integer lx_hd = indexService.getHdLxProjects(creater);
+            map.put("lx_hd",lx_hd);
+
+            //3、上线待审批
+            Integer sx_hd = indexService.getHdSxProjects(creater);
+            map.put("sx_hd",sx_hd);
 
             ProjectInfo projectInfo = new ProjectInfo();
             //循环计算距逾期时间天数

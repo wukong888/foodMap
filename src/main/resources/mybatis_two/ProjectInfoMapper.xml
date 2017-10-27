@@ -77,11 +77,21 @@
         SELECT COUNT(id) from project_info
         WHERE proType = '1' AND proState = '2'
     </select>
+    <!-- 首页：开发中的项目数量 （组员）-->
+    <select id="getDevelopProjects" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '1' AND proState = '2' AND creater = #{creater}
+    </select>
 
     <!-- 首页：立项待审批项目数量 （CEO）-->
     <select id="getLxProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT COUNT(id) from project_info
         WHERE proType = '1' AND proState = '1'
+    </select>
+    <!-- 首页：立项待审批项目数量 （组员）-->
+    <select id="getLxProjects" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '1' AND proState = '1' AND creater = #{creater}
     </select>
 
     <!-- 首页：上线待审批项目数量 （CEO）-->
@@ -89,12 +99,21 @@
         SELECT COUNT(id) from project_info
         WHERE proType = '1' AND proState = '3'
     </select>
-
+    <!-- 首页：上线待审批项目数量 （组员）-->
+    <select id="getSxProjects" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '1' AND proState = '3' AND creater = #{creater}
+    </select>
 
     <!-- 首页：开发中的项目数量 （CEO）活动-->
     <select id="getHdDevelopProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT COUNT(id) from project_info
         WHERE proType = '2' AND proState = '2'
+    </select>
+    <!-- 首页：开发中的项目数量 （组员）活动-->
+    <select id="getHdDevelopProjects" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '2' AND proState = '2' AND creater = #{creater}
     </select>
 
     <!-- 首页：立项待审批项目数量 （CEO）活动-->
@@ -102,11 +121,21 @@
         SELECT COUNT(id) from project_info
         WHERE proType = '2' AND proState = '1'
     </select>
+    <!-- 首页：立项待审批项目数量 （组员）活动-->
+    <select id="getHdLxProjects" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '2' AND proState = '1' AND creater = #{creater}
+    </select>
 
     <!-- 首页：上线待审批项目数量 （CEO）活动-->
     <select id="getHdSxProjectsAll" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT COUNT(id) from project_info
         WHERE proType = '2' AND proState = '3'
+    </select>
+    <!-- 首页：上线待审批项目数量 （组员）活动-->
+    <select id="getHdSxProjects" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proType = '2' AND proState = '3' AND creater = #{creater}
     </select>
 
     <select id="getUpApplyProject" resultType="java.lang.Integer" parameterType="java.lang.String">

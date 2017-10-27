@@ -247,12 +247,14 @@ public class IndexServerImpl implements IndexService {
     public Integer getDevelopProjects(String creater) {
 
         Integer kf = 0;
-        /*if (creater != "") {
+        if (creater != "" ) {
+            //组员
             kf = projectInfoMapper.getDevelopProjects(creater);
         }else {
+            //ceo
             kf = projectInfoMapper.getDevelopProjectsAll();
-        }*/
-        kf = projectInfoMapper.getDevelopProjectsAll();
+        }
+        //kf = projectInfoMapper.getDevelopProjectsAll();
 
         return kf;
     }
@@ -261,12 +263,12 @@ public class IndexServerImpl implements IndexService {
     public Integer getLxProjects(String creater) {
 
         Integer lx = 0;
-        /*if (creater != "") {
+        if (creater != "") {
             lx = projectInfoMapper.getLxProjects(creater);
         }else {
             lx = projectInfoMapper.getLxProjectsAll();
-        }*/
-        lx = projectInfoMapper.getLxProjectsAll();
+        }
+        //lx = projectInfoMapper.getLxProjectsAll();
 
         return lx;
     }
@@ -275,12 +277,12 @@ public class IndexServerImpl implements IndexService {
     public Integer getSxProjects(String creater) {
 
         Integer sx = 0;
-        /*if (creater != "") {
+        if (creater != "") {
             sx = projectInfoMapper.getSxProjects(creater);
         }else {
             sx = projectInfoMapper.getSxProjectsAll();
-        }*/
-        sx = projectInfoMapper.getSxProjectsAll();
+        }
+        //sx = projectInfoMapper.getSxProjectsAll();
 
         return sx;
     }
@@ -290,12 +292,12 @@ public class IndexServerImpl implements IndexService {
     public Integer getHdDevelopProjects(String creater) {
 
         Integer kf = 0;
-        /*if (creater != "") {
+        if (creater != "") {
             kf = projectInfoMapper.getHdDevelopProjects(creater);
         }else {
             kf = projectInfoMapper.getHdDevelopProjectsAll();
-        }*/
-        kf = projectInfoMapper.getHdDevelopProjectsAll();
+        }
+        //kf = projectInfoMapper.getHdDevelopProjectsAll();
 
         return kf;
     }
@@ -304,12 +306,12 @@ public class IndexServerImpl implements IndexService {
     public Integer getHdLxProjects(String creater) {
 
         Integer lx = 0;
-        /*if (creater != "") {
+        if (creater != "") {
             lx = projectInfoMapper.getHdLxProjects(creater);
         }else {
             lx = projectInfoMapper.getHdLxProjectsAll();
-        }*/
-        lx = projectInfoMapper.getHdLxProjectsAll();
+        }
+        //lx = projectInfoMapper.getHdLxProjectsAll();
         return lx;
     }
 
@@ -317,12 +319,12 @@ public class IndexServerImpl implements IndexService {
     public Integer getHdSxProjects(String creater) {
 
         Integer sx = 0;
-        /*if (creater != "") {
+        if (creater != "") {
             sx = projectInfoMapper.getHdSxProjects(creater);
         }else {
             sx = projectInfoMapper.getHdSxProjectsAll();
-        }*/
-        sx = projectInfoMapper.getHdSxProjectsAll();
+        }
+        //sx = projectInfoMapper.getHdSxProjectsAll();
 
         return sx;
     }

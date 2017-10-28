@@ -103,14 +103,14 @@ public class DayReportController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
 
     })
     @RequestMapping(value = "/selectTaskReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectTaskReport(
             @RequestParam(value = "current") Integer current,
             @RequestParam(value = "pageSize") Integer pageSize,
-            @RequestParam(value = "proId" ,required = false) Integer proId) {
+            @RequestParam(value = "proId") Integer proId) {
 
         ApiResult<List<Map>> result =null;
         Map<String,Object> Report=null;
@@ -155,16 +155,16 @@ public class DayReportController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目Id", required = false, dataType = "Integer" ),
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务Id", required = false, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目Id", required = true, dataType = "Integer" ),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务Id", required = true, dataType = "Integer")
 
     })
     @RequestMapping(value = "/selectSubtaskReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectSubtaskReport(
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize,
-            @RequestParam(value = "proId",required = false) Integer proId,
-            @RequestParam(value = "taskId",required = false) Integer taskId) {
+            @RequestParam(value = "proId") Integer proId,
+            @RequestParam(value = "taskId") Integer taskId) {
 
         ApiResult<List<Map>> result =null;
 
@@ -287,5 +287,46 @@ public class DayReportController {
         }
         return null;
     }
+
+    /**
+     * 任务初始化下拉菜单
+     *
+     * @return
+     */
+    @ApiOperation(value = "任务初始化下拉菜单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "Date", value = "日期（如：2010-01-01）", required = true, dataType = "String")
+    })
+    @RequestMapping(value = "/initTask", method = RequestMethod.POST)
+    public ApiResult<List<Map>> initTask(
+            @RequestParam(value = "Date") String Date
+    ){
+        ApiResult<List<Map>> result =null;
+        List<Map> tasks=DayReportService.initTask(Date);
+
+        return new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,"",tasks,null);
+    }
+
+
+    /**
+     * 子任务初始化下拉菜单
+     *
+     * @return
+     */
+    @ApiOperation(value = "子任务初始化下拉菜单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer")
+    })
+    @RequestMapping(value = "/initSubtask", method = RequestMethod.POST)
+    public ApiResult<List<Map>> initSubtask(
+            @RequestParam(value = "proId") Integer proId
+    ){
+        ApiResult<List<Map>> result =null;
+        List<Map> subtasks=DayReportService.initSubtask(proId);
+
+        return new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE,"",subtasks,null);
+    }
+
+
 
 }

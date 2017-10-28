@@ -412,4 +412,18 @@ public class DayReportServiceImpl implements DayReportService{
 
         return Report;
     }
+
+    //任务初始化下拉菜单
+    public List<Map> initTask( String date){
+        String startDate=date+" 00:00:00";
+        String endDate=date+" 23:59:59";
+        List<Map> tasks=DayReportDao.initTask(startDate,endDate);
+        return tasks;
+    }
+
+    //子任务初始化下拉菜单
+    public List<Map> initSubtask( Integer proId){
+        List<Map> subtasks=DayReportDao.initSubtask(proId);
+        return subtasks;
+    }
 }

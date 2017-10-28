@@ -76,4 +76,14 @@ public interface DayReportMapper {
     //根据部门Id查询部门
     @Select("SELECT squad FROM projectManage.dbo.[group] where squadId =#{squadId} ")
     String selectSquadById(@Param("squadId") String squadId);
+
+    //任务初始化
+    @Select("select proName,proId from project_info where proState=1 or proState=2 or proState=3" +
+            " or (proState=4 and finishDate >=#{startDate} and finishDate <= #{endDate}) or (proState=5 and rejectDate  >=#{startDate} and rejectDate <= #{endDate})" +
+            " or (proState=6 and cancelDate  >=#{startDate} and cancelDate <= #{endDate})")
+    List<Map> initTask(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
+    //子任务初始化
+    @Select("select taskName,taskId from project_task where proId=#{proId}")
+    List<Map> initSubtask(@Param("proId") Integer proId);
 }

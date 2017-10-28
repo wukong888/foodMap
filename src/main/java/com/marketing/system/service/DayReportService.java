@@ -22,4 +22,10 @@ public interface DayReportService {
 
     //子任务日报的定时导出
     Map<String,Object> exportSubtaskExcel(String date);
+
+    //初始化任务下拉表
+    List<Map> initTask(String Date);
+
+    //初始化子任务下拉表
+    List<Map> initSubtask(Integer proId);
 }

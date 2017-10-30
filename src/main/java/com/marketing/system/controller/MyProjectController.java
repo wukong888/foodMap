@@ -803,6 +803,17 @@ public class MyProjectController {
             Map<String, Object> map1 = new HashMap<>();
             Double sum = 0.0;
             String menuLeafIds = "";
+            String department2 = user.getDepartment();
+            department2 = department2.substring(0, 2);
+            //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
+            Department did = myProjectService.getDepartmentIdByMent(department2);
+            String departmentid = did.getDepartmentid();
+
+            //根据部门id查找小组id
+            List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+
+            //小组
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
             for (Map<String, Object> projectTask : taskList) {
                 if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null) {
                     sum += Double.parseDouble(String.valueOf(projectTask.get("workDate")));
@@ -849,10 +860,11 @@ public class MyProjectController {
 
                 mapT.put("menuLeafIds", Ids);
             }
+
             //基本信息+任务信息Basic Information
             ProjectTask projectTask = myProjectService.getProjectTaskByTaskId(taskId);
 
-            if (menuLeafIds.contains(user.getUserName())) {
+            if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && menuLeafIdsmember.contains(projectTask.getSquadId())) {
                 projectTask.setDuty("经理/组长");
             } else {
                 projectTask.setDuty("组员");

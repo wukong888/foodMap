@@ -1306,7 +1306,14 @@ public class MyProjectController {
                 ProjectInfo projectInfo = new ProjectInfo();
                 projectInfo.setId(Integer.valueOf(id));
                 projectInfo.setProid(Integer.valueOf(proId));
-                projectInfo.setProprogress(progress);//进度
+                if (progress == "" || progress == null) {
+                    projectInfo.setProprogress("0");//进度
+                } else if (Integer.valueOf(type) == 5) {//5：预验收
+                    projectInfo.setProprogress("100");//进度
+                } else {
+                    projectInfo.setProprogress(progress);//进度
+                }
+
                 projectInfo.setCreatedate(str);
 
                 //有更新进度则同步项目更新进度

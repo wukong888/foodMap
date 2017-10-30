@@ -427,18 +427,36 @@ public class MyProjectController {
 
             SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
+            String department = user.getDepartment();
+            department = department.substring(0, 2);
+            //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
+            Department did = myProjectService.getDepartmentIdByMent(department);
+            String departmentid = did.getDepartmentid();
+
+            //根据部门id查找小组id
+            List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+
+            Map<String, Object> mapTid = new HashMap<>();
+
+            mapTid = ToolUtil.getmapList(mapList, "squadId");
+            //组长/经理其小组成员
+            List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "subtaskHandler"));
+            //是否有子任务
             List<Map<String, Object>> projectSubtaskList = applyService.selectProSubtaskByProId(proId);
             if (projectSubtaskList.size() > 0) {
                 for (Map map1 : projectSubtaskList) {
-
                     if (user.getUserName().equals(projectInfo.getCreater()) && !user.getDuty().equals("CEO")) {
                         projectInfo.setDuty("项目发起人");
                     } else if (!user.getUserName().equals(projectInfo.getCreater()) && user.getUserName().equals(map1.get("subtaskHandler"))) {
                         projectInfo.setDuty("组员");
                     } else if (user.getDuty().equals("CEO")) {
                         projectInfo.setDuty("CEO");
-                    } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                    } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && menuLeafIdsmember.contains(projectInfo.getCreater())) {
                         projectInfo.setDuty("经理/组长");
+                    } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !menuLeafIdsmember.contains(projectInfo.getCreater())) {
+                        projectInfo.setDuty("组员");
                     }
                 }
             } else {
@@ -446,8 +464,10 @@ public class MyProjectController {
                     projectInfo.setDuty("项目发起人");
                 }  else if (user.getDuty().equals("CEO")) {
                     projectInfo.setDuty("CEO");
-                } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理")) {
+                } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理") && menuLeafIdsmember.contains(projectInfo.getCreater())) {
                     projectInfo.setDuty("经理/组长");
+                } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !menuLeafIdsmember.contains(projectInfo.getCreater())) {
+                    projectInfo.setDuty("组员");
                 } else {
                     projectInfo.setDuty("组员");
                 }
@@ -474,13 +494,13 @@ public class MyProjectController {
                 String departmentId = upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
                 projectTask.put("departmentId", departmentId);//根据squadid取对应部门Id
 
-                String department = upProjectService.selectDepartmentByDId(departmentId);
+                String department2 = upProjectService.selectDepartmentByDId(departmentId);
 
-                if (department.length() > 1) {
-                    department = department.substring(0, 2);
+                if (department2.length() > 1) {
+                    department2 = department2.substring(0, 2);
                 }
 
-                map1.put("department", department);
+                map1.put("department", department2);
 
                 //对应组所有人信息
                 List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);

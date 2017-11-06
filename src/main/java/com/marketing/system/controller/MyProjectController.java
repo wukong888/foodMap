@@ -464,7 +464,7 @@ public class MyProjectController {
                     projectInfo.setDuty("项目发起人");
                 }  else if (user.getDuty().equals("CEO")) {
                     projectInfo.setDuty("CEO");
-                } else if (user.getDuty().contains("组长") || user.getDuty().contains("经理") && menuLeafIdsmember.contains(projectInfo.getCreater())) {
+                } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && menuLeafIdsmember.contains(projectInfo.getCreater())) {
                     projectInfo.setDuty("经理/组长");
                 } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !menuLeafIdsmember.contains(projectInfo.getCreater())) {
                     projectInfo.setDuty("组员");

@@ -16,9 +16,9 @@ public interface DayReportMapper {
     List<Map> selectProReport(@Param("current") Integer current, @Param("pageSize") Integer pageSize, @Param("startDate") String startDate, @Param("endDate") String endDate);
 
     //查询项目日报记录
-    @Select("select proName,creater,proState,proProgress,proDevelopLogId,proId,rejectDate,cancelDate from project_info where proId = #{proId} and proState=1 or proState=2 or proState=3 " +
+    @Select("select proName,creater,proState,proProgress,proDevelopLogId,proId,rejectDate,cancelDate from project_info where proId = #{proId} and (proState=1 or proState=2 or proState=3 " +
             " or (proState=4 and finishDate >=#{startDate} and finishDate <= #{endDate}) or (proState=5 and rejectDate  >=#{startDate} and rejectDate <= #{endDate}) " +
-            " or (proState=6 and cancelDate  >=#{startDate} and cancelDate <= #{endDate})  order by createDate asc OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
+            " or (proState=6 and cancelDate  >=#{startDate} and cancelDate <= #{endDate}))  order by createDate asc OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
     List<Map> selectProReport1(@Param("current") Integer current, @Param("pageSize") Integer pageSize, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("proId") Integer proId);
 
     //查询全部项目日报记录-不分页

@@ -132,7 +132,7 @@ public class DayReportController {
             String msg = "";
             if (sum == 0) {
                 msg = "未查询到相关数据！";
-                result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, new ArrayList<>(), null);
+                result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, new ArrayList<>(), rdPage);
             } else {
                 if (current > rdPage.getPages()) {
                     msg = "已经超过当前所有页数！";
@@ -190,7 +190,7 @@ public class DayReportController {
             String msg = "";
             if (sum == 0) {
                 msg = "未查询到相关数据！";
-                result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, new ArrayList<>(), null);
+                result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, new ArrayList<>(), rdPage);
             } else {
                 if (current > rdPage.getPages()) {
                     msg = "已经超过当前所有页数！";

@@ -1114,7 +1114,12 @@ public class MyProjectController {
                 //projectSubtask.setIdd(idd);//编号
                 projectSubtask.setSubtaskId(Integer.valueOf(subtaskId));
                 projectSubtask.setWorkDate(workDate);//预计工期
-                projectSubtask.setSubtaskprogress(subtaskProgress);//进度
+
+                if (subtaskProgress == "" || subtaskProgress == null) {
+                    projectSubtask.setSubtaskprogress("0");//进度
+                } else {
+                    projectSubtask.setSubtaskprogress(subtaskProgress);//进度
+                }
                 projectSubtask.setSubtaskstate(subtaskState);//子任务状态 值待定*******************************************
                 projectSubtask.setCreateDate(str);
 

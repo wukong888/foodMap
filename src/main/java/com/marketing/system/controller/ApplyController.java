@@ -371,7 +371,7 @@ public class ApplyController {
 
                     Files.copy(mfile.getInputStream(), Paths.get("static", newFileName));
 
-                    String pathFile = "http://192.168.3.26:5826/" + newFileName;
+                    String pathFile = "http://report.wsloan.com:8888/projectManage/" + newFileName;
                     session.setAttribute("uploadPath", pathFile);
 
                     Map<String,String> objectMap = new HashMap<>();

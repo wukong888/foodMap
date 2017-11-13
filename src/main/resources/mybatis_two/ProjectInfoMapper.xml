@@ -65,6 +65,20 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
+    <select id="getProjectInfoByTaskId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from project_info
+        where where proId = (SELECT  proId from project_task where taskId = #{taskId})
+    </select>
+
+    <select id="getProjectInfoBySubTaskId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from project_info
+        where where proId = (SELECT  proId from project_task where taskId = (SELECT taskId from project_subtask where subtaskId = #{subtaskId}))
+    </select>
+
     <select id="getMyApplyProject" resultType="java.lang.Integer" parameterType="java.lang.String">
       select
       COUNT (creater)

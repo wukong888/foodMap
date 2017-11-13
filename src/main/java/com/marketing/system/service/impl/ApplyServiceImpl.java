@@ -110,4 +110,16 @@ public class ApplyServiceImpl implements ApplyService{
 
         return list;
     }
+
+    @Override
+    public ProjectInfo getProjectInfoByTaskId(int taskId) {
+
+        return projectInfoMapper.getProjectInfoByTaskId(taskId);
+    }
+
+    @Override
+    public ProjectInfo getProjectInfoBySubTaskId(int subtaskId) {
+
+        return projectInfoMapper.getProjectInfoBySubTaskId(subtaskId);
+    }
 }

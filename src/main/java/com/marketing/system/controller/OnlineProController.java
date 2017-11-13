@@ -21,6 +21,7 @@ import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -394,12 +395,17 @@ public class OnlineProController {
 
             ProjectInfo ProInfo=OnProService.selectProByProId(proId);
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            java.util.Date date2 = new java.util.Date();
+            String str2 = sdf.format(date2);
+
             if (success == true) {
                 result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过", "审批通过", null);
 
 
                     String postUrl = "{\"Uid\":" + ProInfo.getUserId() + ",\"Content\":\"创建人:" + ProInfo.getCreater()
-                            + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
+                            + "\\n\\n项目名称:" + ProInfo.getProname() + "\\n\\n内容:" + explain
+                            + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
                 try {
@@ -444,8 +450,13 @@ public class OnlineProController {
 
                     ProjectInfo ProInfo=OnProService.selectProByProId(proId);
 
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    java.util.Date date2 = new java.util.Date();
+                    String str2 = sdf.format(date2);
+
                         String postUrl = "{\"Uid\":" + ProInfo.getUserId() + ",\"Content\":\"创建人:" + ProInfo.getCreater()
-                                + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
+                                + "\\n\\n项目名称:" + ProInfo.getProname() + "\\n\\n内容:" + explain
+                                + "\\n\\n推送时间:" + str2
                                 + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
                         try {

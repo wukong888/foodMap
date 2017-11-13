@@ -90,4 +90,8 @@ public interface ProjectInfoMapper {
     Integer getHdSxProjectsAll();
 
     List<ProjectInfo> getZuZhangProjectInfos(Map<String,Object> map);
+
+    ProjectInfo getProjectInfoByTaskId(Integer taskId);
+
+    ProjectInfo getProjectInfoBySubTaskId(Integer subtaskId);
 }

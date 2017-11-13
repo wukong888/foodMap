@@ -239,6 +239,10 @@ public class UpProjectController {
             int ilog = upProjectService.insertProLogRecord(proLogRecord);
 
             SystemUser systemUser = systemUserService.selectIdByName(creatName);
+
+            java.util.Date date2 = new java.util.Date();
+            String str2 = sdf.format(date2);
+
             if (i > 0 && ilog > 0) {
                 result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "操作成功！", null, null);
 
@@ -247,12 +251,14 @@ public class UpProjectController {
                 //(1:立项待审批，2：开发中，3：上线待审批，4：完成，5：驳回，6：作废)
                 if (Integer.valueOf(proState) == 2 || Integer.valueOf(proState) == 4 || Integer.valueOf(proState) == 5) {
                     postUrl = "{\"Uid\":" + projectInfo.getUserId() + ",\"Content\":\"创建人:" + creatName
-                            + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
+                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n内容:" + explain
+                            + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
                 } else if (Integer.valueOf(proState) == 3) {
                     systemUser.getId();
                     postUrl = "{\"Uid\":" + 166 + ",\"Content\":\"创建人:" + creatName
-                            + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
+                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n内容:" + explain
+                            + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
                 }
 

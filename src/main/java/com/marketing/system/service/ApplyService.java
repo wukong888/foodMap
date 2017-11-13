@@ -33,4 +33,10 @@ public interface ApplyService {
 
     //根据项目id查询任务负责人
     List<Map<String, Object>> selecttaskInfoByProId(int proId);
+
+    //根据任务Id查询项目信息
+    ProjectInfo getProjectInfoByTaskId(int taskId);
+
+    //根据子任务Id查询项目信息
+    ProjectInfo getProjectInfoBySubTaskId(int subtaskId);
 }

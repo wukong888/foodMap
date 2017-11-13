@@ -228,7 +228,8 @@ public class ApplyController {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             String postUrl = "";
                 postUrl = "{\"Uid\":" + 166 + ",\"Content\":\"创建人:" + creatName
-                        + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + "项目申请"
+                        + "\\n\\n项目名称:" + proName + "\\n\\n内容:" + "项目申请"
+                        + "\\n\\n推送时间:" + str2
                         + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
             try {
@@ -436,28 +437,19 @@ public class ApplyController {
         }
 
         String postUrl = "";
-        if (title == "" || title == null) {
-            postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
-                    + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
-                    + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
-        } else {
-            postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
-                    + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + content
-                    + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        }
+
         try {
-            //消息推送-回复
-            httpPostWithJSON(postUrl);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             java.util.Date date2 = new java.util.Date();
             String str2 = sdf.format(date2);
 
             int i = 0;
             //项目-插入日志记录
             if (type == 1) {
+
                 if (proId != null && proId != "") {
                     ProLogRecord proLogRecord = new ProLogRecord();
 
@@ -471,6 +463,25 @@ public class ApplyController {
 
                     i = applyService.insertProLogRecord(proLogRecord);
                 }
+
+                ProjectInfo projectInfo = myProjectService.getProjectInfoByProId(Integer.valueOf(proId));
+
+                if (title == "" || title == null) {
+                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                            + "\\n\\n推送时间:" + str2
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+
+                } else {
+                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                            + "\\n\\n推送时间:" + str2
+                            + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+
+                }
+
+                //消息推送-回复
+                httpPostWithJSON(postUrl);
 
             //任务-插入日志记录
             } else if (type == 2) {
@@ -487,6 +498,25 @@ public class ApplyController {
                 //插入任务日志
                 i = myProjectService.insertTaskLogRecode(taskLogRecord);
 
+                ProjectInfo projectInfo = applyService.getProjectInfoByTaskId(Integer.valueOf(taskId));
+
+                if (title == "" || title == null) {
+                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                            + "\\n\\n推送时间:" + str2
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+
+                } else {
+                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                            + "\\n\\n推送时间:" + str2
+                            + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+
+                }
+
+                //消息推送-回复
+                httpPostWithJSON(postUrl);
+
             //子任务-插入日志记录
             } else {
                 SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
@@ -501,6 +531,25 @@ public class ApplyController {
 
                 //插入日志
                 i = myProjectService.insertSubTaskLogRecord(subtaskLogRecord);
+
+                ProjectInfo projectInfo = applyService.getProjectInfoBySubTaskId(Integer.valueOf(subtaskId));
+
+                if (title == "" || title == null) {
+                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                            + "\\n\\n推送时间:" + str2
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+
+                } else {
+                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                            + "\\n\\n推送时间:" + str2
+                            + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+
+                }
+
+                //消息推送-回复
+                httpPostWithJSON(postUrl);
 
             }
 

@@ -4,10 +4,7 @@ import com.marketing.system.entity.*;
 import com.marketing.system.mapper_two.ProjectInfoMapper;
 import com.marketing.system.mapper_two.ProjectSubtaskMapper;
 import com.marketing.system.mapper_two.ProjectTaskMapper;
-import com.marketing.system.service.GroupService;
-import com.marketing.system.service.MembersService;
-import com.marketing.system.service.SystemUserService;
-import com.marketing.system.service.UpProjectService;
+import com.marketing.system.service.*;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -57,6 +54,9 @@ public class UpProjectController {
 
     @Autowired
     ProjectInfoMapper projectInfoMapper;
+
+    @Autowired
+    private RoleService roleService;
 
     /**
      * 查询立项待审批列表
@@ -250,6 +250,7 @@ public class UpProjectController {
                             + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
                 } else if (Integer.valueOf(proState) == 3) {
+                    systemUser.getId();
                     postUrl = "{\"Uid\":" + 166 + ",\"Content\":\"创建人:" + creatName
                             + "\\n\\n项目管理系统:" + "测试" + "\\n\\n内容:" + explain
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
@@ -297,6 +298,18 @@ public class UpProjectController {
         try {
             //基本信息+项目信息Basic Information
             ProjectInfo projectInfo = upProjectService.selectByPrimaryKey(id);
+
+            Map<String, Object> mapTx = new HashMap<>();
+            mapTx.put("Name", "特殊组员");
+            mapTx.put("SystemId", 3);
+
+            Role role = roleService.getRoleByName(mapTx);
+
+            if (role.getRemark().contains(String.valueOf(id))) {
+                projectInfo.setDuty("组员");
+            } else {
+                projectInfo.setDuty("CEO");
+            }
 
             //日志记录
             List<ProLogRecord> logRecordList = upProjectService.getProLogRecordList(proId);

@@ -87,11 +87,31 @@ public class SysMenuController {
                 }else if(name.contains("CEO")){
                     name = "CEO";
                 } else {
-                    name = "组员";
+                    Map<String, Object> mapTx = new HashMap<>();
+                    mapTx.put("Name", "特殊组员");
+                    mapTx.put("SystemId", SystemId);
+
+                    Role role = roleService.getRoleByName(mapTx);
+
+                    if (role.getRemark().contains(String.valueOf(id))) {
+                        name = "特殊组员";
+                    } else {
+                        name = "组员";
+                    }
                 }
             }
         } else {
-            name = "组员";
+            Map<String, Object> mapTx = new HashMap<>();
+            mapTx.put("Name", "特殊组员");
+            mapTx.put("SystemId", SystemId);
+
+            Role role = roleService.getRoleByName(mapTx);
+
+            if (role.getRemark().contains(String.valueOf(id))) {
+                name = "特殊组员";
+            } else {
+                name = "组员";
+            }
         }
 
         map.put("Name", name);

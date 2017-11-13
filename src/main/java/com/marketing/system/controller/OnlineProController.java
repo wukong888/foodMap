@@ -4,6 +4,7 @@ import com.marketing.system.entity.*;
 import com.marketing.system.mapper_two.ProjectSubtaskMapper;
 import com.marketing.system.service.MyProjectService;
 import com.marketing.system.service.OnlineProService;
+import com.marketing.system.service.RoleService;
 import com.marketing.system.service.SystemUserService;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
@@ -46,6 +47,9 @@ public class OnlineProController {
 
     @Autowired
     private ProjectSubtaskMapper projectSubtaskMapper;
+
+    @Autowired
+    private RoleService roleService;
 
     /**
      * 查询上线审批列表
@@ -231,6 +235,19 @@ public class OnlineProController {
             List<Map> OnProInfos = new ArrayList<Map>();
             Map<String, Object> OnProInfo = new HashMap<String, Object>();
             ProjectInfo ProInfo = OnProService.selectOnProInfo(id, proId);
+
+            Map<String, Object> mapTx = new HashMap<>();
+            mapTx.put("Name", "特殊组员");
+            mapTx.put("SystemId", 3);
+
+            Role role = roleService.getRoleByName(mapTx);
+
+            if (role.getRemark().contains(String.valueOf(id))) {
+                ProInfo.setDuty("组员");
+            } else {
+                ProInfo.setDuty("CEO");
+            }
+
             List<ProLogRecord> ProLogRecord = OnProService.selectOnProLogRecord(proId);
             List<Map> ProTask = OnProService.selectOnTask(proId);
             List<ProDevelopLog> ProDevRecord = OnProService.selectOnProDevRecord(proId);

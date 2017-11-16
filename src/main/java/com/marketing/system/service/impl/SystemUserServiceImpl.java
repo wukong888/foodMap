@@ -52,4 +52,20 @@ public class SystemUserServiceImpl implements SystemUserService{
 
         return systemUserMapper.selectIdByName(UserName);
     }
+
+    @Override
+    public List<Map<String, Object>> getGroupMembers(Map<String,Object> map) {
+
+        List<Map<String, Object>> list = systemUserMapper.getGroupMembers(map);
+
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getGroupMembersByManeger(Map<String, Object> map) {
+
+        List<Map<String, Object>> list = systemUserMapper.getGroupMembersByManeger(map);
+
+        return list;
+    }
 }

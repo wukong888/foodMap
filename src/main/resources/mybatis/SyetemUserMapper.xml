@@ -36,4 +36,19 @@
         from SystemUser
         where UserGroup = #{UserGroup,jdbcType=VARCHAR}
     </select>
+
+    <select id="getGroupMembers" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+        select
+        <include refid="Base_Column_List" />
+        from SystemUser
+        where UserGroup LIKE '%${UserGroup}%'
+    </select>
+
+    <select id="getGroupMembersByManeger" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+        select
+        <include refid="Base_Column_List" />
+        from SystemUser
+        where Department LIKE '%${Department}%'
+    </select>
+
 </mapper>

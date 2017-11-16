@@ -18,4 +18,10 @@ public interface SystemUserService {
     List<Map<String, Object>> selectUserGroupBydepartment(Map<String,Object> map);
 
     SystemUser selectIdByName(String UserName);
+
+    //组长本部门小组成员
+    List<Map<String, Object>> getGroupMembers(Map<String,Object> map);
+
+    //经理本部门成员
+    List<Map<String, Object>> getGroupMembersByManeger(Map<String,Object> map);
 }

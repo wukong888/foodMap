@@ -203,7 +203,37 @@ public class MyProjectController {
             if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
                 if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !user.getDuty().equals("CEO")) {
                     Map<String, Object> objectMap = new HashMap<>();
-                    objectMap.put("Idsmember", Idsmember);//小组成员
+
+                    Map<String, Object> stringObjectMap = new HashMap<>();
+                    if (user.getUserGroup().length() > 2) {
+                        stringObjectMap.put("UserGroup",user.getUserGroup().substring(0,2));
+                    } else {
+                        stringObjectMap.put("UserGroup",user.getUserGroup());
+                    }
+
+                    if (user.getDuty().contains("经理")) {
+                        if (user.getDepartment().length() > 3) {
+                            stringObjectMap.put("Department",user.getDepartment().substring(0,3));
+                        } else {
+                            stringObjectMap.put("Department",user.getDepartment());
+                        }
+                        List<Map<String, Object>> list = systemUserService.getGroupMembersByManeger(stringObjectMap);
+
+                        String Idsmembers = StringUtil.toString(MapUtil.collectProperty(list, "UserName"));
+
+                        String[] groupMember = Idsmembers.split(",");
+                        objectMap.put("Idsmember", groupMember);//自己部门小组成员
+
+                    } else {
+                        List<Map<String, Object>> list = systemUserService.getGroupMembers(stringObjectMap);
+
+                        String Idsmembers = StringUtil.toString(MapUtil.collectProperty(list, "UserName"));
+
+                        String[] groupMember = Idsmembers.split(",");
+                        objectMap.put("Idsmember", groupMember);//自己部门小组成员
+                    }
+
+
                     objectMap.put("Ids", Ids);//taskId集合
                     objectMap.put("handler", userName);
                     objectMap.put("createrSquadId", createrSquadId);//项目发起部门

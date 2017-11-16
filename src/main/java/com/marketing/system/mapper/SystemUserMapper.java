@@ -19,4 +19,8 @@ public interface SystemUserMapper {
     List<Map<String, Object>> selectUserGroupBydepartment(Map<String,Object> map);
 
     SystemUser selectIdByName(String UserName);
+
+    List<Map<String,Object>> getGroupMembers(Map<String,Object> map);
+
+    List<Map<String,Object>> getGroupMembersByManeger(Map<String,Object> map);
 }

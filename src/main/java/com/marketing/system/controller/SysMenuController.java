@@ -84,7 +84,7 @@ public class SysMenuController {
             } else {
                 if (name.contains("组长") || name.contains("经理")) {
                     name = "经理/组长";
-                }else if(name.contains("CEO")){
+                } else if (name.contains("CEO")) {
                     name = "CEO";
                 } else {
                     Map<String, Object> mapTx = new HashMap<>();
@@ -130,8 +130,8 @@ public class SysMenuController {
 
             List<Map<String, Object>> menus = sysMenuService.fetchRoleMenus(role.getId(), SystemId);
 
-            mapCreater.put("duty",name);
-            mapCreater.put("menus",menus);
+            mapCreater.put("duty", name);
+            mapCreater.put("menus", menus);
             listNew.add(mapCreater);
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, "查询成功！", listNew, null);
@@ -145,6 +145,7 @@ public class SysMenuController {
 
     /**
      * 查询用户权限
+     *
      * @param request
      * @param response
      * @throws Exception

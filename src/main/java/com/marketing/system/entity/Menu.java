@@ -17,6 +17,16 @@ public class Menu {
 
     private Integer systemid;
 
+    private String isButton;
+
+    public String getIsButton() {
+        return isButton;
+    }
+
+    public void setIsButton(String isButton) {
+        this.isButton = isButton;
+    }
+
     public Integer getId() {
         return id;
     }

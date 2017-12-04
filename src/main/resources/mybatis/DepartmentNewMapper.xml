@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marketing.system.mapper.DepartmentNewMapper" >
+  <resultMap id="BaseResultMap" type="com.marketing.system.entity.DepartmentNew" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="Deptno" property="deptno" jdbcType="NVARCHAR" />
+    <result column="No" property="no" jdbcType="INTEGER" />
+    <result column="Pid" property="pid" jdbcType="INTEGER" />
+    <result column="WorkOrderUse" property="workorderuse" jdbcType="BIT" />
+  </resultMap>
+
+  <resultMap id="GroupTree" type="com.marketing.system.entity.DepartmentNew" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="department" property="department" jdbcType="NVARCHAR"/>
+    <result column="pid" property="_parentId" jdbcType="INTEGER"/>
+    <collection column="id" property="children" select="getGroupNo"/>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, Deptno, No, Pid, WorkOrderUse
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from Department_new
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 获取中心 一级 整合修改 -->
+  <select id="getDepartment" resultMap="GroupTree" parameterType="int" >
+    select
+    id, Deptno AS department,  Pid AS  pid
+    from Department_new where Pid = 0
+  </select>
+
+  <!-- 获取部门 二级 整合修改 -->
+  <select id="getGroupNo" resultMap="GroupTree" parameterType="int" >
+    SELECT id, Deptno AS department,  Pid AS  pid
+    FROM Department_new
+    where pid  = #{id};
+  </select>
+
+  <!-- 项目涉及部门 整合修改 -->
+  <select id="groupList" resultType="java.util.HashMap" >
+    SELECT id, Deptno AS department,  Pid AS  pid
+    FROM Department_new
+    where
+    <foreach item="item" index="index" collection="mentIds"
+             open=" id IN (" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <!-- 判断是总监、经理、组员 整合修改 -->
+  <select id="getCheckDuty" resultType="java.util.HashMap" >
+
+    select
+    <include refid="Base_Column_List" />
+     from Department_new
+    where (id in (SELECT id from Department_new where Pid = #{userGroupId}) or id = #{userGroupId} )
+    and Pid in (SELECT id from Department_new where Pid = 0)
+
+  </select>
+
+  <!-- 总监 整合修改 -->
+  <select id="getZjMember" resultType="java.util.HashMap" >
+
+    select
+    <include refid="Base_Column_List" />
+     from Department_new where
+    id in (SELECT id from Department_new where Pid = #{userGroupId})
+    or Pid in (SELECT Pid from Department_new where Pid in (SELECT id from Department_new where Pid = #{userGroupId}))
+
+  </select>
+
+  <!-- 经理 整合修改 -->
+  <select id="getJlMember" resultType="java.util.HashMap" >
+
+    select
+    <include refid="Base_Column_List" />
+     from Department_new where
+    id in (SELECT id from Department_new where Pid = #{userGroupId})
+    or id = #{userGroupId}
+
+  </select>
+
+  <!-- 组员 整合修改 -->
+  <select id="getMemMember" resultType="java.util.HashMap" >
+
+    SELECT
+    <include refid="Base_Column_List" />
+     FROM Department_new where id in (SELECT id from Department_new where Pid =
+    (select Pid from Department_new where id = #{userGroupId}) or
+    id = (select Pid from Department_new where id = #{userGroupId}))
+
+  </select>
+
+  <!-- 经理 总监 整合修改 -->
+  <select id="getGmMember" resultType="java.util.HashMap" >
+
+    SELECT
+    <include refid="Base_Column_List" />
+     FROM Department_new where Pid = 0
+
+  </select>
+
+  <!-- 根据Id查询小组名称 整合修改 -->
+  <select id="getDeptnoBySquadId" resultType="java.util.HashMap" >
+
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM Department_new where id = #{Id}
+
+  </select>
+
+  <!-- 根据姓名查询小组名称 整合修改 -->
+  <select id="getGroupByCreater" resultType="java.lang.String" >
+
+    SELECT Deptno
+    FROM Department_new
+    where id = (select UserGroupId from SystemUser where UserName = #{UserName});
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from Department_new
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.marketing.system.entity.DepartmentNew" >
+    insert into Department_new (id, Deptno, No, 
+      Pid, WorkOrderUse)
+    values (#{id,jdbcType=INTEGER}, #{deptno,jdbcType=NVARCHAR}, #{no,jdbcType=INTEGER}, 
+      #{pid,jdbcType=INTEGER}, #{workorderuse,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.DepartmentNew" >
+    insert into Department_new
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="deptno != null" >
+        Deptno,
+      </if>
+      <if test="no != null" >
+        No,
+      </if>
+      <if test="pid != null" >
+        Pid,
+      </if>
+      <if test="workorderuse != null" >
+        WorkOrderUse,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="deptno != null" >
+        #{deptno,jdbcType=NVARCHAR},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="workorderuse != null" >
+        #{workorderuse,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.marketing.system.entity.DepartmentNew" >
+    update Department_new
+    <set >
+      <if test="deptno != null" >
+        Deptno = #{deptno,jdbcType=NVARCHAR},
+      </if>
+      <if test="no != null" >
+        No = #{no,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null" >
+        Pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="workorderuse != null" >
+        WorkOrderUse = #{workorderuse,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.marketing.system.entity.DepartmentNew" >
+    update Department_new
+    set Deptno = #{deptno,jdbcType=NVARCHAR},
+      No = #{no,jdbcType=INTEGER},
+      Pid = #{pid,jdbcType=INTEGER},
+      WorkOrderUse = #{workorderuse,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

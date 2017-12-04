@@ -31,6 +31,8 @@ public interface OnlineProMapper {
     @Select("SELECT squad FROM projectManage.dbo.[group] where squadId =#{squadId}")
     String selectSquadById(@Param("squadId")String squadId);
 
+
+
     //查看上线待审批项目的详细信息
     @Select("SELECT * FROM project_info where id=#{id}")
     ProjectInfo selectOnProInfo(@Param("id")Integer id);

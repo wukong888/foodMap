@@ -68,4 +68,20 @@ public class SystemUserServiceImpl implements SystemUserService{
 
         return list;
     }
+
+    @Override
+    public List<Map<String,Object>> getMembersById() {
+
+        List<Map<String,Object>> list = systemUserMapper.getMembersByIdNew();
+
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getMembersByUserGroupId(Map<String, Object> map) {
+
+        List<Map<String,Object>> list = systemUserMapper.getMembersByUserGroupId(map);
+
+        return list;
+    }
 }

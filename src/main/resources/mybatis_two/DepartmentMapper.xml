@@ -16,6 +16,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
+  <!-- 获取部门 整合修改 -->
   <select id="getDepartment" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />

@@ -4,8 +4,10 @@ import com.marketing.system.entity.ProDevelopLog;
 import com.marketing.system.entity.ProLogRecord;
 import com.marketing.system.entity.ProjectInfo;
 import com.marketing.system.entity.ProjectTask;
+import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper_two.RecycleProMapper;
 import com.marketing.system.service.RecycleProService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,6 +20,9 @@ public class RecycleProServiceImpl implements RecycleProService{
 
     @Resource
     private RecycleProMapper RecProDao;
+
+    @Autowired
+    private DepartmentNewMapper departmentNewMapper;
 
     //模糊查询所有回收站的项目
     public Map<String, Object> selectRecPro(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String plansdate1, String plansdate2, String protype, String param){
@@ -83,7 +88,7 @@ public class RecycleProServiceImpl implements RecycleProService{
         List<ProLogRecord> RecProLogRecords=RecProDao.selectRecProLogRecord(proId);
         for(ProLogRecord RecProLogRecord:RecProLogRecords){
             String squadId=RecProLogRecord.getSquadid()+"";
-            String squad=RecProDao.selectSquadById(squadId);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadId);
             RecProLogRecord.setSquadid(squad);
         }
         return RecProLogRecords;
@@ -94,7 +99,7 @@ public class RecycleProServiceImpl implements RecycleProService{
         List<ProjectTask> RecTasks=RecProDao.selectRecTask(proId);
         for(int i=0;i<RecTasks.size();i++){
             String squadId=RecTasks.get(i).getSquadId();
-            String squad=RecProDao.selectSquadById(squadId);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadId);
             RecTasks.get(i).setSquadId(squad);
         }
         return RecTasks;

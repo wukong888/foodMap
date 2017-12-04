@@ -1,8 +1,10 @@
 package com.marketing.system.service.impl;
 
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper_two.FinishProMapper;
 import com.marketing.system.service.FinishProService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,6 +17,9 @@ public class FinishProServiceImpl implements FinishProService {
 
     @Resource
     private FinishProMapper FinProDao;
+
+    @Autowired
+    private DepartmentNewMapper departmentNewMapper;
 
     //模糊查询所有待审批的项目
     public Map<String, Object> selectFinishPro(Integer current, Integer pageSize, String creatersquadid, String creater, String createdate1, String createdate2, String finishdate1, String finishdate2, String onlinedate1,String onlinedate2,String protype, String param){
@@ -51,7 +56,7 @@ public class FinishProServiceImpl implements FinishProService {
         List<ProLogRecord> FinProLogRecords=FinProDao.selectFinProLogRecord(proId);
         for(ProLogRecord FinProLogRecord:FinProLogRecords){
             String squadId=FinProLogRecord.getSquadid();
-            String squad=FinProDao.selectSquadById(squadId);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadId);
             FinProLogRecord.setSquadid(squad);
         }
         return FinProLogRecords;
@@ -62,8 +67,8 @@ public class FinishProServiceImpl implements FinishProService {
         List<Map> FinTasks=FinProDao.selectFinTask(proId);
         for(int i=0;i<FinTasks.size();i++){
             String squadId=(String) FinTasks.get(i).get("squadId");
-            String squad=FinProDao.selectSquadById(squadId);
-            String departmentId=FinProDao.selectDepartmentIdBySquadId(squadId);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadId);
+            String departmentId=departmentNewMapper.selectDepartmentIdBySquadIdNew(squadId);
             FinTasks.get(i).put("departmentId",departmentId);
             FinTasks.get(i).put("squad",squad);
         }
@@ -75,7 +80,7 @@ public class FinishProServiceImpl implements FinishProService {
         List<ProDevelopLog> FinProDevRecords=FinProDao.selectFinProDevRecord(proId);
         for(ProDevelopLog FinProDevRecord:FinProDevRecords){
             String squadId=FinProDevRecord.getSquadid()+"";
-            String squad=FinProDao.selectSquadById(squadId);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadId);
             FinProDevRecord.setSquadid(squad);
         }
         return FinProDevRecords;
@@ -85,7 +90,7 @@ public class FinishProServiceImpl implements FinishProService {
     public ProjectTask selectFinTaskInfo(Integer taskId){
         ProjectTask taskInfo=FinProDao.selectFinTaskInfo(taskId);
         String squadid=taskInfo.getSquadId();
-        String squad=FinProDao.selectSquadById(squadid);
+        String squad=departmentNewMapper.selectSquadByIdNew(squadid);
         taskInfo.setSquadId(squad);
         return taskInfo;
     }
@@ -102,7 +107,7 @@ public class FinishProServiceImpl implements FinishProService {
         for(TaskLogRecord FinTaskLogRecord:FinTaskLogRecords){
 
             String squadid=FinTaskLogRecord.getSquadid();
-            String squad=FinProDao.selectSquadById(squadid);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadid);
             FinTaskLogRecord.setSquadid(squad);
         }
         return FinTaskLogRecords;
@@ -113,7 +118,7 @@ public class FinishProServiceImpl implements FinishProService {
         List<TaskDevelopLog> FinTaskDevRecords=FinProDao.selectFinTaskDevRecord(taskId);
         for(TaskDevelopLog FinTaskDevRecord:FinTaskDevRecords){
             String squadId=FinTaskDevRecord.getSquadid();
-            String squad=FinProDao.selectSquadById(squadId);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadId);
             FinTaskDevRecord.setSquadid(squad);
         }
         return FinTaskDevRecords;
@@ -124,7 +129,7 @@ public class FinishProServiceImpl implements FinishProService {
         List<SubtaskDevelopLog> FinSubtaskDevRecords=FinProDao.selectFinSubtaskDevRecord(subtaskId);
         for(SubtaskDevelopLog FinSubtaskDevRecord:FinSubtaskDevRecords){
             String squadId=FinSubtaskDevRecord.getSquadid();
-            String squad=FinProDao.selectSquadById(squadId);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadId);
             FinSubtaskDevRecord.setSquadid(squad);
         }
         return FinSubtaskDevRecords;
@@ -136,7 +141,7 @@ public class FinishProServiceImpl implements FinishProService {
         for(SubtaskLogRecord FinSubtaskLogRecord:FinSubtaskLogRecords){
 
             String squadid=FinSubtaskLogRecord.getSquadid();
-            String squad=FinProDao.selectSquadById(squadid);
+            String squad=departmentNewMapper.selectSquadByIdNew(squadid);
             FinSubtaskLogRecord.setSquadid(squad);
         }
         return FinSubtaskLogRecords;

@@ -3,6 +3,7 @@ package com.marketing.system.controller;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.service.*;
 import com.marketing.system.util.*;
 import io.swagger.annotations.*;
@@ -13,6 +14,7 @@ import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +47,7 @@ public class ApplyController {
     private GroupService groupService;
 
     @Autowired
-    private DepartmentService departmentService;
+    private  DepartmentService departmentService;
 
     @Autowired
     private MyProjectService myProjectService;
@@ -56,6 +58,20 @@ public class ApplyController {
     @Autowired
     private SystemUserService systemUserService;
 
+    @Autowired
+    private DepartmentNewMapper departmentNewMapper;
+
+    @Autowired
+    private IndexService indexService;
+
+    @Value("${ceo.id}")
+    private String ceoId;
+
+    @Value("${ceo.phone}")
+    private String ceoPhone;
+
+    @Value("${ceo.email}")
+    private String ceoEmail;
 
     @ApiOperation(value = "项目申请")
     @ApiImplicitParams({
@@ -133,7 +149,7 @@ public class ApplyController {
             }
         }
 
-        Members members = applyService.selectSquadIdByMember(creatName);
+        //Members members = applyService.selectSquadIdByMember(creatName);
 
         SystemUser systemUser = systemUserService.selectIdByName(creatName);
 
@@ -148,7 +164,7 @@ public class ApplyController {
         projectInfo.setProstate("1");//项目状态(1:立项待审批，2：开发中，3：上线带审批，4：完成，5：驳回，6：作废,7:逾期)
         projectInfo.setUserId(systemUser.getId());
 
-        projectInfo.setCreaterSquadId(members.getSquadid());//小组id
+        projectInfo.setCreaterSquadId(String.valueOf(systemUser.getUserGroupId()));//小组id
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -162,6 +178,8 @@ public class ApplyController {
         //创建项目，则该创建人成为项目发起人
         int v = applyService.insertApplyProject(projectInfo);
 
+        logger.info("创建项目成功------"+v+"项目名称："+proName);
+
         int ap = 0;
         int sum = 0;
         Map<String, Object> map1 = new HashMap<>();
@@ -171,12 +189,16 @@ public class ApplyController {
 
             String squadId = task.getSquadId();
 
-            String squad = upProjectService.selectSquadBySquadId(Integer.parseInt(squadId));
+            /*String squad = upProjectService.selectSquadBySquadId(Integer.parseInt(squadId));
 
-            map1.put("UserGroup", squad);
+            map1.put("UserGroup", squad);*/
 
+            Map<String, Object> stringObjectMap = new HashMap<>();
+
+            stringObjectMap.put("UserGroupId",squadId);
             //对应组所有人信息
-            List<Map<String, Object>> systemUserList = systemUserService.selectUserGroupBydepartment(map1);
+            //List<Map<String, Object>> systemUserList = systemUserService.selectUserGroupBydepartment(map1);
+            List<Map<String, Object>> systemUserList = systemUserService.getGroupMembers(stringObjectMap);
 
             List<Map<String, Object>> systemUserListNew = new ArrayList<>();
 
@@ -207,6 +229,7 @@ public class ApplyController {
             //创建任务
             ap = applyService.insertSelective(projectTask);
 
+            logger.info("创建任务成功------"+ap+"任务名称："+task.getTaskname());
         }
 
         ProLogRecord proLogRecord = new ProLogRecord();
@@ -223,12 +246,43 @@ public class ApplyController {
         //插入日志
         int ilog = applyService.insertProLogRecord(proLogRecord);
 
+        //发起小组
+        String group = departmentNewMapper.getGroupByCreater(creatName);
 
+        //附件数量
+        if (filePath == "" || filePath ==null) {
+            filePath = "0";
+        } else {
+            filePath = "1";
+        }
+
+
+        //2、立项待审批
+        Integer lx_cp = indexService.getLxProjects("");
+        //2、立项待审批L
+        Integer lx_hd = indexService.getHdLxProjects("");
+
+        Integer lx = lx_cp + lx_hd;
+
+
+        String proTypeName = "";
+        //项目类型(1:产品，2：活动)
+        if (proType == "1") {
+            proTypeName = "产品";
+        } else {
+            proTypeName = "活动";
+        }
         if (v > 0 && ilog > 0 && ap > 0) {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             String postUrl = "";
-                postUrl = "{\"Uid\":" + 166 + ",\"Content\":\"创建人:" + creatName
-                        + "\\n\\n项目名称:" + proName + "\\n\\n内容:" + "项目申请"
+                postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" +proName+ "》的立项申请，请及时处理。"
+                        + "\\n\\n发起小组:" + group
+                        + "\\n\\n发起人:" + creatName
+                        + "\\n\\n项目名称:" + proName
+                        + "\\n\\n项目类型:" + proTypeName
+                        + "\\n\\n上线时间:" + planSDate
+                        + "\\n\\n附件数量:" + filePath + "个"
+                        + "\\n\\n立项审批总量:" + lx + "个"
                         + "\\n\\n推送时间:" + str2
                         + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
@@ -238,6 +292,15 @@ public class ApplyController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            //数据研发中心柏铭成向您申请对《大数据分析平台项目》实施项目立项，请您及时处理。
+            ToolUtil.sendMsg(ceoPhone,group+creatName + "向您申请对《"+ projectInfo.getProname()+"》实施项目立项审批，请您及时处理。");
+
+            //发送邮件
+            ToolUtil.sendEmial(ceoEmail,"关于《"+ projectInfo.getProname() +"》的立项申请审批","您好，"+ group+creatName +"向您发起名为《"+projectInfo.getProname() +"》的立项申请，该项目类型为"+ proTypeName+"，要求上线时间为"+ planSDate + "，提交的附件数量为"+ filePath +"个。请您及时处理。项目简介如下：<br>" +
+                            projectInfo.getProdeclare() + "<br>"+
+                    "点击进入项目审批页：https://192.168.11.132:2222<br>" +
+                    "注：您目前还有"+ lx +"个未处理的立项申请。<br>");
 
         } else {
             r = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -254,7 +317,28 @@ public class ApplyController {
         ApiResult<List<Department>> r = null;
 
         try {
-            List<Department> department = departmentService.getDepartment();
+            List<Department> department = null;
+
+           // List<DepartmentNew> department = departmentNewMapper.getDepartment();
+
+            r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("错误信息："+e);
+        }
+
+        return r;
+
+    }
+
+    @ApiOperation(value = "获取所有中心部门小组")
+    @RequestMapping(value = "/getAllDepartment", method = RequestMethod.POST)
+    public ApiResult<List<DepartmentNew>> getAllDepartment() {
+
+        ApiResult<List<DepartmentNew>> r = null;
+        try {
+
+            List<DepartmentNew> department = departmentNewMapper.getDepartment();
 
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
         } catch (Exception e) {
@@ -271,15 +355,19 @@ public class ApplyController {
             @ApiImplicitParam(paramType = "query", name = "id", value = "参与部门", required = false, dataType = "Integer")
     })
     @RequestMapping(value = "/getGroup", method = RequestMethod.POST)
-    public ApiResult<List<Group>> getGroup(@RequestParam(value = "id", required = false) Integer id) {
+    public ApiResult<List<DepartmentNew>> getGroup(@RequestParam(value = "id", required = false) Integer id) {
 
-        ApiResult<List<Group>> r = null;
-        List<Group> group = new ArrayList<>();
+        ApiResult<List<DepartmentNew>> r = null;
+        List<DepartmentNew> group = new ArrayList<>();
         try {
             if (id == null) {
-                group = groupService.getGroupNo();
+                //group = groupService.getGroupNo();
+                group = departmentNewMapper.getGroupNo();
+
             } else {
-                group = groupService.getGroup(id);
+                //group = groupService.getGroup(id);
+                group = departmentNewMapper.getGroup(id);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -292,7 +380,7 @@ public class ApplyController {
 
     }
 
-    @ApiOperation(value = "获取项目相关部门（回复人）")
+    @ApiOperation(value = "获取项目相关部门（回复人位置）")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer")
     })
@@ -314,8 +402,11 @@ public class ApplyController {
 
             mapS.put("mentIds", IdsT);
 
+            //项目涉及部门
+            List<Map<String, Object>> groupList = departmentNewMapper.groupList(mapS);
+
             //根据squadId(小组id)查找小组所属部门id
-            List<Map<String, Object>> squadList = applyService.getSquadList(mapS);
+            /*List<Map<String, Object>> squadList = applyService.getSquadList(mapS);
 
             String menuLeafIdsThree = StringUtil.toString(MapUtil.collectProperty(squadList, "departmentId"));
 
@@ -326,9 +417,9 @@ public class ApplyController {
             mapThree.put("mentIds", IdsTh);
 
             //根据部门id查找部门名称
-            List<Map<String, Object>> departmentList = applyService.getDepartmentList(mapThree);
+            List<Map<String, Object>> departmentList = applyService.getDepartmentList(mapThree);*/
 
-            r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, departmentList, null);
+            r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, groupList, null);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取项目相关部门："+e);

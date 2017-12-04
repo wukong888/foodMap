@@ -34,14 +34,14 @@
         select
         <include refid="Base_Column_List" />
         from SystemUser
-        where UserGroup = #{UserGroup,jdbcType=VARCHAR}
+        where UserGroup LIKE '%${UserGroup}%'
     </select>
 
     <select id="getGroupMembers" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
         select
-        <include refid="Base_Column_List" />
+        id,UserName
         from SystemUser
-        where UserGroup LIKE '%${UserGroup}%'
+        where UserGroupId = #{UserGroupId}
     </select>
 
     <select id="getGroupMembersByManeger" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
@@ -50,5 +50,30 @@
         from SystemUser
         where Department LIKE '%${Department}%'
     </select>
+
+    <select id="getMembersByUserGroupId" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+        select
+        id,UserName,duty,UserGroupId
+        from SystemUser
+        where
+        <foreach item="item" index="index" collection="mentIds"
+                 open=" UserGroupId IN (" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+   <!-- <select id="getMembersById" parameterType="java.util.HashMap" resultType="java.util.HashMap"  >
+        select
+        <include refid="Base_Column_List" />
+        from SystemUser
+        where UserGroupId = #{UserGroupId}
+    </select>
+
+    <select id="getMembersByIdNew"  parameterType="java.util.HashMap" resultType="com.marketing.system.entity.SystemUser" >
+        select
+        <include refid="Base_Column_List" />
+        from SystemUser
+        where UserGroupId = #{UserGroupId}
+    </select>-->
 
 </mapper>

@@ -2,6 +2,7 @@ package com.marketing.system.controller;
 
 
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper_two.GroupMapper;
 import com.marketing.system.mapper_two.ProjectSubtaskMapper;
 import com.marketing.system.service.*;
@@ -53,6 +54,9 @@ public class MyProjectController {
 
     @Autowired
     private ProjectSubtaskMapper projectSubtaskMapper;
+
+    @Autowired
+    private DepartmentNewMapper departmentNewMapper;
 
     /**
      * 查询我的项目列表
@@ -149,24 +153,38 @@ public class MyProjectController {
                 projectInfotaskNew.add(p);
             }
 
-            String department = user.getDepartment();
-            department = department.substring(0, 2);
-            //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
-            Department did = myProjectService.getDepartmentIdByMent(department);
-            String departmentid = did.getDepartmentid();
+/*******************************************对应组成员 开始***************************************************************/
 
-            //根据部门id查找小组id
-            List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
+            /**
+             * 判断是总监、经理、组员
+             * listDuty = 1 经理
+             * listDuty > 1 总监
+             * listDuty 为空 组员
+             */
+            List<Map<String, Object>> listDuty = departmentNewMapper.getCheckDuty(user.getUserGroupId());
 
-            Map<String, Object> mapTid = new HashMap<>();
+            List<Map<String, Object>> listMem = new ArrayList<>();
+            if (listDuty.size() > 1) {
+                listMem = departmentNewMapper.getZjMember(user.getUserGroupId());
+            } else if (listDuty.size() == 1){
+                listMem = departmentNewMapper.getJlMember(user.getUserGroupId());
+            } else if (listDuty.size() == 0 ){
+                listMem = departmentNewMapper.getMemMember(user.getUserGroupId());
+            }
 
-            mapTid = ToolUtil.getmapList(mapList, "squadId");
-            //组长/经理其小组成员
-            List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+            Map<String, Object> mapMem = new HashMap<>();
 
-            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "subtaskHandler"));
+            mapMem = ToolUtil.getmapList(listMem, "id");
 
-            String[] Idsmember = menuLeafIdsmember.split(",");
+            List<Map<String, Object>> listMembers = systemUserService.getMembersByUserGroupId(mapMem);
+
+            String menuLeafIdsmember2 = StringUtil.toString(MapUtil.collectProperty(listMembers, "UserName"));
+
+            String[] Idsmember = menuLeafIdsmember2.split(",");
+
+
+/*******************************************对应组成员 结束******************************************************************/
+
 
             Map<String, Object> mapTmem = new HashMap<>();
 
@@ -205,34 +223,58 @@ public class MyProjectController {
                     Map<String, Object> objectMap = new HashMap<>();
 
                     Map<String, Object> stringObjectMap = new HashMap<>();
-                    if (user.getUserGroup().length() > 2) {
-                        stringObjectMap.put("UserGroup",user.getUserGroup().substring(0,2));
-                    } else {
-                        stringObjectMap.put("UserGroup",user.getUserGroup());
-                    }
 
-                    if (user.getDuty().contains("经理")) {
-                        if (user.getDepartment().length() > 3) {
-                            stringObjectMap.put("Department",user.getDepartment().substring(0,3));
+                    stringObjectMap.put("UserGroupId",user.getUserGroupId());
+
+                    /**
+                     * 经理判断  是总监的话单独一种情况
+                     */
+                    List<Map<String, Object>> listGm = departmentNewMapper.getGmMember();
+
+                    String GmMember = StringUtil.toString(MapUtil.collectProperty(listGm, "id"));
+                    GmMember.contains(String.valueOf(user.getUserGroupId()));
+
+                    if (GmMember.contains(String.valueOf(user.getUserGroupId()))) {
+
+                        List<Map<String, Object>> list = departmentNewMapper.getZjMember(user.getUserGroupId());
+
+                        Map<String, Object> mapMemZj = new HashMap<>();
+
+                        mapMemZj = ToolUtil.getmapList(list, "id");
+
+                        List<Map<String, Object>> listMembers_zj = systemUserService.getMembersByUserGroupId(mapMemZj);
+
+                        String Idsmembers = StringUtil.toString(MapUtil.collectProperty(listMembers_zj, "UserName"));
+
+                        String[] groupMember = Idsmembers.split(",");
+                        objectMap.put("Idsmember", groupMember);//自己部门小组成员
+
+                    } else {
+                        if (user.getDuty().contains("经理")) {
+
+                            List<Map<String, Object>> list = departmentNewMapper.getJlMember(user.getUserGroupId());
+
+                            Map<String, Object> mapMemZj = new HashMap<>();
+
+                            mapMemZj = ToolUtil.getmapList(list, "id");
+
+                            List<Map<String, Object>> listMembers_zj = systemUserService.getMembersByUserGroupId(mapMemZj);
+
+                            String Idsmembers = StringUtil.toString(MapUtil.collectProperty(listMembers_zj, "UserName"));
+
+                            String[] groupMember = Idsmembers.split(",");
+                            objectMap.put("Idsmember", groupMember);//自己部门小组成员
+
                         } else {
-                            stringObjectMap.put("Department",user.getDepartment());
+                            //组长
+                            List<Map<String, Object>> list = systemUserService.getGroupMembers(stringObjectMap);
+
+                            String Idsmembers = StringUtil.toString(MapUtil.collectProperty(list, "UserName"));
+
+                            String[] groupMember = Idsmembers.split(",");
+                            objectMap.put("Idsmember", groupMember);//自己部门小组成员
                         }
-                        List<Map<String, Object>> list = systemUserService.getGroupMembersByManeger(stringObjectMap);
-
-                        String Idsmembers = StringUtil.toString(MapUtil.collectProperty(list, "UserName"));
-
-                        String[] groupMember = Idsmembers.split(",");
-                        objectMap.put("Idsmember", groupMember);//自己部门小组成员
-
-                    } else {
-                        List<Map<String, Object>> list = systemUserService.getGroupMembers(stringObjectMap);
-
-                        String Idsmembers = StringUtil.toString(MapUtil.collectProperty(list, "UserName"));
-
-                        String[] groupMember = Idsmembers.split(",");
-                        objectMap.put("Idsmember", groupMember);//自己部门小组成员
                     }
-
 
                     objectMap.put("Ids", Ids);//taskId集合
                     objectMap.put("handler", userName);
@@ -274,9 +316,9 @@ public class MyProjectController {
             List<Map<String, Object>> taskProId = new ArrayList<>();
             //判断项目集合中是否有对应小组成员
             //小组集合中是否匹配子任务负责人
-            for (Map map1 : mapList1) {
+            for (Map map1 : listMembers) {
                 for (Map map0 : subtaskList) {
-                    if (map0.get("subtaskHandler") == map1.get("member")) {
+                    if (map0.get("subtaskHandler") == map1.get("UserName")) {
                         taskString.add(map0);
                     }
                 }
@@ -457,7 +499,7 @@ public class MyProjectController {
 
             SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
-            String department = user.getDepartment();
+           /* String department = user.getDepartment();
             department = department.substring(0, 2);
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
             Department did = myProjectService.getDepartmentIdByMent(department);
@@ -472,7 +514,36 @@ public class MyProjectController {
             //组长/经理其小组成员
             List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
 
-            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "subtaskHandler"));
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList1, "subtaskHandler"));*/
+
+/*******************************************对应组成员 开始***************************************************************/
+
+            /**
+             * 判断是总监、经理、组员
+             * listDuty = 1 经理
+             * listDuty > 1 总监
+             * listDuty 为空 组员
+             */
+            List<Map<String, Object>> listDuty = departmentNewMapper.getCheckDuty(user.getUserGroupId());
+
+            List<Map<String, Object>> listMem = new ArrayList<>();
+            if (listDuty.size() > 1) {
+                listMem = departmentNewMapper.getZjMember(user.getUserGroupId());
+            } else if (listDuty.size() == 1){
+                listMem = departmentNewMapper.getJlMember(user.getUserGroupId());
+            } else if (listDuty.size() == 0 ){
+                listMem = departmentNewMapper.getMemMember(user.getUserGroupId());
+            }
+
+            Map<String, Object> mapMem = new HashMap<>();
+
+            mapMem = ToolUtil.getmapList(listMem, "id");
+
+            List<Map<String, Object>> listMembers = systemUserService.getMembersByUserGroupId(mapMem);
+
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(listMembers, "UserName"));
+
+/*******************************************对应组成员 结束******************************************************************/
             //是否有子任务
             List<Map<String, Object>> projectSubtaskList = applyService.selectProSubtaskByProId(proId);
             if (projectSubtaskList.size() > 0) {
@@ -515,11 +586,13 @@ public class MyProjectController {
                     //dbnum1 = Double.parseDouble(String.valueOf(projectTask.get("workDate")));
                 }
 
-                Group group = groupService.getGroupBySquadId(Integer.valueOf((String) projectTask.get("squadId")));
-                String squad = group.getSquad();
+                //Group group = groupService.getGroupBySquadId(Integer.valueOf((String) projectTask.get("squadId")));
+                DepartmentNew departmentNew = departmentNewMapper.getDeptnoBySquadId(Integer.valueOf((String) projectTask.get("squadId")));
+
+                String squad = departmentNew.getDeptno();
                 //projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
                 projectTask.put("squad", squad);//根据id取对应小组中文名
-                String squadId = (String) projectTask.get("squadId");
+                /*String squadId = (String) projectTask.get("squadId");
 
                 String departmentId = upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
                 projectTask.put("departmentId", departmentId);//根据squadid取对应部门Id
@@ -530,10 +603,11 @@ public class MyProjectController {
                     department2 = department2.substring(0, 2);
                 }
 
-                map1.put("department", department2);
+                map1.put("department", department2);*/
 
                 //对应组所有人信息
-                List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+                //List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+                List<Map<String, Object>> systemUserList = listMembers;
                 List<Map<String, Object>> systemUserListNew = new ArrayList<>();
 
                 for (Map sys : systemUserList) {
@@ -661,7 +735,11 @@ public class MyProjectController {
 
                 String squad = upProjectService.selectSquadBySquadId(Integer.parseInt(squadId));
 
-                map1.put("UserGroup", squad);
+                if (squad.length() > 2) {
+                    map1.put("UserGroup", squad.substring(0,2));
+                } else {
+                    map1.put("UserGroup", squad);
+                }
 
                 //对应组所有人信息
                 List<Map<String, Object>> systemUserList = systemUserService.selectUserGroupBydepartment(map1);
@@ -672,10 +750,15 @@ public class MyProjectController {
                     if (sys.get("duty") != "" && sys.get("duty") != null) {
                         if (String.valueOf(sys.get("duty")).contains("组长")) {
                             systemUserListNew.add(sys);
+                        } else if (!String.valueOf(sys.get("duty")).contains("组长") && String.valueOf(sys.get("duty")).contains("经理")){
+                            systemUserListNew.add(sys);
                         }
                     }
                 }
                 String handler2 = "";
+                if (systemUserListNew.size() > 1) {
+                    systemUserListNew = systemUserListNew.stream().filter(x -> x.get("duty").toString().contains("组长") && !(x.get("duty").toString()).contains("副")).collect(Collectors.toList());
+                }
                 for (Map handle : systemUserListNew) {
                     handler2 = String.valueOf(handle.get("UserName"));
 
@@ -692,6 +775,8 @@ public class MyProjectController {
                 projectTask.setTaskstate("1");//任务状态 1:未开始  2:开发中 3:预验收  4:完成
 
                 i = myProjectService.insertProTask(projectTask);
+
+                logger.info("我的项目参与组添加任务成功------"+i+"任务名称："+taskName);
 
                 ProLogRecord proLogRecord = new ProLogRecord();
 
@@ -715,6 +800,13 @@ public class MyProjectController {
 
                 //修改
             } else if (Type == 2) {
+                //判断任务工时是否是任务开始时间和任务结束时间
+                long days = ToolUtil.getBetweenDays(sDate,eDate);
+
+                if (days != Long.valueOf(workDate)) {
+                    return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.DAYS_FAIL,null,null);
+                }
+
                 Integer TaskId = Integer.parseInt(taskId);
                 ProjectTask projectTask = new ProjectTask();
                 projectTask.setTaskId(TaskId);
@@ -738,9 +830,11 @@ public class MyProjectController {
 
                 i = myProjectService.updateTaskById(projectTask);
 
+                logger.info("我的项目参与组修改任务成功------"+i+"任务名称："+taskName);
                 //任务下的子任务全部清空
-                int k = myProjectService.deleteSubTaskById(TaskId);
+                //int k = myProjectService.deleteSubTaskById(TaskId);
 
+                //logger.info("任务下的子任务全部清空成功------"+k+"任务名称："+taskName);
                 ProLogRecord proLogRecord = new ProLogRecord();
 
                 java.util.Date date2 = new java.util.Date();
@@ -762,12 +856,14 @@ public class MyProjectController {
                 }
 
                 //删除 可删除当前任务，删除后该任务内容全部清零
-            } else {
+            } else if (Type == 3){
                 Integer TaskId = Integer.parseInt(taskId);
                 i = myProjectService.deleteTaskById(TaskId);
 
                 //任务下的子任务全部清空
                 int k = myProjectService.deleteSubTaskById(TaskId);
+
+                logger.info("我的项目参与组删除任务、子任务成功------"+k+"任务id："+taskId);
 
                 ProLogRecord proLogRecord = new ProLogRecord();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -826,6 +922,7 @@ public class MyProjectController {
             ProjectInfo projectInfo = myProjectService.getProjectInfoByProId(proId);
 
             SystemUser user = systemUserService.selectByPrimaryKey(userId);
+
             //参与组
             List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
             ProjectTask projectTaskNew = new ProjectTask();
@@ -833,7 +930,7 @@ public class MyProjectController {
             Map<String, Object> map1 = new HashMap<>();
             Double sum = 0.0;
             String menuLeafIds = "";
-            String department2 = user.getDepartment();
+            /*String department2 = user.getDepartment();
             department2 = department2.substring(0, 2);
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
             Department did = myProjectService.getDepartmentIdByMent(department2);
@@ -843,18 +940,49 @@ public class MyProjectController {
             List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
 
             //小组
-            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(mapList, "squadId"));*/
+
+/*******************************************对应组成员 开始***************************************************************/
+
+            /**
+             * 判断是总监、经理、组员
+             * listDuty = 1 经理
+             * listDuty > 1 总监
+             * listDuty 为空 组员
+             */
+            List<Map<String, Object>> listDuty = departmentNewMapper.getCheckDuty(user.getUserGroupId());
+
+            List<Map<String, Object>> listMem = new ArrayList<>();
+            if (listDuty.size() > 1) {
+                listMem = departmentNewMapper.getZjMember(user.getUserGroupId());
+            } else if (listDuty.size() == 1){
+                listMem = departmentNewMapper.getJlMember(user.getUserGroupId());
+            } else if (listDuty.size() == 0 ){
+                listMem = departmentNewMapper.getMemMember(user.getUserGroupId());
+            }
+
+            Map<String, Object> mapMem = new HashMap<>();
+
+            mapMem = ToolUtil.getmapList(listMem, "id");
+
+            List<Map<String, Object>> listMembers = systemUserService.getMembersByUserGroupId(mapMem);
+
+            String menuLeafIdsmember = StringUtil.toString(MapUtil.collectProperty(listMembers, "UserGroupId"));
+
+/*******************************************对应组成员 结束******************************************************************/
             for (Map<String, Object> projectTask : taskList) {
                 if (projectTask.get("workDate") != "" && projectTask.get("workDate") != null) {
                     sum += Double.parseDouble(String.valueOf(projectTask.get("workDate")));
                     //dbnum1 = Double.parseDouble(String.valueOf(projectTask.get("workDate")));
                 }
 
-                Group group = groupService.getGroupBySquadId(Integer.valueOf((String) projectTask.get("squadId")));
-                String squad = group.getSquad();
+                //Group group = groupService.getGroupBySquadId(Integer.valueOf((String) projectTask.get("squadId")));
+                DepartmentNew departmentNew = departmentNewMapper.getDeptnoBySquadId(Integer.valueOf((String) projectTask.get("squadId")));
+
+                String squad = departmentNew.getDeptno();
                 //projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
                 projectTask.put("squad", squad);//根据id取对应小组中文名
-                String squadId = (String) projectTask.get("squadId");
+                /*String squadId = (String) projectTask.get("squadId");
 
                 String departmentId = upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
                 projectTask.put("departmentId", departmentId);//根据squadid取对应部门Id
@@ -865,10 +993,11 @@ public class MyProjectController {
                     department = department.substring(0, 2);
                 }
 
-                map1.put("department", department);
+                map1.put("department", department);*/
 
                 //对应组所有人信息
-                List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+                //List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+                List<Map<String, Object>> systemUserList = listMembers;
                 List<Map<String, Object>> systemUserListNew = new ArrayList<>();
 
 
@@ -908,9 +1037,12 @@ public class MyProjectController {
                 projectTask.setDuty("项目发起人");
             }
 
-            Group group = groupMapper.getGroupBySquadId(Integer.valueOf(projectTask.getSquadId()));
+            //Group group = groupMapper.getGroupBySquadId(Integer.valueOf(projectTask.getSquadId()));
+
+            DepartmentNew departmentNew = departmentNewMapper.getDeptnoBySquadId(Integer.valueOf(projectTask.getSquadId()));
+
             //对应组名称
-            projectTask.setSquad(group.getSquad());
+            projectTask.setSquad(departmentNew.getDeptno());
 
             map.put("projectTask", projectTask);
 
@@ -952,11 +1084,39 @@ public class MyProjectController {
             List<ProjectSubtask> list = myProjectService.getProjectSubtaskList(taskId);
 
             SystemUser user = systemUserService.selectByPrimaryKey(id);
+
+/*******************************************对应组成员 开始***************************************************************/
+
+            /**
+             * 判断是总监、经理、组员
+             * listDuty = 1 经理
+             * listDuty > 1 总监
+             * listDuty 为空 组员
+             */
+            List<Map<String, Object>> listDuty = departmentNewMapper.getCheckDuty(user.getUserGroupId());
+
+            List<Map<String, Object>> listMem = new ArrayList<>();
+            if (listDuty.size() > 1) {
+                listMem = departmentNewMapper.getZjMember(user.getUserGroupId());
+            } else if (listDuty.size() == 1){
+                listMem = departmentNewMapper.getJlMember(user.getUserGroupId());
+            } else if (listDuty.size() == 0 ){
+                listMem = departmentNewMapper.getMemMember(user.getUserGroupId());
+            }
+
+            Map<String, Object> mapMem = new HashMap<>();
+
+            mapMem = ToolUtil.getmapList(listMem, "id");
+
+            List<Map<String, Object>> listMembers = systemUserService.getMembersByUserGroupId(mapMem);
+
+/*******************************************对应组成员 结束******************************************************************/
+
             ProjectSubtask projectSubtask1 = new ProjectSubtask();
             for (ProjectSubtask projectSubtask : list) {
 
                 //子任务权限：自己、自己组长、经理和ceo有权限
-                Map<String, Object> map1 = new HashMap<>();
+                /*Map<String, Object> map1 = new HashMap<>();
                 Map<String, Object> map2 = new HashMap<>();
 
                 map2.put("member", projectSubtask.getSubtaskhandler());
@@ -966,10 +1126,11 @@ public class MyProjectController {
                 if (department2.length() > 1) {
                     department2 = department2.substring(0, 2);
                 }
-                map1.put("department", department2);
+                map1.put("department", department2);*/
 
                 //对应组所有人信息
-                List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+                //List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
+                List<Map<String, Object>> systemUserList = listMembers;
 
                 List<Map<String, Object>> systemUserListNew = new ArrayList<>();
 
@@ -1085,6 +1246,8 @@ public class MyProjectController {
 
                 int i = myProjectService.insertProSubTask(projectSubtask);
 
+                logger.info("子任务列表添加成功------"+i+"子任务名称："+subtaskName);
+
                 SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
                 SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -1155,6 +1318,7 @@ public class MyProjectController {
 
                 int k = myProjectService.updateProSubTask(projectSubtask);
 
+                logger.info("子任务列表修改成功------"+k+"子任务名称："+subtaskName);
                 SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
 
                 java.util.Date date2 = new java.util.Date();
@@ -1189,9 +1353,11 @@ public class MyProjectController {
                 }
 
                 //删除
-            } else {
+            } else if (type == 3){
 
                 int j = myProjectService.deleteProSubTaskById(Integer.valueOf(subtaskId));
+
+                logger.info("子任务列表删除成功------"+j+"子任务id："+subtaskId);
 
                 SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1498,6 +1664,7 @@ public class MyProjectController {
 
                 int i = myProjectService.updateTaskById(projectTask);
 
+                logger.info("提交任务成功------"+i+"任务id："+taskId);
                 TaskDevelopLog taskDevelopLog = new TaskDevelopLog();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1533,6 +1700,7 @@ public class MyProjectController {
 
                 int i = myProjectService.updateProSubTask(projectSubtask);
 
+                logger.info("提交子任务成功------"+i+"子任务id："+subtaskId);
                 SubtaskDevelopLog subtaskDevelopLog = new SubtaskDevelopLog();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1638,15 +1806,16 @@ public class MyProjectController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "type", value = "类型 2：任务 3：子任务", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "type", value = "类型 2：任务 3：子任务", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getSecondLeverType", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getSecondLeverType(
             @RequestParam(value = "id") int id,
             @RequestParam(value = "proId") int proId,
-            @RequestParam(value = "type") int type) {
+            @RequestParam(value = "type") int type,
+            @RequestParam(value = "taskId") int taskId) {
 
-        Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
         try {
             if (type == 2) {
@@ -1659,8 +1828,6 @@ public class MyProjectController {
                 //任务
                 List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap(proId);
 
-                Map<String, Object> objectMapNew = new HashMap<>();
-
                 String menuLeafIds = StringUtil.toString(MapUtil.collectProperty(taskList, "taskId"));
 
                 String[] Ids = menuLeafIds.split(",");
@@ -1670,6 +1837,8 @@ public class MyProjectController {
                 mapT.put("menuLeafIds", Ids);
                 //子任务
                 List<Map<String, Object>> subtaskList = myProjectService.getSubTaskListMap(mapT);
+
+                subtaskList = subtaskList.stream().filter(x -> x.get("taskId").toString().equals(String.valueOf(taskId))).collect(Collectors.toList());
 
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, subtaskList, null);
             }
@@ -1707,16 +1876,41 @@ public class MyProjectController {
 
         try {
             SystemUser user = systemUserService.selectByPrimaryKey(id);
-            String department = user.getDepartment();
+
+/*******************************************对应组成员 开始***************************************************************/
+
+            /**
+             * 判断是总监、经理、组员
+             * listDuty = 1 经理
+             * listDuty > 1 总监
+             * listDuty 为空 组员
+             */
+            List<Map<String, Object>> listDuty = departmentNewMapper.getCheckDuty(user.getUserGroupId());
+
+            List<Map<String, Object>> listMem = new ArrayList<>();
+            if (listDuty.size() > 1) {
+                listMem = departmentNewMapper.getZjMember(user.getUserGroupId());
+            } else if (listDuty.size() == 1){
+                listMem = departmentNewMapper.getJlMember(user.getUserGroupId());
+            } else if (listDuty.size() == 0 ){
+                listMem = departmentNewMapper.getMemMember(user.getUserGroupId());
+            }
+
+            Map<String, Object> mapMem = new HashMap<>();
+
+            mapMem = ToolUtil.getmapList(listMem, "id");
+
+            List<Map<String, Object>> listMembers = systemUserService.getMembersByUserGroupId(mapMem);
+
+
+/*******************************************对应组成员 结束******************************************************************/
+            /*String department = user.getDepartment();
             department = department.substring(0, 2);
 
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
-            Department did = myProjectService.getDepartmentIdByMent(department);
+            Department did = myProjectService.getDepartmentIdByMent(department);*/
 
-            if (did == null) {
-                result = new ApiResult<>(Constant.FAIL_CODE_VALUE, "抱歉，暂未匹配到您相关部门！", list, null);
-            } else {
-                String departmentid = did.getDepartmentid();
+                /*String departmentid = did.getDepartmentid();
 
                 //根据部门id查找小组id
                 List<Map<String, Object>> mapList = myProjectService.getSquadId(String.valueOf(departmentid));
@@ -1727,14 +1921,13 @@ public class MyProjectController {
 
                 mapTid.put("mentIds", mIds);
                 //组长/经理其小组成员
-                List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+                List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);*/
 
-                map.put("members", mapList1);
+                map.put("members", listMembers);
 
                 list.add(map);
 
                 result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
-            }
 
         } catch (Exception e) {
             e.printStackTrace();

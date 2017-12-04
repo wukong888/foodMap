@@ -1,6 +1,7 @@
 package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.service.MyProjectService;
 import com.marketing.system.service.OnlineProService;
 import com.marketing.system.service.RecycleProService;
@@ -28,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(description = "上线待审批接口", value = "上线待审批接口")
+@Api(description = "回收站接口", value = "回收站接口")
 @Scope("prototype")
 @RestController
 @EnableAutoConfiguration
@@ -43,6 +44,9 @@ public class RecycleProController {
 
     @Autowired
     private SystemUserService systemUserService;
+
+    @Autowired
+    private DepartmentNewMapper departmentNewMapper;
 
 
 
@@ -129,7 +133,35 @@ public class RecycleProController {
 
             SystemUser user = systemUserService.selectByPrimaryKey(id);
             String userName = user.getUserName();//当前登录用户
-            String department = user.getDepartment();
+
+            /*******************************************对应组成员 开始***************************************************************/
+
+            /**
+             * 判断是总监、经理、组员
+             * listDuty = 1 经理
+             * listDuty > 1 总监
+             * listDuty 为空 组员
+             */
+            List<Map<String, Object>> listDuty = departmentNewMapper.getCheckDuty(user.getUserGroupId());
+
+            List<Map<String, Object>> listMem = new ArrayList<>();
+            if (listDuty.size() > 1) {
+                listMem = departmentNewMapper.getZjMember(user.getUserGroupId());
+            } else if (listDuty.size() == 1){
+                listMem = departmentNewMapper.getJlMember(user.getUserGroupId());
+            } else if (listDuty.size() == 0 ){
+                listMem = departmentNewMapper.getMemMember(user.getUserGroupId());
+            }
+
+            Map<String, Object> mapMem = new HashMap<>();
+
+            mapMem = ToolUtil.getmapList(listMem, "id");
+
+            List<Map<String, Object>> listMembers = systemUserService.getMembersByUserGroupId(mapMem);
+
+/*******************************************对应组成员 结束******************************************************************/
+
+            /*String department = user.getDepartment();
             department = department.substring(0, 2);
 
         //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
@@ -142,9 +174,12 @@ public class RecycleProController {
         String[] mIds = mentIds.split(",");
         Map<String, Object> mapTid = new HashMap<>();
 
-        mapTid.put("mentIds", mIds);
+        mapTid.put("mentIds", mIds);*/
+
+
         //组长/经理其小组成员
-        List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+        //List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
+            List<Map<String, Object>> mapList1 = listMembers;
 
         //当前登录用户所涉及子任务
         List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
@@ -163,7 +198,7 @@ public class RecycleProController {
         
         for (Map map1 : mapList1) {
             for (Map map0 : subtaskList) {
-                if (map0.get("subtaskHandler") == map1.get("member")) {
+                if (map0.get("subtaskHandler") == map1.get("UserName")) {
                     taskString.add(map0);
                 }
             }

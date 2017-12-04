@@ -24,4 +24,9 @@ public interface SystemUserService {
 
     //经理本部门成员
     List<Map<String, Object>> getGroupMembersByManeger(Map<String,Object> map);
+
+    List<Map<String,Object>> getMembersById();
+
+    //获取对应组成员
+    List<Map<String,Object>> getMembersByUserGroupId(Map<String,Object> map);
 }

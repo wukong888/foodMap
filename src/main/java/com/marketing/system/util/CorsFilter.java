@@ -41,6 +41,7 @@ public class CorsFilter implements Filter {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setContentType("image/gif");
+        response.setContentType("application/json");
         chain.doFilter(req, res);
         String token = reqs.getHeader("Authorization");
 

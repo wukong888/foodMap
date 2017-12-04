@@ -27,6 +27,11 @@
     delete from token_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <delete id="deleteTop" >
+      delete FROM token_record where id IN  (select top 1 id  FROM token_record)
+  </delete>
+
   <insert id="insert" parameterType="com.marketing.system.entity.TokenRecord" >
     insert into token_record ( token, create_time
       )

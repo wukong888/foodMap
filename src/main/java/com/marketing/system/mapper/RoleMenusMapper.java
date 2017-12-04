@@ -27,4 +27,6 @@ public interface RoleMenusMapper {
 
     int updateMenu(Map<String,Object> map);
 
+    List<Map<String,Object>> getButton();
+
 }

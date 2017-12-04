@@ -1,19 +1,27 @@
 package com.marketing.system.util;
 
+
+import com.alibaba.fastjson.JSONObject;
 import com.marketing.system.cache.Cache;
 import com.marketing.system.cache.CacheManager;
 import com.marketing.system.entity.ProjectInfo;
 import com.marketing.system.entity.SystemUser;
-import org.apache.http.HttpResponse;
+import org.apache.commons.httpclient.HttpException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
+
+import java.io.*;
+import java.net.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ToolUtil {
+
     //文件响应下载
     public static void downloadFile(File file, OutputStream out) {
         try {
@@ -110,6 +118,37 @@ public class ToolUtil {
 
         return betweenDays;
     }
+
+    /**
+     * 计算两个时间间隔天数
+     * @return
+     */
+    public static Long getBetweenDays(String startTime,String endTime) {
+        long betweenDays = 0;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            Date endTimeN = sdf.parse(startTime);//结束时间
+            Date plansdate = sdf.parse(endTime);//开始时间
+
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(plansdate);
+
+            Date smdate = sdf.parse(sdf.format(endTimeN));
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(smdate);
+            long time1 = cal.getTimeInMillis();
+            cal.setTime(calendar.getTime());
+            long time2 = cal.getTimeInMillis();
+            betweenDays = ((time2 - time1) / (1000 * 3600 * 24));//天数
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return betweenDays;
+    }
+
 
     /**
      * 判断缓存是否存在
@@ -286,4 +325,119 @@ public class ToolUtil {
 
         return mapTid;
     }
+
+
+    //发送短信
+    public static String sendMsg(String phone,String content)  throws HttpException, IOException{
+        try {
+            //创建连接
+            URL url = new URL("http://120.27.195.107:8181/api/sms");
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setRequestMethod("POST");
+            connection.setUseCaches(false);
+            connection.setInstanceFollowRedirects(true);
+            //application/x-javascript text/xml->xml数据 application/x-javascript->json对象 application/x-www-form-urlencoded->表单数据 application/json;charset=utf-8 -> json数据
+            connection.setRequestProperty("Content-Type",
+                    "application/json;charset=utf-8");
+            connection.setRequestProperty("accept", "*/*");
+            connection.setRequestProperty("user-agent",
+                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+
+            connection.connect();
+
+            //POST请求
+            OutputStream out = connection.getOutputStream();
+            JSONObject obj = new JSONObject();
+            obj.put("tel", phone);
+            obj.put("Content", content);
+
+            //String postData = "{\"tel\":"+phone+",\"Content\":"+content+"}";
+            //String postData = "{\"tel\":\"13685515856\",\"Content\":\"蓝色666\"}";
+            out.write(obj.toJSONString().getBytes("utf-8"));
+            out.flush();
+            out.close();
+
+            //读取响应
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream(),"UTF-8"));
+            String lines;
+            StringBuffer sb = new StringBuffer();
+            while ((lines = reader.readLine()) != null) {
+                lines = new String(lines.getBytes(), "utf-8");
+                sb.append(lines);
+            }
+            System.out.println(sb);
+            reader.close();
+            // 断开连接
+            connection.disconnect();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+
+    }
+
+    //发送邮件
+    public static String sendEmial(String tomail,String title,String content)  throws HttpException, IOException{
+        try {
+            //创建连接
+            URL url = new URL("http://120.27.195.107:8181/api/EMaill");
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setRequestMethod("POST");
+            connection.setUseCaches(false);
+            connection.setInstanceFollowRedirects(true);
+            //application/x-javascript text/xml->xml数据 application/x-javascript->json对象 application/x-www-form-urlencoded->表单数据 application/json;charset=utf-8 -> json数据
+            connection.setRequestProperty("Content-Type",
+                    "application/json;charset=utf-8");
+            connection.setRequestProperty("accept", "*/*");
+            connection.setRequestProperty("user-agent",
+                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+
+            connection.connect();
+
+            //POST请求
+            OutputStream out = connection.getOutputStream();
+            JSONObject obj = new JSONObject();
+            obj.put("Tomail", tomail);
+            obj.put("Title", title);
+            obj.put("Content", content);
+
+            out.write(obj.toJSONString().getBytes("utf-8"));
+            out.flush();
+            out.close();
+
+            //读取响应
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream(),"UTF-8"));
+            String lines;
+            StringBuffer sb = new StringBuffer();
+            while ((lines = reader.readLine()) != null) {
+                lines = new String(lines.getBytes(), "utf-8");
+                sb.append(lines);
+            }
+            System.out.println(sb);
+            reader.close();
+            // 断开连接
+            connection.disconnect();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+
+    }
+
 }

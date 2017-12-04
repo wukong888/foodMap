@@ -15,6 +15,7 @@
         <result column="ParentId" property="ParentId"/>
         <result column="Scriptid" property="Scriptid"/>
         <result column="SystemId" property="SystemId"/>
+        <result column="isButton" property="isButton"/>
     </resultMap>
 
 
@@ -65,6 +66,7 @@
         Menu
         WHERE
          SystemId = #{SystemId,jdbcType=INTEGER}
+        AND isButton = '0'
         <foreach item="item" index="index" collection="ids"
                  open="and id IN (" separator="," close=")">
             #{item}
@@ -85,6 +87,24 @@
         FROM
         Menu
         WHERE SystemId = #{SystemId,jdbcType=INTEGER}
+        AND isButton = '0'
+    </select>
+
+    <select id="getButton" resultMap="menuHashMap">
+        SELECT
+        id,
+        ParentId,
+        Name,
+        Url,
+        GroupId,
+        Px,
+        Scriptid,
+        SystemId,
+        isButton
+        FROM
+        Menu
+        WHERE SystemId = 30
+        AND isButton = '1'
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="com.marketing.system.entity.RoleMenus">

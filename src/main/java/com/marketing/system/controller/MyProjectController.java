@@ -1807,14 +1807,14 @@ public class MyProjectController {
             @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "type", value = "类型 2：任务 3：子任务", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "Integer")
     })
     @RequestMapping(value = "/getSecondLeverType", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getSecondLeverType(
             @RequestParam(value = "id") int id,
             @RequestParam(value = "proId") int proId,
             @RequestParam(value = "type") int type,
-            @RequestParam(value = "taskId") int taskId) {
+            @RequestParam(value = "taskId",required = false) int taskId) {
 
         ApiResult<List<Map<String, Object>>> result = null;
         try {

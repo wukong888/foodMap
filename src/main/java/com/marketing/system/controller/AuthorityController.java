@@ -144,6 +144,8 @@ public class AuthorityController {
                         } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !menuLeafIdsmember.contains(projectInfo.getCreater())) {
                             //projectInfo.setDuty("组员");
                             map.put(mapButton.get("Url").toString(),"false");
+                        } else {
+                            map.put(mapButton.get("Url").toString(),"false");
                         }
                     }
                 }

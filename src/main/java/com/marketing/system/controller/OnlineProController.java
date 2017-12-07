@@ -1,20 +1,20 @@
 package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
-import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper_two.ProjectSubtaskMapper;
-import com.marketing.system.service.*;
+import com.marketing.system.service.MyProjectService;
+import com.marketing.system.service.OnlineProService;
+import com.marketing.system.service.RoleService;
+import com.marketing.system.service.SystemUserService;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.util.StopWatch;
@@ -51,21 +51,6 @@ public class OnlineProController {
 
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private DepartmentNewMapper departmentNewMapper;
-
-    @Autowired
-    private IndexService indexService;
-
-    @Value("${ceo.id}")
-    private String ceoId;
-
-    @Value("${ceo.phone}")
-    private String ceoPhone;
-
-    @Value("${ceo.email}")
-    private String ceoEmail;
 
     /**
      * 查询上线审批列表
@@ -134,37 +119,11 @@ public class OnlineProController {
 
             List<ProjectInfo> OnProAll = (List<ProjectInfo>) OnProMapAll.get("OnPro");
 
+            SystemUser user2 = (SystemUser) SecurityUtils.getSubject().getPrincipal();
+
             SystemUser user = systemUserService.selectByPrimaryKey(id);
             String userName = user.getUserName();//当前登录用户
-
-/*******************************************对应组成员 开始***************************************************************/
-
-            /**
-             * 判断是总监、经理、组员
-             * listDuty = 1 经理
-             * listDuty > 1 总监
-             * listDuty 为空 组员
-             */
-            List<Map<String, Object>> listDuty = departmentNewMapper.getCheckDuty(user.getUserGroupId());
-
-            List<Map<String, Object>> listMem = new ArrayList<>();
-            if (listDuty.size() > 1) {
-                listMem = departmentNewMapper.getZjMember(user.getUserGroupId());
-            } else if (listDuty.size() == 1){
-                listMem = departmentNewMapper.getJlMember(user.getUserGroupId());
-            } else if (listDuty.size() == 0 ){
-                listMem = departmentNewMapper.getMemMember(user.getUserGroupId());
-            }
-
-            Map<String, Object> mapMem = new HashMap<>();
-
-            mapMem = ToolUtil.getmapList(listMem, "id");
-
-            List<Map<String, Object>> listMembers = systemUserService.getMembersByUserGroupId(mapMem);
-
-/*******************************************对应组成员 结束******************************************************************/
-
-            /*String department = user.getDepartment();
+            String department = user.getDepartment();
             department = department.substring(0, 2);
 
             //当前用户为组长/经理时，可以查看自己和其小组成员相关的项目
@@ -177,11 +136,9 @@ public class OnlineProController {
             String[] mIds = mentIds.split(",");
             Map<String, Object> mapTid = new HashMap<>();
 
-            mapTid.put("mentIds", mIds);*/
-
+            mapTid.put("mentIds", mIds);
             //组长/经理其小组成员
-            //List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
-            List<Map<String, Object>> mapList1 = listMembers;
+            List<Map<String, Object>> mapList1 = myProjectService.getMembers(mapTid);
 
             //当前登录用户所涉及子任务
             List<Map<String, Object>> subtaskList = myProjectService.getSubTaskIdByHander(userName);
@@ -199,7 +156,7 @@ public class OnlineProController {
             //小组集合中是否匹配子任务负责人
             for (Map map1 : mapList1) {
                 for (Map map0 : subtaskList) {
-                    if (map0.get("subtaskHandler") == map1.get("UserName")) {
+                    if (map0.get("subtaskHandler") == map1.get("member")) {
                         taskString.add(map0);
                     }
                 }
@@ -414,112 +371,62 @@ public class OnlineProController {
     @ApiOperation(value = "审批通过")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批通过说明", required = true, dataType = "String")
     })
     @RequestMapping(value = "/selectInsertProPassLog", method = RequestMethod.POST)
     public ApiResult<String> selectInsertProPassLog(
             @RequestParam(value = "proId") int proId,
-            @RequestParam(value = "userId") int userId,
             @RequestParam(value = "explain", required = false) String explain) {
         ApiResult<String> result = null;
         String onlineDate=DateUtil.getYMDHMSDate();
 
-        SystemUser user = systemUserService.selectByPrimaryKey(userId);
+        if(OnProService.isAllTaskPass(proId)){
 
-        //验证是否ceo权限操作
-        if (!user.getDuty().equals("CEO")) {
-            result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.NOTCEO_FAIL,null,null);
-            return result;
-        }
+            try {
 
-        try {
-            boolean success = OnProService.insertProPassLog(proId, explain,onlineDate);
+                boolean success = OnProService.insertProPassLog(proId, explain,onlineDate);
 
-            List<Map<String,Object>> updateSubtaskProgress = projectSubtaskMapper.selectProSubtaskByProId(proId);
+                List<Map<String,Object>> updateSubtaskProgress = projectSubtaskMapper.selectProSubtaskByProId(proId);
 
-            String mentIds = StringUtil.toString(MapUtil.collectProperty(updateSubtaskProgress, "taskId"));
-            String[] mIds = mentIds.split(",");
-            Map<String, Object> mapTid = new HashMap<>();
+                String mentIds = StringUtil.toString(MapUtil.collectProperty(updateSubtaskProgress, "taskId"));
+                String[] mIds = mentIds.split(",");
+                Map<String, Object> mapTid = new HashMap<>();
 
-            mapTid.put("mentIds", mIds);
+                mapTid.put("mentIds", mIds);
 
-            //更新任务相关子任务进度为100
-            boolean updateSubtaskProgressResult = projectSubtaskMapper.updateSubtaskProgress(mapTid);
+                //更新任务相关子任务进度为100
+                boolean updateSubtaskProgressResult = projectSubtaskMapper.updateSubtaskProgress(mapTid);
 
-            ProjectInfo ProInfo=OnProService.selectProByProId(proId);
+                ProjectInfo ProInfo=OnProService.selectProByProId(proId);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            java.util.Date date2 = new java.util.Date();
-            String str2 = sdf.format(date2);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                java.util.Date date2 = new java.util.Date();
+                String str2 = sdf.format(date2);
 
-            //发起小组
-            String group = departmentNewMapper.getGroupByCreater(ProInfo.getCreater());
+                if (success == true) {
+                    result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过", "审批通过", null);
 
-            //3、上线待审批
-            Integer sx_cp = indexService.getSxProjects("");
 
-            //3、上线待审批
-            Integer sx_hd = indexService.getHdSxProjects("");
-
-            Integer sx = sx_cp + sx_hd;
-
-            long betweenDays = ToolUtil.getBetweenTimes(ProInfo.getPlanedate());
-
-            String yuqi = "";
-            if (betweenDays > 0) {
-                yuqi = "否";
-            } else {
-                yuqi = "是";
-            }
-            //项目类型(1:产品，2：活动)
-            String proTypeName = "";
-            if (ProInfo.getProtype().equals("1")) {
-                proTypeName = "产品";
-            } else {
-                proTypeName = "活动";
-            }
-            if (success == true) {
-                result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过", "审批通过", null);
-
-                    /*String postUrl = "{\"Uid\":" + ProInfo.getUserId() + ",\"Content\":\"创建人:" + ProInfo.getCreater()
+                    String postUrl = "{\"Uid\":" + ProInfo.getUserId() + ",\"Content\":\"创建人:" + ProInfo.getCreater()
                             + "\\n\\n项目名称:" + ProInfo.getProname() + "\\n\\n内容:" + explain
                             + "\\n\\n推送时间:" + str2
-                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";*/
-                String postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" +ProInfo.getProname()+ "》的上线申请，请及时处理。"
-                        + "\\n\\n发起小组:" + group
-                        + "\\n\\n发起人:" + ProInfo.getCreater()
-                        + "\\n\\n项目名称:" + ProInfo.getProname()
-                        + "\\n\\n项目类型:" + proTypeName
-                        + "\\n\\n发起时间:" + ProInfo.getCreatedate()
-                        + "\\n\\n是否逾期:" + yuqi
-                        + "\\n\\n上线审批总量:" + sx + "个"
-                        + "\\n\\n推送时间:" + str2
-                        + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
-                try {
-                    //消息推送-回复
-                    httpPostWithJSON(postUrl);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    try {
+                        //消息推送-回复
+                        httpPostWithJSON(postUrl);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过操作失败", "审批通过操作失败", null);
                 }
-
-                //上线待审批，发送短信
-
-                //数据研发中心柏铭成向您申请对《大数据分析平台项目》实施项目立项，请您及时处理。
-                ToolUtil.sendMsg(ceoPhone,group+ProInfo.getCreater() + "向您申请对《"+ ProInfo.getProname()+"》实施项目上线，请您及时处理。");
-
-                //发送邮件
-                ToolUtil.sendEmial(ceoEmail,"关于《"+ ProInfo.getProname() +"》的上线申请","您好，"+ group+ProInfo.getCreater() +"向您发起名为《"+ProInfo.getProname() +"》的上线申请，该项目类型为"+ proTypeName+"，此项目按照要求时间上线（要求上线时间为"+ ProInfo.getPlanedate() + ")。请您及时处理。项目简介如下：<br>" +
-                        ProInfo.getProdeclare() + "<br>"+
-                        "点击进入项目审批页：https://192.168.11.132:2222<br>" +
-                        "注：您目前还有"+ sx +"个未处理的上线申请。<br>");
-            } else {
-                result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批通过操作失败", "审批通过操作失败", null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("审批通过 错误信息：" + e);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("审批通过 错误信息：" + e);
+        }else{
+            result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "项目任务未全部完成", "项目任务未全部完成", null);
         }
         return result;
     }
@@ -554,17 +461,17 @@ public class OnlineProController {
                     java.util.Date date2 = new java.util.Date();
                     String str2 = sdf.format(date2);
 
-                        String postUrl = "{\"Uid\":" + ProInfo.getUserId() + ",\"Content\":\"创建人:" + ProInfo.getCreater()
-                                + "\\n\\n项目名称:" + ProInfo.getProname() + "\\n\\n内容:" + explain
-                                + "\\n\\n推送时间:" + str2
-                                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+                    String postUrl = "{\"Uid\":" + ProInfo.getUserId() + ",\"Content\":\"创建人:" + ProInfo.getCreater()
+                            + "\\n\\n项目名称:" + ProInfo.getProname() + "\\n\\n内容:" + explain
+                            + "\\n\\n推送时间:" + str2
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
-                        try {
-                            //消息推送-回复
-                            httpPostWithJSON(postUrl);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        //消息推送-回复
+                        httpPostWithJSON(postUrl);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "审批驳回操作失败", "审批驳回操作失败", null);
                 }

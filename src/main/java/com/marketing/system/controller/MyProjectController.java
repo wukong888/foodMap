@@ -3,7 +3,9 @@ package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
 import com.marketing.system.mapper.DepartmentNewMapper;
+import com.marketing.system.mapper.SystemUserMapper;
 import com.marketing.system.mapper_two.GroupMapper;
+import com.marketing.system.mapper_two.OnlineProMapper;
 import com.marketing.system.mapper_two.ProjectSubtaskMapper;
 import com.marketing.system.service.*;
 import com.marketing.system.util.*;
@@ -25,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.marketing.system.util.WeiXinPushUtil.httpPostWithJSON;
 
 @Api(description = "我的项目接口", value = "我的项目接口")
 @Scope("prototype")
@@ -57,6 +61,12 @@ public class MyProjectController {
 
     @Autowired
     private DepartmentNewMapper departmentNewMapper;
+
+    @Autowired
+    private OnlineProMapper OnProMapper;
+
+    @Autowired
+    private SystemUserMapper systemUserMapper;
 
     /**
      * 查询我的项目列表
@@ -761,7 +771,6 @@ public class MyProjectController {
                 }
                 for (Map handle : systemUserListNew) {
                     handler2 = String.valueOf(handle.get("UserName"));
-
                 }
                 projectTask.setHandler(handler2);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -777,6 +786,52 @@ public class MyProjectController {
                 i = myProjectService.insertProTask(projectTask);
 
                 logger.info("我的项目参与组添加任务成功------"+i+"任务名称："+taskName);
+
+                //任务分配完成时，推送消息给相关负责人
+                Integer Uid=systemUserMapper.getUidByName(handler);
+                //获取当前时间
+                String PushDate=DateUtil.getYMDHMDate();
+                //获取相应项目信息
+                ProjectInfo pro = OnProMapper.selectProByProId(ProId);
+
+                //推送给相应的任务处理人-组长
+                String postUrl1 = "";
+                String postUrl2 = "";
+                String postUrl3 = "";
+                postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                        + "\\n\\n任务分配:" + handler
+                        + "\\n\\n任务名称:" + taskName
+                        + "\\n\\n开始时间:" + sDate
+                        + "\\n\\n结束时间:" + eDate
+                        + "\\n\\n推送时间:" + PushDate
+                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+
+                //推送给郑洁
+                postUrl2 = "{\"Uid\":" + 1285 + ",\"Content\":\"《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                        + "\\n\\n任务分配:" + handler
+                        + "\\n\\n任务名称:" + taskName
+                        + "\\n\\n开始时间:" + sDate
+                        + "\\n\\n结束时间:" + eDate
+                        + "\\n\\n推送时间:" + PushDate
+                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+
+                //推送给陈总
+                postUrl3 = "{\"Uid\":" + 193 + ",\"Content\":\"《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                        + "\\n\\n任务分配:" + handler
+                        + "\\n\\n任务名称:" + taskName
+                        + "\\n\\n开始时间:" + sDate
+                        + "\\n\\n结束时间:" + eDate
+                        + "\\n\\n推送时间:" + PushDate
+                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+
+                try {
+                    //消息推送-任务分配
+                    httpPostWithJSON(postUrl1);
+                    httpPostWithJSON(postUrl2);
+                    httpPostWithJSON(postUrl3);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 ProLogRecord proLogRecord = new ProLogRecord();
 
@@ -1288,6 +1343,35 @@ public class MyProjectController {
                     result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
                 } else {
                     result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+                }
+
+                //子任务分配成功消息推送
+                //获取当前时间
+                String PushDate=DateUtil.getYMDHMDate();
+
+                //推送给相应的子任务处理人-组员
+
+                   //获取组员id
+                   Integer Uid = systemUserMapper.getUidByName(subtaskHandler);
+                   //获取子任务所属的项目名称
+                   String proName = OnProMapper.getProNameByTaskId(taskId);
+                   //获取子任务所属任务的信息
+                   ProjectTask task = OnProMapper.getTaskByTaskId(taskId);
+
+                String postUrl = "";
+                postUrl = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
+                        + "\\n\\n任务分配:" + task.getHandler()
+                        + "\\n\\n任务名称:" + subtaskName
+                        + "\\n\\n开始时间:" + sDate
+                        + "\\n\\n结束时间:" + eDate
+                        + "\\n\\n推送时间:" + PushDate
+                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+
+                try {
+                    //消息推送-任务分配
+                    httpPostWithJSON(postUrl);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 //2：修改

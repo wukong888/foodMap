@@ -52,4 +52,9 @@ public interface OnlineProService {
 
     //根据proid查找项目信息
     ProjectInfo selectProByProId(Integer proId);
+
+    //判断项目中的任务进度是否全部是100%
+    Boolean isAllTaskPass(Integer proId);
+
+
 }

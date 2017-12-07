@@ -16,8 +16,8 @@ public interface OnlineProMapper {
             " and createDate <= #{createdate2} and finishDate >= #{finishdate1} and finishDate <= #{finishdate2} and proType like '%${protype}%' and proName like '%${param}%'" +
             " ORDER BY createDate desc  OFFSET (#{pageSize}*(#{current}-1))  ROWS FETCH NEXT #{pageSize} ROWS ONLY")
     List<ProjectInfo> selectOnPro(@Param("creatersquadid")String creatersquadid,@Param("creater")String creater,@Param("createdate1")String createdate1,
-    @Param("createdate2")String createdate2,@Param("finishdate1")String finishdate1,@Param("finishdate2")String finishdate2,@Param("protype")String protype,
-    @Param("param")String param,@Param("current")Integer current,@Param("pageSize")Integer pageSize);
+                                  @Param("createdate2")String createdate2,@Param("finishdate1")String finishdate1,@Param("finishdate2")String finishdate2,@Param("protype")String protype,
+                                  @Param("param")String param,@Param("current")Integer current,@Param("pageSize")Integer pageSize);
 
     //模糊查询上线待审批的项目的数量
     @Select("SELECT count(1) FROM project_info where proState=3 and createrSquadId like '%${creatersquadid}%' and creater like '%${creater}%' and " +
@@ -30,8 +30,6 @@ public interface OnlineProMapper {
     //根据部门Id查部门
     @Select("SELECT squad FROM projectManage.dbo.[group] where squadId =#{squadId}")
     String selectSquadById(@Param("squadId")String squadId);
-
-
 
     //查看上线待审批项目的详细信息
     @Select("SELECT * FROM project_info where id=#{id}")
@@ -93,7 +91,7 @@ public interface OnlineProMapper {
     //项目驳回功能，项目日志记录增加一条日志记录
     @Insert("INSERT INTO pro_LogRecord (proId,type,Date,squadId,Emp,explain,filePath) values (#{proid},#{type},#{date},#{squadid},#{emp},#{explain},#{filepath})")
     boolean insertProReturnLog(@Param("proid")Integer proid,@Param("type")String type,@Param("date")String date,@Param("squadid")String squadid,@Param("emp")String emp,
-                             @Param("explain")String explain,@Param("filepath")String filepath);
+                               @Param("explain")String explain,@Param("filepath")String filepath);
 
     //项目上线审批驳回，更改项目状态
     @Update("UPDATE project_info SET proState=2 ,againState=2 WHERE proId=#{proId}")
@@ -106,6 +104,36 @@ public interface OnlineProMapper {
     //根据项目Id查找项目信息
     @Select("select * from project_info where proId=#{proId}")
     ProjectInfo selectProByProId(@Param("proId")Integer proId);
+
+    //根据项目Id，查找项目下的任务
+    @Select("SELECT * FROM project_task WHERE proId=#{proId}")
+    List<ProjectTask> getTaskByProId(@Param("proId")Integer proId);
+
+
+
+    //根据任务Id获取项目名称
+    @Select("SELECT proName FROM project_info WHERE proId =(SELECT proId FROM project_task WHERE taskId=#{taskId})")
+    String getProNameByTaskId(@Param("taskId")Integer taskId);
+
+    //根据任务id获取任务信息
+    @Select("SELECT * FROM project_task WHERE taskId=#{taskId}")
+    ProjectTask getTaskByTaskId(@Param("taskId")Integer taskId);
+
+    //根据任务Id查找旗下所以子任务
+    @Select("SELECT * FROM project_subtask WHERE taskId = #{taskId}")
+    List<ProjectSubtask> getSubtaskByTaskId(@Param("taskId")Integer taskId);
+
+    //根据子任务Id查找所有对应的子任务开发日志
+    @Select("SELECT a.* FROM subtask_DevelopLog a JOIN project_subtask b ON a.subtaskId=b.subtaskId WHERE a.subtaskId = #{subtaskId}")
+    List<SubtaskDevelopLog> getAllSubTaskDevLog(@Param("subtaskId")Integer subtaskId);
+
+    //修改子任务中未按时更新开发日志记录次数
+    @Update("UPDATE project_subtask SET noPutCount =#{NoPutCount} where subtaskId =#{subtaskId}")
+    boolean updateNoPutCount(@Param("NoPutCount")Integer NoPutCount,@Param("subtaskId")Integer subtaskId);
+
+    //获取所有未上线项目
+    @Select("SELECT * FROM project_info WHERE proState = 2 OR proState = 7")
+    List<ProjectInfo> getAllNoOnlinePro();
 
 
 }

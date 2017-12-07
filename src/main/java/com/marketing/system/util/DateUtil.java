@@ -88,6 +88,20 @@ public class DateUtil {
         return sdf.format(Date);
     }
 
+    //获取MM月dd日格式的当前时间
+    public static String getMDDate(){
+        Date Date=new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 ");
+        return sdf.format(Date);
+    }
+
+    //获取yyyy-MM-dd HH格式的当前时间
+    public static String getYMDHDate(){
+        Date Date=new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh");
+        return sdf.format(Date);
+    }
+
     //获取yyyy-MM-dd hh:mm:ss格式的当前时间
     public static String getYMDHMSDate(){
         Date Date=new Date();
@@ -125,9 +139,20 @@ public class DateUtil {
 
         return MonthDayDate;
     }
-//
-//    public  static void main(String[] args){
-//
-//       System.out.println(getSystemTime());
-//    }
+
+    public static Integer  getDayDiff(String fromDate,String toDate){
+        SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd");//如2016-08-10
+        long from = 0;
+        long to = 0;
+        try {
+            from = simpleFormat.parse(fromDate).getTime();
+            to = simpleFormat.parse(toDate).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int days = (int) ((to - from)/(1000 * 60 * 60 * 24));
+        return days;
+
+    }
+
 }

@@ -22,7 +22,7 @@ public class DayReportServiceImpl implements DayReportService{
 
         String date=null;
         if(Date==null||Date==""){
-           date= DateUtil.getYMDDate();
+            date= DateUtil.getYMDDate();
         }
         String startDate=date+"00:00:00";
         String endDate=date+"23:59:59";
@@ -59,12 +59,22 @@ public class DayReportServiceImpl implements DayReportService{
         return  Report;
     }
 
+    //通过数据库查找项目日报信息
+    public Map<String,Object> getProDayReportInfos(String reportDate,Integer current,Integer pageSize){
+        List<Map> ProReportInfos=DayReportDao.getProDayReportInfos(reportDate,current,pageSize);
+        Integer ProReportInfosCount = DayReportDao.getProDayReportInfosCount(reportDate);
+        Map<String,Object> ProReport=new HashMap<String,Object>();
+        ProReport.put("ProReportInfos",ProReportInfos);
+        ProReport.put("ProReportInfosCount",ProReportInfosCount);
+        return ProReport;
+    }
+
     //模糊查询任务日报
     public Map<String,Object> selectTaskReport(Integer current, Integer pageSize, String Date,Integer proId){
 
         String date=null;
         if(Date==null||Date==""){
-           date= DateUtil.getYMDDate();
+            date= DateUtil.getYMDDate();
         }
         String startDate=date+"00:00:00";
         String endDate=date+"23:59:59";
@@ -114,7 +124,6 @@ public class DayReportServiceImpl implements DayReportService{
             taskReport.put("taskState",taskState);
             taskReport.put("taskProgress",taskProgress);
             taskReport.put("taskLogs",taskLogs);
-            System.out.println("taskLogs----------------"+taskLogs);
             taskReports.add(taskReport);
         }
         List<Map> taskReport=ToolUtil.listSplit(current,pageSize,taskReports);
@@ -128,12 +137,30 @@ public class DayReportServiceImpl implements DayReportService{
         return  Report;
     }
 
+    //通过数据库查找任务日报信息
+    public Map<String,Object> getTaskDayReportInfos(String reportDate,Integer current,Integer pageSize,Integer proId){
+        List<Map> TaskReportInfos = new ArrayList<Map>();
+        Integer TaskReportInfosCount = null;
+        Map<String,Object> TaskReport=new HashMap<String,Object>();
+        if(proId==null){
+            TaskReportInfos=DayReportDao.getTaskDayReportInfos(reportDate,current,pageSize);
+            TaskReportInfosCount = DayReportDao.getTaskDayReportInfosCount(reportDate);
+        }else{
+            TaskReportInfos=DayReportDao.getTaskDayReportInfos1(reportDate,current,pageSize,proId);
+            TaskReportInfosCount = DayReportDao.getTaskDayReportInfosCount1(reportDate,proId);
+        }
+        TaskReport.put("TaskReportInfos",TaskReportInfos);
+        TaskReport.put("TaskReportInfosCount",TaskReportInfosCount);
+
+        return TaskReport;
+    }
+
     //模糊查询子任务日报
     public Map<String,Object> selectSubtaskReport(Integer current, Integer pageSize, String Date,Integer proId,Integer taskId){
 
         String date=null;
         if(Date==null||Date==""){
-         date= DateUtil.getYMDDate();
+            date= DateUtil.getYMDDate();
         }
         String startDate=date+"00:00:00";
         String endDate=date+"23:59:59";
@@ -166,8 +193,8 @@ public class DayReportServiceImpl implements DayReportService{
                 TaskReports.addAll(TaskReport);
             }
         }else{
-              TaskReport=DayReportDao.selectTaskReportByTaskId(1,200,taskId);
-              TaskReports.addAll(TaskReport);
+            TaskReport=DayReportDao.selectTaskReportByTaskId(1,200,taskId);
+            TaskReports.addAll(TaskReport);
         }
         /*for(Integer ProId:proIds){
             TaskReport=DayReportDao.selectTaskReport(1,200,ProId);
@@ -205,9 +232,34 @@ public class DayReportServiceImpl implements DayReportService{
         }
         List<Map> subtaskReport=ToolUtil.listSplit(current,pageSize,subtaskReports);
         Report.put("subtaskReports",subtaskReport);
-        Report.put("subtaskReportsNum",subtaskReport.size());
+        Report.put("subtaskReportsNum",subtaskReports.size());
         return  Report;
     }
+
+    //通过数据库查找子任务日报信息
+    public Map<String,Object> getSubtaskDayReportInfos(String reportDate,Integer current,Integer pageSize,Integer proId,Integer taskId){
+        List<Map> SubtaskReportInfos = new ArrayList<Map>();
+        Integer SubtaskReportInfosCount = null;
+        Map<String,Object> SubtaskReport=new HashMap<String,Object>();
+        if(proId==null){
+            SubtaskReportInfos=DayReportDao.getSubaskDayReportInfos(reportDate,current,pageSize);
+            SubtaskReportInfosCount = DayReportDao.getSubtaskDayReportInfosCount(reportDate);
+        }else{
+            if(taskId==null){
+                SubtaskReportInfos=DayReportDao.getSubtaskDayReportInfos1(reportDate,current,pageSize,proId);
+                SubtaskReportInfosCount = DayReportDao.getSubtaskDayReportInfosCount1(reportDate,proId);
+            }else{
+                SubtaskReportInfos=DayReportDao.getSubtaskDayReportInfos2(reportDate,current,pageSize,taskId);
+                SubtaskReportInfosCount = DayReportDao.getSubtaskDayReportInfosCount2(reportDate,taskId);
+            }
+
+        }
+        SubtaskReport.put("SubtaskReportInfos",SubtaskReportInfos);
+        SubtaskReport.put("SubtaskReportInfosCount",SubtaskReportInfosCount);
+
+        return SubtaskReport;
+    }
+
 
     //项目日报的定时导出
     public Map<String,Object> exportProExcel( String date){
@@ -367,7 +419,7 @@ public class DayReportServiceImpl implements DayReportService{
             SubtaskReport=DayReportDao.exportSubtaskExcel(taskId);
             SubtaskReports.addAll(SubtaskReport);
         }
-       // List<Map> SubtaskReport=DayReportDao.exportSubtaskExcel(startDate,endDate);
+        // List<Map> SubtaskReport=DayReportDao.exportSubtaskExcel(startDate,endDate);
 
         //得到该任务的动态记录
         for(int i=0;i<SubtaskReports.size();i++){

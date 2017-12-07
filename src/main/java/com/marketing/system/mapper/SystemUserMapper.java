@@ -30,6 +30,10 @@ public interface SystemUserMapper {
     @Select("select id,UserName,UserGroupId from SystemUser ")
     List<Map<String,Object>> getMembersByIdNew();
 
+    //根据用户名查找SystemUser的Uid
+    @Select("SELECT id from SystemUser where UserName=#{name}")
+    Integer getUidByName(@Param("name")String name);
+
     //获取对应组成员
     List<Map<String,Object>> getMembersByUserGroupId(Map<String,Object> map);
 }

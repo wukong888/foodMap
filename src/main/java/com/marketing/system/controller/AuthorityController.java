@@ -67,12 +67,14 @@ public class AuthorityController {
     @ApiOperation(value = "项目详情页面按钮权限",notes = "返回说明，xm_sxsp：上线审批按钮，xm_tjkfrz：添加开发日志按钮，xm_tj：添加按钮，xm_xg：修改按钮，xm_sc：删除按钮，xm_xmzf：项目作废按钮")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "id", value = "我的项目主键id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getAuthorityByUser", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getAuthorityByUser(
             @RequestParam(value = "id") int id,
-            @RequestParam(value = "proId") int proId ) {
+            @RequestParam(value = "proId") int proId,
+            @RequestParam(value = "userId") int userId) {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
@@ -80,9 +82,7 @@ public class AuthorityController {
         try {
             ProjectInfo projectInfo = upProjectService.selectByPrimaryKey(id);
 
-            Session session = SecurityUtils.getSubject().getSession();
-            int v =  Integer.valueOf(session.getAttribute("userId").toString());
-            SystemUser user = systemUserService.selectByPrimaryKey(v);
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
 /*******************************************对应组成员 开始***************************************************************/
 
@@ -144,6 +144,8 @@ public class AuthorityController {
                         } else if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && !menuLeafIdsmember.contains(projectInfo.getCreater())) {
                             //projectInfo.setDuty("组员");
                             map.put(mapButton.get("Url").toString(),"false");
+                        } else {
+                            map.put(mapButton.get("Url").toString(),"false");
                         }
                     }
                 }
@@ -188,11 +190,13 @@ public class AuthorityController {
     @ApiOperation(value = "任务详情页按钮权限",notes = "返回说明，rw_tjrw：提交任务按钮，rw_tjkfrz：添加开发日志按钮，rw_tj：添加按钮，rw_xg：修改按钮，rw_sc：删除按钮")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer") })
     @RequestMapping(value = "/getTaskAuthorityByUser", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getTaskAuthorityByUser(
             @RequestParam(value = "taskId") int taskId,
-            @RequestParam(value = "proId") int proId ) {
+            @RequestParam(value = "proId") int proId,
+            @RequestParam(value = "userId") int userId) {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
@@ -201,11 +205,8 @@ public class AuthorityController {
         try {
             ProjectInfo projectInfo = myProjectService.getProjectInfoByProId(proId);
 
-            Session session = SecurityUtils.getSubject().getSession();
-            int v =  Integer.valueOf(session.getAttribute("userId").toString());
-            System.out.println("userId:"+ v);
 
-            SystemUser user = systemUserService.selectByPrimaryKey(v);
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
 /*******************************************对应组成员 开始***************************************************************/
             /**
@@ -281,11 +282,13 @@ public class AuthorityController {
      */
     @ApiOperation(value = "子任务详情页按钮权限",notes = "返回说明，sub_tjzrw：提交子任务按钮，sub_tjkfrz：添加开发日志按钮")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getSubTaskAuthorityByUser", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getSubTaskAuthorityByUser(
-            @RequestParam(value = "taskId") int taskId ) {
+            @RequestParam(value = "taskId") int taskId,
+            @RequestParam(value = "userId") int userId) {
 
         ApiResult<List<Map<String, Object>>> result = null;
         Map<String, Object> map = new HashMap<>();
@@ -295,11 +298,7 @@ public class AuthorityController {
         try {
             List<ProjectSubtask> list = myProjectService.getProjectSubtaskList(taskId);
 
-            Session session = SecurityUtils.getSubject().getSession();
-            int v =  Integer.valueOf(session.getAttribute("userId").toString());
-            System.out.println("userId:"+ v);
-
-            SystemUser user = systemUserService.selectByPrimaryKey(v);
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
 /*******************************************对应组成员 开始***************************************************************/
 

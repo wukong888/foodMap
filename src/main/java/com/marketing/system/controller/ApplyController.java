@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -543,7 +544,7 @@ public class ApplyController {
 
     /**
      * 消息推送-回复
-     * @param id
+     * @param pushId
      * @param userName
      * @param content
      * @param type
@@ -551,7 +552,7 @@ public class ApplyController {
      */
     @ApiOperation(value = "消息推送-回复")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "id", value = "选择回复人id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "pushId", value = "选择回复人id", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType = "query", name = "subtaskId", value = "子任务id", required = false, dataType = "String"),
@@ -563,7 +564,7 @@ public class ApplyController {
     })
     @RequestMapping(value = "/messagePush", method = RequestMethod.POST)
     public ApiResult<String> messagePush(
-            @RequestParam(value = "id", required = true) int id,
+            @RequestParam(value = "pushId", required = true) String pushId,
             @RequestParam(value = "proId", required = false) String proId,
             @RequestParam(value = "taskId", required = false) String taskId,
             @RequestParam(value = "subtaskId", required = false) String subtaskId,
@@ -612,13 +613,13 @@ public class ApplyController {
                 ProjectInfo projectInfo = myProjectService.getProjectInfoByProId(Integer.valueOf(proId));
 
                 if (title == "" || title == null) {
-                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
                             + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
                 } else {
-                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
                             + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Url\":\"\"}";
@@ -646,13 +647,13 @@ public class ApplyController {
                 ProjectInfo projectInfo = applyService.getProjectInfoByTaskId(Integer.valueOf(taskId));
 
                 if (title == "" || title == null) {
-                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
                             + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
                 } else {
-                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
                             + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Url\":\"\"}";
@@ -680,13 +681,13 @@ public class ApplyController {
                 ProjectInfo projectInfo = applyService.getProjectInfoBySubTaskId(Integer.valueOf(subtaskId));
 
                 if (title == "" || title == null) {
-                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
                             + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
                 } else {
-                    postUrl = "{\"Uid\":" + id + ",\"Content\":\"创建人:" + userName
+                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
                             + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Url\":\"\"}";

@@ -105,7 +105,7 @@
   </select>
 
   <!-- 根据Id查询小组名称 整合修改 -->
-  <select id="getDeptnoBySquadId" resultType="java.util.HashMap" >
+  <select id="getDeptnoBySquadId" resultMap="BaseResultMap" >
 
     SELECT
     <include refid="Base_Column_List" />

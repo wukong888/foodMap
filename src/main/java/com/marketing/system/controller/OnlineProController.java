@@ -504,12 +504,10 @@ public class OnlineProController {
     @ApiOperation(value = "审批通过前判断")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批驳回说明", required = true, dataType = "String"),
     })
     @RequestMapping(value = "/getIsProPass", method = RequestMethod.POST)
     public ApiResult<String> getIsProPass(
-            @RequestParam(value = "proId") int proId,
-            @RequestParam(value = "explain", required = false) String explain) {
+            @RequestParam(value = "proId") int proId) {
         ApiResult<String> result = null;
         if(OnProService.isAllTaskPass(proId)){
             result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "项目任务已全部完成", "项目任务未全部完成", null);

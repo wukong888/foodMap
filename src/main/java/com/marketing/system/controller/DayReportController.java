@@ -81,7 +81,7 @@ public class DayReportController {
                 String msg = "";
                 if (current > rdPage.getPages()) {
                     msg = "已经超过当前所有页数！";
-                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, new ArrayList<Map>(), rdPage);
                 } else {
                     msg = "查询成功！";
                     result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, ProReportInfos, rdPage);
@@ -107,7 +107,7 @@ public class DayReportController {
                 String msg = "";
                 if (current > rdPage.getPages()) {
                     msg = "已经超过当前所有页数！";
-                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, new ArrayList<Map>(), rdPage);
                 } else {
                     msg = "查询成功！";
                     result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, ProReport, rdPage);
@@ -163,7 +163,7 @@ public class DayReportController {
                 String msg = "";
                 if (current > rdPage.getPages()) {
                     msg = "已经超过当前所有页数！";
-                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, new ArrayList<Map>(), rdPage);
                 } else {
                     msg = "查询成功！";
                     result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, TaskReportInfos, rdPage);
@@ -193,7 +193,7 @@ public class DayReportController {
                 } else {
                     if (current > rdPage.getPages()) {
                         msg = "已经超过当前所有页数！";
-                        result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                        result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, new ArrayList<Map>(), rdPage);
                     } else {
                         msg = "查询成功！";
                         result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, TaskReport, rdPage);
@@ -251,7 +251,7 @@ public class DayReportController {
                 String msg = "";
                 if (current > rdPage.getPages()) {
                     msg = "已经超过当前所有页数！";
-                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, new ArrayList<Map>(), rdPage);
                 } else {
                     msg = "查询成功！";
                     result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, SubtaskReportInfos, rdPage);

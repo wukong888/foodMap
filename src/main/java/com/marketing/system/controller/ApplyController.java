@@ -50,7 +50,7 @@ public class ApplyController {
     private GroupService groupService;
 
     @Autowired
-    private  DepartmentService departmentService;
+    private DepartmentService departmentService;
 
     @Autowired
     private MyProjectService myProjectService;
@@ -103,13 +103,13 @@ public class ApplyController {
                                            @RequestParam(value = "creatName", required = true) String creatName,
                                            @RequestParam(value = "filePath", required = false) String filePath,
                                            //@RequestParam(value = "myDomain", required = false) List<ProjectTask> myDomain
-                                           @RequestParam(value = "myDomain",required = true)  String myDomain,
-                                           HttpServletRequest request,HttpSession session2
-                                           ) throws IOException {
+                                           @RequestParam(value = "myDomain", required = true) String myDomain,
+                                           HttpServletRequest request, HttpSession session2
+    ) throws IOException {
 
         String reBoolean = ToolUtil.cacheExist(proName);
         if (reBoolean.equals("full")) {
-            ApiResult<Integer> r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            ApiResult<Integer> r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.AGAINCOMMIT_FAIL, null, null);
             return r;
         }
         ApiResult<Integer> r = null;
@@ -121,7 +121,8 @@ public class ApplyController {
         //获取前端list值
         Gson gson = new Gson();
 
-        List<ProjectTask> list = gson.fromJson(myDomain, new TypeToken<List<ProjectTask>>(){}.getType());
+        List<ProjectTask> list = gson.fromJson(myDomain, new TypeToken<List<ProjectTask>>() {
+        }.getType());
 
         int a = 0;
         //先查询有无项目编号，有则取最大值，无则默认为1开始
@@ -133,7 +134,7 @@ public class ApplyController {
             }
         } catch (Exception e) {
             a = 1;
-            logger.error("错误信息："+e);
+            logger.error("错误信息：" + e);
         }
 
         String code = "";
@@ -187,7 +188,7 @@ public class ApplyController {
         //创建项目，则该创建人成为项目发起人
         int v = applyService.insertApplyProject(projectInfo);
 
-        logger.info("创建项目成功------"+v+"项目名称："+proName);
+        logger.info("创建项目成功------" + v + "项目名称：" + proName);
 
         int ap = 0;
         int sum = 0;
@@ -204,7 +205,7 @@ public class ApplyController {
 
             Map<String, Object> stringObjectMap = new HashMap<>();
 
-            stringObjectMap.put("UserGroupId",squadId);
+            stringObjectMap.put("UserGroupId", squadId);
             //对应组所有人信息
             //List<Map<String, Object>> systemUserList = systemUserService.selectUserGroupBydepartment(map1);
             List<Map<String, Object>> systemUserList = systemUserService.getGroupMembers(stringObjectMap);
@@ -218,8 +219,8 @@ public class ApplyController {
                     }
                 }
             }
-            String handler ="";
-            for (Map handle :systemUserListNew) {
+            String handler = "";
+            for (Map handle : systemUserListNew) {
                 handler = String.valueOf(handle.get("UserName"));
 
             }
@@ -233,23 +234,23 @@ public class ApplyController {
             projectTask.setTaskprogress("0");//任务进度
             projectTask.setTaskstate("1");
 
-            sum ++;
+            sum++;
             projectTask.setIdd(sum);//项目编号
             //创建任务
             ap = applyService.insertSelective(projectTask);
 
-            logger.info("创建任务成功------"+ap+"任务名称："+task.getTaskname());
+            logger.info("创建任务成功------" + ap + "任务名称：" + task.getTaskname());
 
             //任务分配完成时，推送消息给相关负责人
-             Integer Uid=systemUserMapper.getUidByName(handler);
-                //获取当前时间
-                String PushDate=DateUtil.getYMDHMDate();
+            Integer Uid = systemUserMapper.getUidByName(handler);
+            //获取当前时间
+            String PushDate = DateUtil.getYMDHMDate();
 
             //推送给相应的任务处理人-组长
             String postUrl1 = "";
             String postUrl2 = "";
             String postUrl3 = "";
-            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+task.getTaskname()+"工作，请及时处理。"
+            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + handler
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()
@@ -258,7 +259,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给郑洁
-            postUrl2 = "{\"Uid\":" + 1285 + ",\"Content\":\"《" +proName+ "》需您协助实施"+task.getTaskname()+"工作，请及时处理。"
+            postUrl2 = "{\"Uid\":" + 1285 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + handler
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()
@@ -267,7 +268,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给陈总
-            postUrl3 = "{\"Uid\":" + 1278 + ",\"Content\":\"《" +proName+ "》需您协助实施"+task.getTaskname()+"工作，请及时处理。"
+            postUrl3 = "{\"Uid\":" + 1278 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + handler
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()
@@ -284,7 +285,6 @@ public class ApplyController {
                 e.printStackTrace();
             }
         }
-
 
 
         ProLogRecord proLogRecord = new ProLogRecord();
@@ -305,7 +305,7 @@ public class ApplyController {
         String group = departmentNewMapper.getGroupByCreater(creatName);
 
         //附件数量
-        if (filePath == "" || filePath ==null) {
+        if (filePath == "" || filePath == null) {
             filePath = "0";
         } else {
             filePath = "1";
@@ -330,16 +330,16 @@ public class ApplyController {
         if (v > 0 && ilog > 0 && ap > 0) {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             String postUrl = "";
-                postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" +proName+ "》的立项申请，请及时处理。"
-                        + "\\n\\n发起小组:" + group
-                        + "\\n\\n发起人:" + creatName
-                        + "\\n\\n项目名称:" + proName
-                        + "\\n\\n项目类型:" + proTypeName
-                        + "\\n\\n上线时间:" + planSDate
-                        + "\\n\\n附件数量:" + filePath + "个"
-                        + "\\n\\n立项审批总量:" + lx + "个"
-                        + "\\n\\n推送时间:" + str2
-                        + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+            postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" + proName + "》的立项申请，请及时处理。"
+                    + "\\n\\n发起小组:" + group
+                    + "\\n\\n发起人:" + creatName
+                    + "\\n\\n项目名称:" + proName
+                    + "\\n\\n项目类型:" + proTypeName
+                    + "\\n\\n上线时间:" + planSDate
+                    + "\\n\\n附件数量:" + filePath + "个"
+                    + "\\n\\n立项审批总量:" + lx + "个"
+                    + "\\n\\n推送时间:" + str2
+                    + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
             try {
                 //消息推送-回复
@@ -349,13 +349,13 @@ public class ApplyController {
             }
 
             //数据研发中心柏铭成向您申请对《大数据分析平台项目》实施项目立项，请您及时处理。
-            ToolUtil.sendMsg(ceoPhone,group+creatName + "向您申请对《"+ projectInfo.getProname()+"》实施项目立项审批，请您及时处理。");
+            ToolUtil.sendMsg(ceoPhone, group + creatName + "向您申请对《" + projectInfo.getProname() + "》实施项目立项审批，请您及时处理。");
 
             //发送邮件
-            ToolUtil.sendEmial(ceoEmail,"关于《"+ projectInfo.getProname() +"》的立项申请审批","您好，"+ group+creatName +"向您发起名为《"+projectInfo.getProname() +"》的立项申请，该项目类型为"+ proTypeName+"，要求上线时间为"+ planSDate + "，提交的附件数量为"+ filePath +"个。请您及时处理。项目简介如下：<br>" +
-                            projectInfo.getProdeclare() + "<br>"+
+            ToolUtil.sendEmial(ceoEmail, "关于《" + projectInfo.getProname() + "》的立项申请审批", "您好，" + group + creatName + "向您发起名为《" + projectInfo.getProname() + "》的立项申请，该项目类型为" + proTypeName + "，要求上线时间为" + planSDate + "，提交的附件数量为" + filePath + "个。请您及时处理。项目简介如下：<br>" +
+                    projectInfo.getProdeclare() + "<br>" +
                     "点击进入项目审批页：https://192.168.11.132:2222<br>" +
-                    "注：您目前还有"+ lx +"个未处理的立项申请。<br>");
+                    "注：您目前还有" + lx + "个未处理的立项申请。<br>");
 
         } else {
             r = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -374,12 +374,12 @@ public class ApplyController {
         try {
             List<Department> department = null;
 
-           // List<DepartmentNew> department = departmentNewMapper.getDepartment();
+            // List<DepartmentNew> department = departmentNewMapper.getDepartment();
 
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("错误信息："+e);
+            logger.error("错误信息：" + e);
         }
 
         return r;
@@ -398,7 +398,7 @@ public class ApplyController {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, department, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("错误信息："+e);
+            logger.error("错误信息：" + e);
         }
 
         return r;
@@ -426,7 +426,7 @@ public class ApplyController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("错误信息："+e);
+            logger.error("错误信息：" + e);
         }
 
         r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, group, null);
@@ -477,7 +477,7 @@ public class ApplyController {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, groupList, null);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("获取项目相关部门："+e);
+            logger.error("获取项目相关部门：" + e);
         }
 
         return r;
@@ -521,8 +521,8 @@ public class ApplyController {
                     String pathFile = "http://report.wsloan.com:8888/projectManage/" + newFileName;
                     session.setAttribute("uploadPath", pathFile);
 
-                    Map<String,String> objectMap = new HashMap<>();
-                    objectMap.put("uploadPath",pathFile);
+                    Map<String, String> objectMap = new HashMap<>();
+                    objectMap.put("uploadPath", pathFile);
 
                     r = new ApiResult<Map<String, String>>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, objectMap, null);
                 }
@@ -530,11 +530,11 @@ public class ApplyController {
             } catch (IllegalStateException e) {
                 e.printStackTrace();
                 r = new ApiResult<Map<String, String>>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
-                logger.error("上传文件错误信息："+e);
-            }catch (Exception e) {
+                logger.error("上传文件错误信息：" + e);
+            } catch (Exception e) {
                 e.printStackTrace();
                 r = new ApiResult<Map<String, String>>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
-                logger.error("上传文件错误信息："+e);
+                logger.error("上传文件错误信息：" + e);
             }
 
         }
@@ -544,6 +544,7 @@ public class ApplyController {
 
     /**
      * 消息推送-回复
+     *
      * @param pushId
      * @param userName
      * @param content
@@ -572,20 +573,30 @@ public class ApplyController {
             @RequestParam(value = "content", required = true) String content,
             @RequestParam(value = "filePath", required = false) String filePath,
             @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "type", required = true) int type){
+            @RequestParam(value = "type", required = true) int type) {
 
         ApiResult<String> result = null;
 
         String reBoolean = ToolUtil.cacheExist(content);
         if (reBoolean.equals("full")) {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.AGAINCOMMIT_FAIL, null, null);
             return result;
         }
 
         String postUrl = "";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<String> listId = new ArrayList<String>();
+        if (pushId.contains(",")) {
+            String[] id = pushId.split(",");
 
+            for (int i = 0; i < id.length; i++) {
+                listId.add(id[i]);
+            }
+        } else {
+            String id = pushId;
+            listId.add(id);
+        }
 
         try {
 
@@ -612,24 +623,26 @@ public class ApplyController {
 
                 ProjectInfo projectInfo = myProjectService.getProjectInfoByProId(Integer.valueOf(proId));
 
-                if (title == "" || title == null) {
-                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
-                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
-                            + "\\n\\n推送时间:" + str2
-                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+                for (String s : listId) {
+                    if (title == "" || title == null) {
+                        postUrl = "{\"Uid\":" + s + ",\"Content\":\"创建人:" + userName
+                                + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                                + "\\n\\n推送时间:" + str2
+                                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
-                } else {
-                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
-                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
-                            + "\\n\\n推送时间:" + str2
-                            + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+                    } else {
+                        postUrl = "{\"Uid\":" + s + ",\"Content\":\"创建人:" + userName
+                                + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                                + "\\n\\n推送时间:" + str2
+                                + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+                    }
 
+                    //消息推送-回复
+                    httpPostWithJSON(postUrl);
                 }
 
-                //消息推送-回复
-                httpPostWithJSON(postUrl);
 
-            //任务-插入日志记录
+                //任务-插入日志记录
             } else if (type == 2) {
                 TaskLogRecord taskLogRecord = new TaskLogRecord();
 
@@ -646,24 +659,26 @@ public class ApplyController {
 
                 ProjectInfo projectInfo = applyService.getProjectInfoByTaskId(Integer.valueOf(taskId));
 
-                if (title == "" || title == null) {
-                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
-                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
-                            + "\\n\\n推送时间:" + str2
-                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+                for (String s : listId) {
+                    if (title == "" || title == null) {
+                        postUrl = "{\"Uid\":" + s + ",\"Content\":\"创建人:" + userName
+                                + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                                + "\\n\\n推送时间:" + str2
+                                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
-                } else {
-                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
-                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
-                            + "\\n\\n推送时间:" + str2
-                            + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+                    } else {
+                        postUrl = "{\"Uid\":" + s + ",\"Content\":\"创建人:" + userName
+                                + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                                + "\\n\\n推送时间:" + str2
+                                + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+                    }
 
+                    //消息推送-回复
+                    httpPostWithJSON(postUrl);
                 }
 
-                //消息推送-回复
-                httpPostWithJSON(postUrl);
 
-            //子任务-插入日志记录
+                //子任务-插入日志记录
             } else {
                 SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
 
@@ -680,35 +695,38 @@ public class ApplyController {
 
                 ProjectInfo projectInfo = applyService.getProjectInfoBySubTaskId(Integer.valueOf(subtaskId));
 
-                if (title == "" || title == null) {
-                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
-                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
-                            + "\\n\\n推送时间:" + str2
-                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+                for (String s : listId) {
+                    if (title == "" || title == null) {
+                        postUrl = "{\"Uid\":" + s + ",\"Content\":\"创建人:" + userName
+                                + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                                + "\\n\\n推送时间:" + str2
+                                + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
-                } else {
-                    postUrl = "{\"Uid\":" + pushId + ",\"Content\":\"创建人:" + userName
-                            + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
-                            + "\\n\\n推送时间:" + str2
-                            + "\",\"AgentId\":1000011,\"Url\":\"\"}";
+                    } else {
+                        postUrl = "{\"Uid\":" + s + ",\"Content\":\"创建人:" + userName
+                                + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n推送内容:" + content
+                                + "\\n\\n推送时间:" + str2
+                                + "\",\"AgentId\":1000011,\"Url\":\"\"}";
 
+                    }
+
+                    //消息推送-回复
+                    httpPostWithJSON(postUrl);
                 }
 
-                //消息推送-回复
-                httpPostWithJSON(postUrl);
 
             }
 
             if (i > 0 || proId == null || proId == "") {
-                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.OPERATION_SUCCESS,null,null);
+                result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             } else {
-                result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.OPERATION_FAIL,null,null);
+                result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.OPERATION_FAIL,null,null);
-            logger.error("消息推送错误信息："+e);
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+            logger.error("消息推送错误信息：" + e);
         }
 
 

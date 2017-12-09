@@ -76,7 +76,7 @@
         select
         <include refid="Base_Column_List"/>
         from project_info
-        where where proId = (SELECT  proId from project_task where taskId = (SELECT taskId from project_subtask where subtaskId = #{subtaskId}))
+        where proId = (SELECT  proId from project_task where taskId = (SELECT taskId from project_subtask where subtaskId = #{subtaskId}))
     </select>
 
     <select id="getMyApplyProject" resultType="java.lang.Integer" parameterType="java.lang.String">
@@ -339,7 +339,12 @@
             #{item}
         </foreach>
         or proId in (
-        SELECT proId from project_task where handler = #{handler} or taskId IN
+        SELECT proId from project_task where handler = #{handler} OR
+        <foreach item="item" index="index" collection="Idsmember"
+                 open=" handler IN (" separator="," close=")">
+            #{item}
+        </foreach>
+        or taskId IN
         (select taskId from project_subtask where
         <foreach item="item" index="index" collection="Idsmember"
                  open=" subtaskHandler IN (" separator="," close=")">

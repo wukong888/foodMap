@@ -510,9 +510,9 @@ public class OnlineProController {
             @RequestParam(value = "proId") int proId) {
         ApiResult<String> result = null;
         if(OnProService.isAllTaskPass(proId)){
-            result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "项目任务已全部完成", "项目任务未全部完成", null);
+            result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "项目任务已全部完成", "true", null);
         }else{
-            result = new ApiResult<String>(Constant.FAIL_CODE_VALUE, "项目任务未全部完成", "项目任务未全部完成", null);
+            result = new ApiResult<String>(Constant.FAIL_CODE_VALUE, "项目任务未全部完成", "false", null);
         }
         return result;
     }

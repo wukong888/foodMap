@@ -31,6 +31,16 @@ public class ProjectSubtask {
 
     private String createDate;
 
+    public Integer getNoPutCount() {
+        return noPutCount;
+    }
+
+    public void setNoPutCount(Integer noPutCount) {
+        this.noPutCount = noPutCount;
+    }
+
+    private Integer noPutCount;
+
     public String getCreateDate() {
         return createDate;
     }

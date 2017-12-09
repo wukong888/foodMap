@@ -55,40 +55,69 @@ public class DayReportController {
     @ApiOperation(value = "模糊查询项目日报")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "reportDate", value = "日报日期", required = false, dataType = "String")
 
     })
     @RequestMapping(value = "selectProReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectProReport(
             @RequestParam(value = "current") int current,
-            @RequestParam(value = "pageSize") int pageSize) {
+            @RequestParam(value = "pageSize") int pageSize,
+            @RequestParam(value = "reportDate",required = false) String reportDate) {
         ApiResult<List<Map>> result = null;
-        try {
-            String Date = null;
+        String nowDate=DateUtil.getYMDDate();
+        if(!nowDate.equals(reportDate) && reportDate!="" && reportDate!=null){
+            try {
+                Map<String,Object> ProReport=DayReportService.getProDayReportInfos(reportDate,current,pageSize);
+                List<Map> ProReportInfos = (List<Map>) ProReport.get("ProReportInfos");
+                Integer sum= (Integer) ProReport.get("ProReportInfosCount");
+                //分页信息
+                RdPage rdPage = new RdPage();
+                rdPage.setTotal(sum);
+                rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+                rdPage.setCurrent(current);
+                rdPage.setPageSize(pageSize);
 
-            Map<String, Object> Report = DayReportService.selectProReport(current, pageSize, Date);
-            List<Map> ProReport = (List<Map>) Report.get("proReports");
-            Integer sum = (Integer) Report.get("proReportsNum");
-
-            //分页信息
-            RdPage rdPage = new RdPage();
-            rdPage.setTotal(sum);
-            rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
-            rdPage.setCurrent(current);
-            rdPage.setPageSize(pageSize);
-
-            String msg = "";
-            if (current > rdPage.getPages()) {
-                msg = "已经超过当前所有页数！";
-                result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
-            } else {
-                msg = "查询成功！";
-                result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, ProReport, rdPage);
+                String msg = "";
+                if (current > rdPage.getPages()) {
+                    msg = "已经超过当前所有页数！";
+                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                } else {
+                    msg = "查询成功！";
+                    result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, ProReportInfos, rdPage);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("模糊查询项目日报 错误信息：" + e.getMessage());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("模糊查询项目日报 错误信息：" + e.getMessage());
+        }else{
+            try {
+                String Date = null;
+                Map<String, Object> Report = DayReportService.selectProReport(current, pageSize, Date);
+                List<Map> ProReport = (List<Map>) Report.get("proReports");
+                Integer sum = (Integer) Report.get("proReportsNum");
+
+                //分页信息
+                RdPage rdPage = new RdPage();
+                rdPage.setTotal(sum);
+                rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+                rdPage.setCurrent(current);
+                rdPage.setPageSize(pageSize);
+
+                String msg = "";
+                if (current > rdPage.getPages()) {
+                    msg = "已经超过当前所有页数！";
+                    result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                } else {
+                    msg = "查询成功！";
+                    result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, ProReport, rdPage);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("模糊查询项目日报 错误信息：" + e.getMessage());
+            }
         }
+
 
         return result;
 
@@ -103,50 +132,80 @@ public class DayReportController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
-
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "reportDate", value = "日期", required = false, dataType = "String")
     })
     @RequestMapping(value = "/selectTaskReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectTaskReport(
             @RequestParam(value = "current") Integer current,
             @RequestParam(value = "pageSize") Integer pageSize,
-            @RequestParam(value = "proId") Integer proId) {
+            @RequestParam(value = "proId",required = false) Integer proId,
+            @RequestParam(value = "reportDate",required = false) String reportDate) {
 
         ApiResult<List<Map>> result = null;
+        //获取当前日期
+        String nowDate=DateUtil.getYMDDate();
+
         Map<String, Object> Report = null;
         String Date = null;
-        Report = DayReportService.selectTaskReport(current, pageSize, Date, proId);
-        try {
+        if(!nowDate.equals(reportDate) && reportDate!="" && reportDate!=null){
+            try {
+                Map<String,Object> TaskReport=DayReportService.getTaskDayReportInfos(reportDate,current,pageSize,proId);
+                List<Map> TaskReportInfos = (List<Map>) TaskReport.get("TaskReportInfos");
+                Integer sum= (Integer) TaskReport.get("TaskReportInfosCount");
+                //分页信息
+                RdPage rdPage = new RdPage();
+                rdPage.setTotal(sum);
+                rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+                rdPage.setCurrent(current);
+                rdPage.setPageSize(pageSize);
 
-
-            List<Map> TaskReport = (List<Map>) Report.get("taskReports");
-            Integer sum = (Integer) Report.get("taskReportsNum");
-
-            //分页信息
-            RdPage rdPage = new RdPage();
-            rdPage.setTotal(sum);
-            rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
-            rdPage.setCurrent(current);
-            rdPage.setPageSize(pageSize);
-
-            String msg = "";
-            if (sum == 0) {
-                msg = "未查询到相关数据！";
-                result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, new ArrayList<>(), rdPage);
-            } else {
+                String msg = "";
                 if (current > rdPage.getPages()) {
                     msg = "已经超过当前所有页数！";
                     result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
                 } else {
                     msg = "查询成功！";
-                    result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, TaskReport, rdPage);
+                    result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, TaskReportInfos, rdPage);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("模糊查询项目日报 错误信息：" + e.getMessage());
             }
+        }else{
+            Report = DayReportService.selectTaskReport(current, pageSize, Date, proId);
+            try {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("模糊查询任务日报 错误信息：" + e.getMessage());
+                List<Map> TaskReport = (List<Map>) Report.get("taskReports");
+                Integer sum = (Integer) Report.get("taskReportsNum");
+
+                //分页信息
+                RdPage rdPage = new RdPage();
+                rdPage.setTotal(sum);
+                rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+                rdPage.setCurrent(current);
+                rdPage.setPageSize(pageSize);
+
+                String msg = "";
+                if (sum == 0) {
+                    msg = "未查询到相关数据！";
+                    result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, new ArrayList<>(), rdPage);
+                } else {
+                    if (current > rdPage.getPages()) {
+                        msg = "已经超过当前所有页数！";
+                        result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                    } else {
+                        msg = "查询成功！";
+                        result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, TaskReport, rdPage);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("模糊查询任务日报 错误信息：" + e.getMessage());
+            }
         }
+
 
         return result;
 
@@ -161,106 +220,85 @@ public class DayReportController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面记录数", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目Id", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务Id", required = true, dataType = "Integer")
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目Id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务Id", required = false, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "reportDate", value = "日期", required = false, dataType = "String")
 
     })
     @RequestMapping(value = "/selectSubtaskReport", method = RequestMethod.POST)
     public ApiResult<List<Map>> selectSubtaskReport(
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize,
-            @RequestParam(value = "proId") Integer proId,
-            @RequestParam(value = "taskId") Integer taskId) {
+            @RequestParam(value = "proId",required = false) Integer proId,
+            @RequestParam(value = "taskId",required = false) Integer taskId,
+            @RequestParam(value = "reportDate",required = false) String reportDate) {
 
         ApiResult<List<Map>> result = null;
+        //获取当前日期
+        String nowDate=DateUtil.getYMDDate().trim();
+        if(!nowDate.equals(reportDate) && reportDate!="" && reportDate!=null){
+            try {
+                Map<String,Object> SubtaskReport=DayReportService.getSubtaskDayReportInfos(reportDate,current,pageSize,proId,taskId);
+                List<Map> SubtaskReportInfos = (List<Map>) SubtaskReport.get("SubtaskReportInfos");
+                Integer sum= (Integer) SubtaskReport.get("SubtaskReportInfosCount");
+                //分页信息
+                RdPage rdPage = new RdPage();
+                rdPage.setTotal(sum);
+                rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+                rdPage.setCurrent(current);
+                rdPage.setPageSize(pageSize);
 
-        try {
-            String Date = null;
-            Map<String, Object> Report = DayReportService.selectSubtaskReport(current, pageSize, Date, proId, taskId);
-            List<Map> SubtaskReport = (List<Map>) Report.get("subtaskReports");
-            Integer sum = (Integer) Report.get("subtaskReportsNum");
-
-            //分页信息
-            RdPage rdPage = new RdPage();
-            rdPage.setTotal(sum);
-            rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
-            rdPage.setCurrent(current);
-            rdPage.setPageSize(pageSize);
-
-            String msg = "";
-            if (sum == 0) {
-                msg = "未查询到相关数据！";
-                result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, new ArrayList<>(), rdPage);
-            } else {
+                String msg = "";
                 if (current > rdPage.getPages()) {
                     msg = "已经超过当前所有页数！";
                     result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
                 } else {
                     msg = "查询成功！";
-                    result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, SubtaskReport, rdPage);
+                    result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, SubtaskReportInfos, rdPage);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("模糊查询项目日报 错误信息：" + e.getMessage());
             }
+        }else{
+            try {
+                String Date = null;
+                Map<String, Object> Report = DayReportService.selectSubtaskReport(current, pageSize, Date, proId, taskId);
+                List<Map> SubtaskReport = (List<Map>) Report.get("subtaskReports");
+                Integer sum = (Integer) Report.get("subtaskReportsNum");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("模糊查询子任务日报 错误信息：" + e.getMessage());
+                //分页信息
+                RdPage rdPage = new RdPage();
+                rdPage.setTotal(sum);
+                rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+                rdPage.setCurrent(current);
+                rdPage.setPageSize(pageSize);
+
+                String msg = "";
+                if (sum == 0) {
+                    msg = "未查询到相关数据！";
+                    result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, new ArrayList<>(), rdPage);
+                } else {
+                    if (current > rdPage.getPages()) {
+                        msg = "已经超过当前所有页数！";
+                        result = new ApiResult<List<Map>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
+                    } else {
+                        msg = "查询成功！";
+                        result = new ApiResult<List<Map>>(Constant.SUCCEED_CODE_VALUE, msg, SubtaskReport, rdPage);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("模糊查询子任务日报 错误信息：" + e.getMessage());
+            }
         }
+
 
         return result;
 
     }
 
-    /**
-     * 日报定时导出
-     *
-     * @return
-
-     @RequestMapping(value = "/exportProExcelTime", method = RequestMethod.POST)
-     @Scheduled(cron="0 0/1 * * * ?")
-     public ApiResult<List<Map>> exportExcelTime() {
-     String date= DateUtil.getYMDDate();
-
-     System.out.println("---"+new Date());
-     //项目日报的定时导出
-     Map<String,Object> Report1=DayReportService.exportProExcel(date);
-     List<Map> ProReport=(List<Map>)Report1.get("proReports");
-
-     String pathProName ="\\static\\"+date+"ProjectReport.xlsx";
-     try {
-     File file=new File(pathProName);
-     OutputStream outputStream1= new FileOutputStream(file);
-     DayReportExport1.exportExcel(ProReport,outputStream1);
-     } catch (Exception e) {
-     e.printStackTrace();
-     }
-
-     //任务日报的定时导出
-     Map<String,Object> Report2=DayReportService.exportTaskExcel(date);
-     List<Map> TaskReport=(List<Map>)Report2.get("taskReports");
-     String pathTaskName ="\\static\\"+date+"TaskReport.xlsx";
-     try {
-     File file=new File(pathTaskName);
-     OutputStream outputStream2= new FileOutputStream(file);
-     DayReportExport1.exportExcel(TaskReport,outputStream2);
-     } catch (Exception e) {
-     e.printStackTrace();
-     }
-
-     //子任务日报的定时导出
-     Map<String,Object> Report3=DayReportService.exportSubtaskExcel(date);
-     List<Map> SubtaskReport=(List<Map>)Report2.get("subtaskReports");
-     String pathSubtaskName ="\\static\\"+date+"SubtaskReport.xlsx";
-     try {
-     File file=new File(pathSubtaskName);
-     OutputStream outputStream3= new FileOutputStream(file);
-     DayReportExport1.exportExcel(SubtaskReport,outputStream3);
-     } catch (Exception e) {
-     e.printStackTrace();
-     }
-
-
-     return null;
-     }*/
 
     /**
      * 日报导出

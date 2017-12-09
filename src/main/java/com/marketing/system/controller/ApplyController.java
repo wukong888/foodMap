@@ -4,6 +4,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.marketing.system.entity.*;
 import com.marketing.system.mapper.DepartmentNewMapper;
+import com.marketing.system.mapper.SystemUserMapper;
+import com.marketing.system.mapper_two.OnlineProMapper;
 import com.marketing.system.service.*;
 import com.marketing.system.util.*;
 import io.swagger.annotations.*;
@@ -64,6 +66,12 @@ public class ApplyController {
 
     @Autowired
     private IndexService indexService;
+
+    @Autowired
+    private OnlineProMapper OnProMapper;
+
+    @Autowired
+    private SystemUserMapper systemUserMapper;
 
     @Value("${ceo.id}")
     private String ceoId;
@@ -231,7 +239,53 @@ public class ApplyController {
             ap = applyService.insertSelective(projectTask);
 
             logger.info("创建任务成功------"+ap+"任务名称："+task.getTaskname());
+
+            //任务分配完成时，推送消息给相关负责人
+             Integer Uid=systemUserMapper.getUidByName(handler);
+                //获取当前时间
+                String PushDate=DateUtil.getYMDHMDate();
+
+            //推送给相应的任务处理人-组长
+            String postUrl1 = "";
+            String postUrl2 = "";
+            String postUrl3 = "";
+            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+task.getTaskname()+"工作，请及时处理。"
+                    + "\\n\\n任务分配:" + handler
+                    + "\\n\\n任务名称:" + task.getTaskname()
+                    + "\\n\\n开始时间:" + task.getSdate()
+                    + "\\n\\n结束时间:" + task.getEdate()
+                    + "\\n\\n推送时间:" + PushDate
+                    + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+
+            //推送给郑洁
+            postUrl2 = "{\"Uid\":" + 1285 + ",\"Content\":\"《" +proName+ "》需您协助实施"+task.getTaskname()+"工作，请及时处理。"
+                    + "\\n\\n任务分配:" + handler
+                    + "\\n\\n任务名称:" + task.getTaskname()
+                    + "\\n\\n开始时间:" + task.getSdate()
+                    + "\\n\\n结束时间:" + task.getEdate()
+                    + "\\n\\n推送时间:" + PushDate
+                    + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+
+            //推送给陈总
+            postUrl3 = "{\"Uid\":" + 1278 + ",\"Content\":\"《" +proName+ "》需您协助实施"+task.getTaskname()+"工作，请及时处理。"
+                    + "\\n\\n任务分配:" + handler
+                    + "\\n\\n任务名称:" + task.getTaskname()
+                    + "\\n\\n开始时间:" + task.getSdate()
+                    + "\\n\\n结束时间:" + task.getEdate()
+                    + "\\n\\n推送时间:" + PushDate
+                    + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+
+            try {
+                //消息推送-任务分配
+                httpPostWithJSON(postUrl1);
+                httpPostWithJSON(postUrl2);
+                httpPostWithJSON(postUrl3);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+
 
         ProLogRecord proLogRecord = new ProLogRecord();
 

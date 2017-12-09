@@ -28,4 +28,13 @@ public interface DayReportService {
 
     //初始化子任务下拉表
     List<Map> initSubtask(Integer proId);
+
+    //通过数据库查找项目日报信息
+    Map<String,Object> getProDayReportInfos(String reportDate,Integer current,Integer pageSize);
+
+    //通过数据库查找任务日报信息
+    Map<String,Object> getTaskDayReportInfos(String reportDate,Integer current,Integer pageSize,Integer proId);
+
+    //通过数据库查找子任务日报信息
+    Map<String,Object> getSubtaskDayReportInfos(String reportDate,Integer current,Integer pageSize,Integer proId,Integer taksId);
 }

@@ -2,10 +2,8 @@ package com.marketing.system.service.impl;
 
 
 import com.marketing.system.entity.*;
-import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper_two.OnlineProMapper;
 import com.marketing.system.service.OnlineProService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sun.java2d.pipe.SpanShapeRenderer;
@@ -22,9 +20,6 @@ public class OnilneProServiceImpl implements OnlineProService{
 
     @Resource
     private OnlineProMapper OnProDao;
-
-    @Resource
-    private DepartmentNewMapper DepartNewDao;
 
     //模糊查询所有待审批的项目
     public Map<String, Object> selectOnPro(Integer current,Integer pageSize,String creatersquadid,String creater,String createdate1,String createdate2,String finishdate1,String finishdate2,String protype,String param){
@@ -61,7 +56,7 @@ public class OnilneProServiceImpl implements OnlineProService{
         List<ProLogRecord> OnProLogRecords=OnProDao.selectOnProLogRecord(proId);
         for(ProLogRecord OnProLogRecord:OnProLogRecords){
             String squadId=OnProLogRecord.getSquadid()+"";
-            String squad=DepartNewDao.selectSquadByIdNew(squadId);
+            String squad=OnProDao.selectSquadById(squadId);
             OnProLogRecord.setSquadid(squad);
         }
         return OnProLogRecords;
@@ -72,9 +67,9 @@ public class OnilneProServiceImpl implements OnlineProService{
         List<Map> OnTasks=OnProDao.selectOnTask(proId);
         for(int i=0;i<OnTasks.size();i++){
             String squadId=(String) OnTasks.get(i).get("squadId");
-            String squad=DepartNewDao.selectSquadByIdNew(squadId);
+            String squad=OnProDao.selectSquadById(squadId);
             OnTasks.get(i).put("squad",squad);
-            String departmentId=DepartNewDao.selectDepartmentIdBySquadIdNew(squadId);
+            String departmentId=OnProDao.selectDepartmentIdBySquadId(squadId);
             OnTasks.get(i).put("departmentId",departmentId);
         }
         return OnTasks;
@@ -85,7 +80,7 @@ public class OnilneProServiceImpl implements OnlineProService{
         List<ProDevelopLog> OnProDevRecords=OnProDao.selectOnProDevRecord(proId);
         for(ProDevelopLog OnProDevRecord:OnProDevRecords){
             String squadId=OnProDevRecord.getSquadid()+"";
-            String squad=DepartNewDao.selectSquadByIdNew(squadId);
+            String squad=OnProDao.selectSquadById(squadId);
             OnProDevRecord.setSquadid(squad);
         }
         return OnProDevRecords;
@@ -95,7 +90,7 @@ public class OnilneProServiceImpl implements OnlineProService{
     public ProjectTask selectOnTaskInfo(Integer taskId){
         ProjectTask taskInfo=OnProDao.selectOnTaskInfo(taskId);
         String squadid=taskInfo.getSquadId();
-        String squad=DepartNewDao.selectSquadByIdNew(squadid);
+        String squad=OnProDao.selectSquadById(squadid);
         taskInfo.setSquadId(squad);
         return taskInfo;
     }
@@ -111,7 +106,7 @@ public class OnilneProServiceImpl implements OnlineProService{
         List<TaskLogRecord> OnTaskLogRecords=OnProDao.selectOnTaskLogRecord(taskId);
         for(TaskLogRecord OnTaskLogRecord:OnTaskLogRecords){
             String squadid=OnTaskLogRecord.getSquadid();
-            String squad=DepartNewDao.selectSquadByIdNew(squadid);
+            String squad=OnProDao.selectSquadById(squadid);
             OnTaskLogRecord.setSquadid(squad);
         }
         return OnTaskLogRecords;
@@ -122,7 +117,7 @@ public class OnilneProServiceImpl implements OnlineProService{
         List<TaskDevelopLog> OnTaskDevRecords=OnProDao.selectOnTaskDevRecord(taskId);
         for(TaskDevelopLog OnTaskDevRecord:OnTaskDevRecords){
             String squadId=OnTaskDevRecord.getSquadid();
-            String squad=DepartNewDao.selectSquadByIdNew(squadId);
+            String squad=OnProDao.selectSquadById(squadId);
             OnTaskDevRecord.setSquadid(squad);
         }
         return OnTaskDevRecords;
@@ -130,10 +125,10 @@ public class OnilneProServiceImpl implements OnlineProService{
 
     //查看上线待审批任务的子任务开发日志
     public List<SubtaskDevelopLog> selectOnSubTaskDevRecord(Integer subtaskId){
-          List<SubtaskDevelopLog> OnSubtaskDevRecords=OnProDao.selectOnSubtaskDevRecord(subtaskId);
+        List<SubtaskDevelopLog> OnSubtaskDevRecords=OnProDao.selectOnSubtaskDevRecord(subtaskId);
         for(SubtaskDevelopLog OnSubtaskDevRecord:OnSubtaskDevRecords){
             String squadId=OnSubtaskDevRecord.getSquadid();
-            String squad=DepartNewDao.selectSquadByIdNew(squadId);
+            String squad=OnProDao.selectSquadById(squadId);
             OnSubtaskDevRecord.setSquadid(squad);
         }
         return OnSubtaskDevRecords;
@@ -144,7 +139,7 @@ public class OnilneProServiceImpl implements OnlineProService{
         List<SubtaskLogRecord> OnSubtaskLogRecords=OnProDao.selectOnSubtaskLogRecord(subtaskId);
         for(SubtaskLogRecord OnSubtaskLogRecord:OnSubtaskLogRecords){
             String squadid=OnSubtaskLogRecord.getSquadid();
-            String squad=DepartNewDao.selectSquadByIdNew(squadid);
+            String squad=OnProDao.selectSquadById(squadid);
             OnSubtaskLogRecord.setSquadid(squad);
         }
         return OnSubtaskLogRecords;
@@ -152,7 +147,7 @@ public class OnilneProServiceImpl implements OnlineProService{
 
     //查看子任务的详细信息
     public ProjectSubtask selectOnSubtaskInfo(Integer subtaskId){
-      ProjectSubtask OnSubtaskInfo= OnProDao.selectOnSubtaskInfo(subtaskId);
+        ProjectSubtask OnSubtaskInfo= OnProDao.selectOnSubtaskInfo(subtaskId);
         return OnSubtaskInfo;
     }
 
@@ -195,6 +190,22 @@ public class OnilneProServiceImpl implements OnlineProService{
         ProjectInfo ProInfo=OnProDao.selectProByProId(proId);
         return ProInfo;
     }
+
+    //判断项目中的任务进度是否全部是100%
+    public Boolean isAllTaskPass(Integer proId){
+        Boolean pass=true;
+        List<ProjectTask> Tasks=OnProDao.getTaskByProId(proId);
+        for(ProjectTask Task:Tasks){
+            if(Task.getTaskprogress().equals("100")){
+
+            }else{
+                pass=false;
+                return pass;
+            }
+        }
+        return pass;
+    }
+
 
 
 

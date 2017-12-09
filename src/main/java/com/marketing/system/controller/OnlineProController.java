@@ -426,7 +426,7 @@ public class OnlineProController {
                 logger.error("审批通过 错误信息：" + e);
             }
         }else{
-            result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "项目任务未全部完成", "项目任务未全部完成", null);
+            result = new ApiResult<String>(Constant.FAIL_CODE_PARAM_INSUFFICIENT, "项目任务未全部完成", "项目任务未全部完成", null);
         }
         return result;
     }
@@ -492,6 +492,30 @@ public class OnlineProController {
             e.printStackTrace();
             logger.error("审批驳回 错误信息：" + e.getMessage());
         }*/
+        return result;
+    }
+
+    /**
+     * 审批通过，判断项目任务是否全部完成
+     *
+     *
+     * @return
+     */
+    @ApiOperation(value = "审批通过前判断")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "proId", value = "项目id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "explain", value = "项目审批驳回说明", required = true, dataType = "String"),
+    })
+    @RequestMapping(value = "/getIsProPass", method = RequestMethod.POST)
+    public ApiResult<String> getIsProPass(
+            @RequestParam(value = "proId") int proId,
+            @RequestParam(value = "explain", required = false) String explain) {
+        ApiResult<String> result = null;
+        if(OnProService.isAllTaskPass(proId)){
+            result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "项目任务已全部完成", "项目任务未全部完成", null);
+        }else{
+            result = new ApiResult<String>(Constant.FAIL_CODE_VALUE, "项目任务未全部完成", "项目任务未全部完成", null);
+        }
         return result;
     }
 

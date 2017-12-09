@@ -743,20 +743,14 @@ public class MyProjectController {
                 projectTask.setEdate(eDate);//任务结束时间
                 projectTask.setWorkDate(workDate);//任务工时
 
-                String squad = upProjectService.selectSquadBySquadId(Integer.parseInt(squadId));
+                List<Map<String,Object>> list = new ArrayList<>();
+                list = systemUserService.getMembersById();
 
-                if (squad.length() > 2) {
-                    map1.put("UserGroup", squad.substring(0,2));
-                } else {
-                    map1.put("UserGroup", squad);
-                }
-
-                //对应组所有人信息
-                List<Map<String, Object>> systemUserList = systemUserService.selectUserGroupBydepartment(map1);
+                list = list.stream().filter(x -> x.get("UserGroupId").equals(squadId)).collect(Collectors.toList());
 
                 List<Map<String, Object>> systemUserListNew = new ArrayList<>();
 
-                for (Map sys : systemUserList) {
+                for (Map sys : list) {
                     if (sys.get("duty") != "" && sys.get("duty") != null) {
                         if (String.valueOf(sys.get("duty")).contains("组长")) {
                             systemUserListNew.add(sys);

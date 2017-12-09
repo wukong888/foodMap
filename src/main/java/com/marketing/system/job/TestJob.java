@@ -157,7 +157,7 @@ public class TestJob extends BatchProperties.Job {
         return null;
     }
 
-    @Scheduled(cron="0 30 22 * * ?")
+    @Scheduled(cron="0 50 18 * * ?")
     public ApiResult<List<Map>> saveDayReportTime() {
 
         //-------保存项目日报的相关数据
@@ -171,15 +171,11 @@ public class TestJob extends BatchProperties.Job {
         String startDate=DATE+"00:00:00";
         String endDate=DATE+"23:59:59";
 
-        Map<String,Object> Report=new HashMap<String ,Object>();
-
         //项目日报的所有记录
-        List<Map> proReports=new ArrayList<Map>();
         List<Map> ProReportAll=DayReportDao.selectProReport(1,1000,startDate,endDate);
         //得到该项目的动态记录
         for(int i=0;i<ProReport.size();i++){
             //项目日报的单条记录
-            //Map<String,Object> proReort=new HashMap<String,Object>();
             String proName=(String)ProReportAll.get(i).get("proName");
             String creater=(String)ProReportAll.get(i).get("creater");
             String proState=(String)ProReportAll.get(i).get("proState");
@@ -238,13 +234,7 @@ public class TestJob extends BatchProperties.Job {
             for(int j=0;j<taskLogs.size();j++){
                 taskDyn=String.valueOf(j+1)+":"+taskLogs.get(j).get("Emp")+" "+taskLogs.get(j).get("explain");
             }
-            /*taskReport.put("taskName",taskName);
-            taskReport.put("handler",handler);
-            taskReport.put("taskState",taskState);
-            taskReport.put("taskProgress",taskProgress);
-            taskReport.put("taskLogs",taskLogs);
-            System.out.println("taskLogs----------------"+taskLogs);
-            taskReports.add(taskReport);*/
+
             Boolean success=DayReportDao.saveTaskDayReport(taskId,taskName,handler,taskState,taskProgress,taskDyn,DATE,proId);
             if(success){
                 System.out.println("任务日报数据保存成功");
@@ -277,10 +267,7 @@ public class TestJob extends BatchProperties.Job {
             TaskReports2.addAll(TaskReport2);
         }
 
-        /*for(Integer ProId:proIds){
-            TaskReport=DayReportDao.selectTaskReport(1,200,ProId);
-            TaskReports.addAll(TaskReport);
-        }*/
+
         //得到展示任务中的任务id
         List<Map> SubtaskReport=null;
         List<Map> SubtaskReports=new ArrayList<Map>();
@@ -533,7 +520,6 @@ public class TestJob extends BatchProperties.Job {
             List<ProjectSubtask> subtasks= OnProDao.getSubtaskByTaskId(task.getTaskId());
             for(ProjectSubtask subtask:subtasks){
                 Boolean flag=false;
-                String postUrl = "";
                 //判断子任务状态是否是未开始，开发中，驳回状态
                 if("1".equals(subtask.getSubtaskstate())||"2".equals(subtask.getSubtaskstate())||"5".equals(subtask.getSubtaskstate())){
                     //获取到该子任务中所有的开发日志记录
@@ -682,7 +668,6 @@ public class TestJob extends BatchProperties.Job {
 
         return null;
     }
-
 
     //未实施更新通报
     @Scheduled(cron="0 44 14 * * ?")

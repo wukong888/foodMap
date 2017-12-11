@@ -659,7 +659,9 @@ public class MyProjectController {
                 } else {
                     //则更新状态为逾期
                     if (betweenDays < 0) {
-                        projectTaskNew.setTaskstate("5");//逾期
+                        if (!projectTask.get("taskState").equals("3")) {
+                            projectTaskNew.setTaskstate("5");//逾期
+                        }
                         projectTaskNew.setTaskId(Integer.valueOf(String.valueOf(projectTask.get("taskId"))));
                         int i = myProjectService.updateTaskById(projectTaskNew);
                     }

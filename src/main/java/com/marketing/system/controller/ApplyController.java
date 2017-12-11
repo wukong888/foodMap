@@ -259,7 +259,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给郑洁
-            postUrl2 = "{\"Uid\":" + 1285 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + handler
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()
@@ -268,7 +268,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给陈总
-            postUrl3 = "{\"Uid\":" + 1278 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl3 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + handler
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()

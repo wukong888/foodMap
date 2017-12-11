@@ -138,7 +138,7 @@ public class DayReportServiceImpl implements DayReportService{
     }
 
     //通过数据库查找任务日报信息
-    public Map<String,Object> getTaskDayReportInfos(String reportDate,Integer current,Integer pageSize,Integer proId){
+    public Map<String,Object>  getTaskDayReportInfos(String reportDate,Integer current,Integer pageSize,Integer proId){
         List<Map> TaskReportInfos = new ArrayList<Map>();
         Integer TaskReportInfosCount = null;
         Map<String,Object> TaskReport=new HashMap<String,Object>();

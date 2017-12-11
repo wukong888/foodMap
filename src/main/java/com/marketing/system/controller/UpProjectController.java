@@ -471,7 +471,7 @@ public class UpProjectController {
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
 
-            logger.info("结果list：" + list);
+            logger.error("结果list：" + list);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("错误信息：" + e);

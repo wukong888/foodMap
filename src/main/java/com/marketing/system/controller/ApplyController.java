@@ -188,7 +188,7 @@ public class ApplyController {
         //创建项目，则该创建人成为项目发起人
         int v = applyService.insertApplyProject(projectInfo);
 
-        logger.info("创建项目成功------" + v + "项目名称：" + proName);
+        logger.error("创建项目成功------" + v + "项目名称：" + proName);
 
         int ap = 0;
         int sum = 0;
@@ -239,7 +239,7 @@ public class ApplyController {
             //创建任务
             ap = applyService.insertSelective(projectTask);
 
-            logger.info("创建任务成功------" + ap + "任务名称：" + task.getTaskname());
+            logger.error("创建任务成功------" + ap + "任务名称：" + task.getTaskname());
 
             //任务分配完成时，推送消息给相关负责人
             Integer Uid = systemUserMapper.getUidByName(handler);
@@ -508,12 +508,12 @@ public class ApplyController {
 
                     String fileOldName = mfile.getOriginalFilename();
 
-                    logger.info("原文件名：" + fileName);
-                    logger.info("原文件名：" + fileOldName);
+                    logger.error("原文件名：" + fileName);
+                    logger.error("原文件名：" + fileOldName);
 
                     // 新文件名（唯一）
                     String newFileName = new Date().getTime() + fileOldName;
-                    logger.info("新文件名：" + newFileName);
+                    logger.error("新文件名：" + newFileName);
 
 
                     Files.copy(mfile.getInputStream(), Paths.get("static", newFileName));

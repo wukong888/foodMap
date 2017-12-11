@@ -27,11 +27,11 @@ public interface SystemUserMapper {
     List<Map<String,Object>> getGroupMembersByManeger(Map<String,Object> map);
 
     //根据id查询组员
-    @Select("select id,UserName,duty,UserGroupId from SystemUser ")
+    @Select("select id,UserName,duty,UserGroupId from SystemUser where job = 1")
     List<Map<String,Object>> getMembersByIdNew();
 
     //根据用户名查找SystemUser的Uid
-    @Select("SELECT id from SystemUser where UserName=#{name}")
+    @Select("SELECT id from SystemUser where UserName=#{name} and job = 1")
     Integer getUidByName(@Param("name")String name);
 
     //获取对应组成员

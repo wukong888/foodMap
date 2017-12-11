@@ -21,6 +21,7 @@
         <include refid="Base_Column_List" />
         from SystemUser
         where UserName = #{UserName,jdbcType=VARCHAR} AND Password = #{Password,jdbcType=VARCHAR}
+        AND job = 1
     </select>
 
     <select id="selectManagerBydepartment" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
@@ -42,6 +43,7 @@
         id,UserName
         from SystemUser
         where UserGroupId = #{UserGroupId}
+        AND job = 1
     </select>
 
     <select id="getGroupMembersByManeger" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
@@ -60,6 +62,7 @@
                  open=" UserGroupId IN (" separator="," close=")">
             #{item}
         </foreach>
+        AND job = 1
     </select>
 
    <!-- <select id="getMembersById" parameterType="java.util.HashMap" resultType="java.util.HashMap"  >

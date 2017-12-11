@@ -101,10 +101,10 @@ public class IndexController {
                 creater = user.getUserName();
             }
             //逾期提示 1：项目
-            Map<String,Object> map1 = new HashMap<>();
-            map1.put("creater",creater);
-            map1.put("current",1);
-            map1.put("pageSize",1000);
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("creater", creater);
+            map1.put("current", 1);
+            map1.put("pageSize", 1000);
             List<ProjectInfo> infoList = indexService.getProjectInfoList(map1);
 
             //逾期提示 2：任务
@@ -121,7 +121,7 @@ public class IndexController {
 
             list.add(map);
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("用户首页错误信息：" + e);
@@ -131,6 +131,7 @@ public class IndexController {
 
     /**
      * 用户首页新
+     *
      * @param id
      * @return
      */
@@ -149,7 +150,7 @@ public class IndexController {
         ApiResult<List<Map<String, Object>>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
-        try{
+        try {
             SystemUser user = systemUserService.selectByPrimaryKey(id);
 
             //职位，立项待审批、上线待审批暂时只有CEO有该权限
@@ -170,10 +171,10 @@ public class IndexController {
              * 项目概况
              */
             //逾期项目置顶、每页显示五条，超过五条翻页显示、CEO显示所有的项目概况
-            Map<String,Object> map1 = new HashMap<>();
-            map1.put("creater",creater);
-            map1.put("current",current);
-            map1.put("pageSize",1000);
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("creater", creater);
+            map1.put("current", current);
+            map1.put("pageSize", 1000);
 
             List<ProjectInfo> infoList = new ArrayList<>();
             Integer kf_cp_zz = 0;
@@ -182,13 +183,13 @@ public class IndexController {
                 //组员 看自己的项目概况
                 infoList = indexService.getProjectInfoList(map1);
 
-            } else if (dutyName.contains("组长") || dutyName.contains("经理")){
+            } else if (dutyName.contains("组长") || dutyName.contains("经理")) {
                 Map<String, Object> objectMap = new HashMap<>();
 
                 objectMap.put("handler", user.getUserName());
                 //objectMap.put("creater",creater);
-                objectMap.put("current",current);
-                objectMap.put("pageSize",1000);
+                objectMap.put("current", current);
+                objectMap.put("pageSize", 1000);
 
 /*******************************************对应组成员 开始***************************************************************/
 
@@ -203,9 +204,9 @@ public class IndexController {
                 List<Map<String, Object>> listMem = new ArrayList<>();
                 if (listDuty.size() > 1) {
                     listMem = departmentNewMapper.getZjMember(user.getUserGroupId());
-                } else if (listDuty.size() == 1){
+                } else if (listDuty.size() == 1) {
                     listMem = departmentNewMapper.getJlMember(user.getUserGroupId());
-                } else if (listDuty.size() == 0 ){
+                } else if (listDuty.size() == 0) {
                     listMem = departmentNewMapper.getMemMember(user.getUserGroupId());
                 }
 
@@ -231,10 +232,10 @@ public class IndexController {
 
                 //项目类型(1:产品，2：活动)
                 infoListNumCp = infoList.stream().filter(t -> Integer.valueOf(t.getProtype()) == 1).collect(Collectors.toList());
-                kf_cp_zz= infoListNumCp.size();
+                kf_cp_zz = infoListNumCp.size();
 
                 infoListNumHd = infoList.stream().filter(t -> Integer.valueOf(t.getProtype()) == 2).collect(Collectors.toList());
-                kf_hd_zz= infoListNumHd.size();
+                kf_hd_zz = infoListNumHd.size();
             } else {
                 //ceo项目概况
                 infoList = indexService.getProjectInfoList(map1);
@@ -265,19 +266,19 @@ public class IndexController {
             //1、开发中的项目
             Integer kf_hd = indexService.getHdDevelopProjects(creater);
             if (dutyName.contains("组长") || dutyName.contains("经理")) {
-                map.put("kf_hd",kf_hd_zz);
+                map.put("kf_hd", kf_hd_zz);
             } else {
-                map.put("kf_hd",kf_hd);
+                map.put("kf_hd", kf_hd);
             }
 
 
             //2、立项待审批L
             Integer lx_hd = indexService.getHdLxProjects(creater);
-            map.put("lx_hd",lx_hd);
+            map.put("lx_hd", lx_hd);
 
             //3、上线待审批
             Integer sx_hd = indexService.getHdSxProjects(creater);
-            map.put("sx_hd",sx_hd);
+            map.put("sx_hd", sx_hd);
 
             ProjectInfo projectInfo = new ProjectInfo();
             //循环计算距逾期时间天数
@@ -296,7 +297,7 @@ public class IndexController {
             sum = infoList.size();
             infoList = ToolUtil.listSplit2(current, pageSize, infoList);
 
-            map.put("infoList",infoList);
+            map.put("infoList", infoList);
             RdPage rdPage = new RdPage();
             //分页信息
             rdPage.setTotal(sum);

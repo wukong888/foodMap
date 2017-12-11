@@ -779,7 +779,7 @@ public class MyProjectController {
 
                 i = myProjectService.insertProTask(projectTask);
 
-                logger.info("我的项目参与组添加任务成功------"+i+"任务名称："+taskName);
+                logger.error("我的项目参与组添加任务成功------"+i+"任务名称："+taskName);
 
                 //任务分配完成时，推送消息给相关负责人
                 Integer Uid=systemUserMapper.getUidByName(handler);
@@ -879,11 +879,11 @@ public class MyProjectController {
 
                 i = myProjectService.updateTaskById(projectTask);
 
-                logger.info("我的项目参与组修改任务成功------"+i+"任务名称："+taskName);
+                logger.error("我的项目参与组修改任务成功------"+i+"任务名称："+taskName);
                 //任务下的子任务全部清空
                 //int k = myProjectService.deleteSubTaskById(TaskId);
 
-                //logger.info("任务下的子任务全部清空成功------"+k+"任务名称："+taskName);
+                //logger.error("任务下的子任务全部清空成功------"+k+"任务名称："+taskName);
                 ProLogRecord proLogRecord = new ProLogRecord();
 
                 java.util.Date date2 = new java.util.Date();
@@ -912,7 +912,7 @@ public class MyProjectController {
                 //任务下的子任务全部清空
                 int k = myProjectService.deleteSubTaskById(TaskId);
 
-                logger.info("我的项目参与组删除任务、子任务成功------"+k+"任务id："+taskId);
+                logger.error("我的项目参与组删除任务、子任务成功------"+k+"任务id："+taskId);
 
                 ProLogRecord proLogRecord = new ProLogRecord();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1295,7 +1295,7 @@ public class MyProjectController {
 
                 int i = myProjectService.insertProSubTask(projectSubtask);
 
-                logger.info("子任务列表添加成功------"+i+"子任务名称："+subtaskName);
+                logger.error("子任务列表添加成功------"+i+"子任务名称："+subtaskName);
 
                 SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
                 SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1396,7 +1396,7 @@ public class MyProjectController {
 
                 int k = myProjectService.updateProSubTask(projectSubtask);
 
-                logger.info("子任务列表修改成功------"+k+"子任务名称："+subtaskName);
+                logger.error("子任务列表修改成功------"+k+"子任务名称："+subtaskName);
                 SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
 
                 java.util.Date date2 = new java.util.Date();
@@ -1435,7 +1435,7 @@ public class MyProjectController {
 
                 int j = myProjectService.deleteProSubTaskById(Integer.valueOf(subtaskId));
 
-                logger.info("子任务列表删除成功------"+j+"子任务id："+subtaskId);
+                logger.error("子任务列表删除成功------"+j+"子任务id："+subtaskId);
 
                 SubtaskLogRecord subtaskLogRecord = new SubtaskLogRecord();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1742,7 +1742,7 @@ public class MyProjectController {
 
                 int i = myProjectService.updateTaskById(projectTask);
 
-                logger.info("提交任务成功------"+i+"任务id："+taskId);
+                logger.error("提交任务成功------"+i+"任务id："+taskId);
                 TaskDevelopLog taskDevelopLog = new TaskDevelopLog();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1778,7 +1778,7 @@ public class MyProjectController {
 
                 int i = myProjectService.updateProSubTask(projectSubtask);
 
-                logger.info("提交子任务成功------"+i+"子任务id："+subtaskId);
+                logger.error("提交子任务成功------"+i+"子任务id："+subtaskId);
                 SubtaskDevelopLog subtaskDevelopLog = new SubtaskDevelopLog();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

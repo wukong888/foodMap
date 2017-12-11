@@ -40,7 +40,7 @@
 
     <select id="getGroupMembers" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
         select
-        id,UserName
+        id,UserName,duty
         from SystemUser
         where UserGroupId = #{UserGroupId}
         AND job = 1

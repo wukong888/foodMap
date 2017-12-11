@@ -250,7 +250,14 @@ public class ApplyController {
             String postUrl1 = "";
             String postUrl2 = "";
             String postUrl3 = "";
-            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            /*postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+                    + "\\n\\n任务分配:" + handler
+                    + "\\n\\n任务名称:" + task.getTaskname()
+                    + "\\n\\n开始时间:" + task.getSdate()
+                    + "\\n\\n结束时间:" + task.getEdate()
+                    + "\\n\\n推送时间:" + PushDate
+                    + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
+            postUrl1 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + handler
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()

@@ -2,8 +2,10 @@ package com.marketing.system.service.impl;
 
 
 import com.marketing.system.entity.*;
+import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper_two.OnlineProMapper;
 import com.marketing.system.service.OnlineProService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sun.java2d.pipe.SpanShapeRenderer;
@@ -20,6 +22,9 @@ public class OnilneProServiceImpl implements OnlineProService{
 
     @Resource
     private OnlineProMapper OnProDao;
+
+    @Autowired
+    private DepartmentNewMapper departmentNewMapper;
 
     //模糊查询所有待审批的项目
     public Map<String, Object> selectOnPro(Integer current,Integer pageSize,String creatersquadid,String creater,String createdate1,String createdate2,String finishdate1,String finishdate2,String protype,String param){
@@ -67,7 +72,11 @@ public class OnilneProServiceImpl implements OnlineProService{
         List<Map> OnTasks=OnProDao.selectOnTask(proId);
         for(int i=0;i<OnTasks.size();i++){
             String squadId=(String) OnTasks.get(i).get("squadId");
-            String squad=OnProDao.selectSquadById(squadId);
+
+            DepartmentNew departmentNew = departmentNewMapper.getDeptnoBySquadId(Integer.valueOf(squadId));
+
+            String squad = departmentNew.getDeptno();
+
             OnTasks.get(i).put("squad",squad);
             String departmentId=OnProDao.selectDepartmentIdBySquadId(squadId);
             OnTasks.get(i).put("departmentId",departmentId);

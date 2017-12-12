@@ -347,7 +347,6 @@ public class ApplyController {
                     + "\\n\\n立项审批总量:" + lx + "个"
                     + "\\n\\n推送时间:" + str2
                     + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
-
             try {
                 //消息推送-回复
                 httpPostWithJSON(postUrl);
@@ -363,7 +362,6 @@ public class ApplyController {
                     projectInfo.getProdeclare() + "<br>" +
                     "点击进入项目审批页：https://192.168.11.132:2222<br>" +
                     "注：您目前还有" + lx + "个未处理的立项申请。<br>");
-
         } else {
             r = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
         }

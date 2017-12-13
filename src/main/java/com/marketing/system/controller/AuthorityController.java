@@ -283,11 +283,13 @@ public class AuthorityController {
     @ApiOperation(value = "子任务详情页按钮权限",notes = "返回说明，sub_tjzrw：提交子任务按钮，sub_tjkfrz：添加开发日志按钮")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "taskId", value = "任务id", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "subTaskId", value = "子任务id", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getSubTaskAuthorityByUser", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getSubTaskAuthorityByUser(
             @RequestParam(value = "taskId") int taskId,
+            @RequestParam(value = "subTaskId") int subTaskId,
             @RequestParam(value = "userId") int userId) {
 
         ApiResult<List<Map<String, Object>>> result = null;
@@ -298,7 +300,12 @@ public class AuthorityController {
         try {
             List<ProjectSubtask> list = myProjectService.getProjectSubtaskList(taskId);
 
+            list = list.stream().filter(x ->x.getSubtaskId().equals(subTaskId)).collect(Collectors.toList());
             SystemUser user = systemUserService.selectByPrimaryKey(userId);
+
+            /*if (!user.getDuty().contains("组长") && !user.getDuty().contains("经理") && !user.getDuty().contains("CEO")) {
+                list = list.stream().filter(x ->x.getSubtaskhandler().equals(user.getUserName())).collect(Collectors.toList());
+            }*/
 
 /*******************************************对应组成员 开始***************************************************************/
 

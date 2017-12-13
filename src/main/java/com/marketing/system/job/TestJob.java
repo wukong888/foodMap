@@ -308,7 +308,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //任务分配超时
-    @Scheduled(cron="0 0/5 * * * ?")
+    @Scheduled(cron="0 0/720 * * * ?")
     public ApiResult<List<Map>> taskTimeOutWeiXinPush() {
 
         System.out.println("-------------------");

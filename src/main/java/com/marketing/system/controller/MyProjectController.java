@@ -1377,7 +1377,7 @@ public class MyProjectController {
                         + "\\n\\n推送时间:" + PushDate
                         + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
-                postUrl2 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
+                postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + task.getHandler()
                         + "\\n\\n任务名称:" + subtaskName
                         + "\\n\\n开始时间:" + sDate

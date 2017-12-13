@@ -1367,8 +1367,17 @@ public class MyProjectController {
                    //获取子任务所属任务的信息
                    ProjectTask task = OnProMapper.getTaskByTaskId(taskId);
 
-                String postUrl = "";
-                postUrl = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
+                String postUrl1 = "";
+                String postUrl2 = "";
+                postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
+                        + "\\n\\n任务分配:" + task.getHandler()
+                        + "\\n\\n任务名称:" + subtaskName
+                        + "\\n\\n开始时间:" + sDate
+                        + "\\n\\n结束时间:" + eDate
+                        + "\\n\\n推送时间:" + PushDate
+                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+
+                postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + task.getHandler()
                         + "\\n\\n任务名称:" + subtaskName
                         + "\\n\\n开始时间:" + sDate
@@ -1378,7 +1387,8 @@ public class MyProjectController {
 
                 try {
                     //消息推送-任务分配
-                    httpPostWithJSON(postUrl);
+                    httpPostWithJSON(postUrl1);
+                    httpPostWithJSON(postUrl2);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

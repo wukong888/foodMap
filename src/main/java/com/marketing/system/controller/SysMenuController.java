@@ -1,7 +1,10 @@
 package com.marketing.system.controller;
 
+import com.marketing.system.entity.ProjectInfo;
 import com.marketing.system.entity.Role;
 import com.marketing.system.entity.SystemUser;
+import com.marketing.system.entity.UserRoles;
+import com.marketing.system.mapper.UserRolesMapper;
 import com.marketing.system.service.ApplyService;
 import com.marketing.system.service.RoleService;
 import com.marketing.system.service.SysMenuService;
@@ -25,12 +28,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Api(description = "用户菜单接口", value = "用户菜单接口")
 @Scope("prototype")
@@ -52,6 +54,9 @@ public class SysMenuController {
 
     @Autowired
     private SystemUserService systemUserService;
+
+    @Autowired
+    private UserRolesMapper userRolesMapper;
 
     /**
      * 根据角色查询菜单
@@ -114,6 +119,13 @@ public class SysMenuController {
             }
         }
 
+        //
+        Map<String, Object> mapTRole = new HashMap<>();
+        mapTRole.put("SystemId", SystemId);
+        List<UserRoles> userRoles = userRolesMapper.getRoleByAddName(mapTRole);
+
+        userRoles = userRoles.stream().filter(x -> x.getUid().equals(user.getId())).collect(Collectors.toList());
+
         map.put("Name", name);
         map.put("SystemId", SystemId);
 
@@ -128,10 +140,29 @@ public class SysMenuController {
             mapMenu.put("roleId", role.getId());
             mapMenu.put("SystemId", SystemId);
 
-            List<Map<String, Object>> menus = sysMenuService.fetchRoleMenus(role.getId(), SystemId);
+            List<Map<String, Object>> menus = new ArrayList<>();
+            List<Map<String, Object>> menusAll = new ArrayList<>();
+            List<Map<String, Object>> menusAllNew = new ArrayList<>();
+            if (userRoles.size() > 0) {
+                for (UserRoles userRoles1 : userRoles) {
+                    menus = sysMenuService.fetchRoleMenus(userRoles1.getRid(), SystemId);
+
+                    menusAll.addAll(menus);
+                }
+                Iterator it = menusAll.iterator();
+                while (it.hasNext()) {
+                    Map<String, Object> obj = (Map<String, Object>) it.next();
+                    if (!menusAllNew.contains(obj)) {                //不包含就添加
+                        menusAllNew.add(obj);
+                    }
+                }
+                mapCreater.put("menus", menusAllNew);
+            } else {
+                menus = sysMenuService.fetchRoleMenus(role.getId(), SystemId);
+                mapCreater.put("menus", menus);
+            }
 
             mapCreater.put("duty", name);
-            mapCreater.put("menus", menus);
             listNew.add(mapCreater);
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, "查询成功！", listNew, null);

@@ -117,7 +117,7 @@ public class UpProjectController {
         try {
             Map<String, Object> map = new HashMap<>();
 
-            map = ToolUtil.putMap(current,createrSquadId,creater,"1",createDateStart,createDateEnd,planSDateStart,planSDateEnd,proType,proName);
+            map = ToolUtil.putMap(current, createrSquadId, creater, "1", createDateStart, createDateEnd, planSDateStart, planSDateEnd, proType, proName);
 
             List<ProjectInfo> projectInfos = upProjectService.getProjectInfoList(map);
 
@@ -142,7 +142,7 @@ public class UpProjectController {
             rdPage.setPageSize(pageSize);
 
             String msg = "";
-            if (current > rdPage.getPages() && sum !=0) {
+            if (current > rdPage.getPages() && sum != 0) {
                 msg = "已经超过当前所有页数！";
                 result = new ApiResult<List<ProjectInfo>>(Constant.FAIL_CODE_VALUE, msg, null, rdPage);
             } else {
@@ -189,20 +189,20 @@ public class UpProjectController {
             @RequestParam(value = "explain") String explain,
             @RequestParam(value = "proState") String proState,
             @RequestParam(value = "userId") Integer userId,
-            @RequestParam(value = "rejectState",required = false) String rejectState) {
+            @RequestParam(value = "rejectState", required = false) String rejectState) {
 
         ApiResult<String> result = null;
 
         String reBoolean = ToolUtil.cacheExist(explain);
         if (reBoolean.equals("full")) {
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE,Constant.AGAINCOMMIT_FAIL,null,null);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.AGAINCOMMIT_FAIL, null, null);
             return result;
         }
         SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
         //验证是否ceo权限操作
         if (!user.getDuty().equals("CEO") && (proState == "2" || proState == "5" || proState == "6")) {
-            result = new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.NOTCEO_FAIL,null,null);
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.NOTCEO_FAIL, null, null);
             return result;
         }
         try {
@@ -220,23 +220,23 @@ public class UpProjectController {
             //申请的项目审批通过或者驳回
             //1：立项待审批驳回
             if (proState.equals("2")) {
-                map.put("againState",2);//开发中
+                map.put("againState", 2);//开发中
                 i = upProjectService.setPassOrRejectTwo(map);
                 //驳回 1：立项待审批驳回 2：上线待审批驳回
-            } else if ( proState.equals("5")) {
+            } else if (proState.equals("5")) {
                 if (rejectState.equals("1")) {
                     //&& (rejectState.equals("1") || rejectState.equals("2"))
-                    map.put("againState",null);//开发中
+                    map.put("againState", null);//开发中
                     i = upProjectService.setPassOrRejectTwo(map);
-                } else if(rejectState.equals("2")){
-                    map.put("againState",2);//开发中
+                } else if (rejectState.equals("2")) {
+                    map.put("againState", 2);//开发中
                     i = upProjectService.setPassOrRejectTwo(map);
                 }
 
-            } else if (proState.equals("3")){ //上线带审批
-                map.put("againState",null);//开发中
+            } else if (proState.equals("3")) { //上线带审批
+                map.put("againState", null);//开发中
                 i = upProjectService.setPassOrRejectTwo(map);
-            } else{
+            } else {
                 i = upProjectService.setPassOrReject(map);
             }
 
@@ -246,7 +246,7 @@ public class UpProjectController {
                 boolean updateTaskProgress = projectTaskMapper.updateTaskProgress(proId);
 
                 //子任务
-                List<Map<String,Object>> updateSubtaskProgress = projectSubtaskMapper.selectProSubtaskByProId(proId);
+                List<Map<String, Object>> updateSubtaskProgress = projectSubtaskMapper.selectProSubtaskByProId(proId);
 
                 String mentIds = StringUtil.toString(MapUtil.collectProperty(updateSubtaskProgress, "taskId"));
                 String[] mIds = mentIds.split(",");
@@ -269,13 +269,15 @@ public class UpProjectController {
             //插入日志
             int ilog = upProjectService.insertProLogRecord(proLogRecord);
 
-            SystemUser systemUser = systemUserService.selectIdByName(creatName);
+            //SystemUser systemUser = systemUserService.selectIdByName(creatName);
+            //ProjectInfo projectInfo = projectInfoMapper.getProjectInfoByProId(proId);
+            ProjectInfo projectInfo = projectInfoMapper.selectByPrimaryKey(id);
 
             java.util.Date date2 = new java.util.Date();
             String str2 = sdf.format(date2);
 
             //发起小组
-            String group = departmentNewMapper.getGroupByCreater(creatName);
+            String group = departmentNewMapper.getGroupByCreater(projectInfo.getCreater());
 
             //3、上线待审批
             Integer sx_cp = indexService.getSxProjects("");
@@ -288,8 +290,6 @@ public class UpProjectController {
 
             if (i > 0 && ilog > 0) {
                 result = new ApiResult<String>(Constant.SUCCEED_CODE_VALUE, "操作成功！", null, null);
-
-                ProjectInfo projectInfo = projectInfoMapper.selectByPrimaryKey(id);
 
                 //项目类型(1:产品，2：活动)
                 String proTypeName = "";
@@ -314,9 +314,9 @@ public class UpProjectController {
                             + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n内容:" + explain
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";*/
-                    postUrl = "{\"Uid\":" + projectInfo.getUserId() + ",\"Content\":\"您有关于《" +projectInfo.getProname()+ "》的上线申请，请及时处理。"
+                    postUrl = "{\"Uid\":" + projectInfo.getUserId() + ",\"Content\":\"您有关于《" + projectInfo.getProname() + "》的上线申请，请及时处理。"
                             + "\\n\\n发起小组:" + group
-                            + "\\n\\n发起人:" + creatName
+                            + "\\n\\n发起人:" + projectInfo.getCreater()
                             + "\\n\\n项目名称:" + projectInfo.getProname()
                             + "\\n\\n项目类型:" + proTypeName
                             + "\\n\\n发起时间:" + projectInfo.getCreatedate()
@@ -326,9 +326,9 @@ public class UpProjectController {
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
 
                 } else if (Integer.valueOf(proState) == 3) {
-                    postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" +projectInfo.getProname()+ "》的上线申请，请及时处理。"
+                    postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" + projectInfo.getProname() + "》的上线申请，请及时处理。"
                             + "\\n\\n发起小组:" + group
-                            + "\\n\\n发起人:" + creatName
+                            + "\\n\\n发起人:" + projectInfo.getCreater()
                             + "\\n\\n项目名称:" + projectInfo.getProname()
                             + "\\n\\n项目类型:" + proTypeName
                             + "\\n\\n发起时间:" + projectInfo.getCreatedate()
@@ -349,13 +349,13 @@ public class UpProjectController {
                 if (Integer.valueOf(proState) == 3) {
 
                     //数据研发中心柏铭成向您申请对《大数据分析平台项目》实施项目立项，请您及时处理。
-                    ToolUtil.sendMsg(ceoPhone,group+creatName + "向您申请对《"+ projectInfo.getProname()+"》实施项目上线，请您及时处理。");
+                    ToolUtil.sendMsg(ceoPhone, group + projectInfo.getCreater() + "向您申请对《" + projectInfo.getProname() + "》实施项目上线，请您及时处理。");
 
                     //发送邮件
-                    ToolUtil.sendEmial(ceoEmail,"关于《"+ projectInfo.getProname() +"》的上线申请","您好，"+ group+creatName +"向您发起名为《"+projectInfo.getProname() +"》的立项申请，该项目类型为"+ proTypeName+"，此项目按照要求时间上线（要求上线时间为"+ projectInfo.getPlanedate() + ")。请您及时处理。项目简介如下：<br>" +
-                            projectInfo.getProdeclare() + "<br>"+
+                    ToolUtil.sendEmial(ceoEmail, "关于《" + projectInfo.getProname() + "》的上线申请", "您好，" + group + projectInfo.getCreater() + "向您发起名为《" + projectInfo.getProname() + "》的立项申请，该项目类型为" + proTypeName + "，此项目按照要求时间上线（要求上线时间为" + projectInfo.getPlanedate() + ")。请您及时处理。项目简介如下：<br>" +
+                            projectInfo.getProdeclare() + "<br>" +
                             "点击进入项目审批页：https://192.168.11.132:2222<br>" +
-                            "注：您目前还有"+ sx +"个未处理的上线申请。<br>");
+                            "注：您目前还有" + sx + "个未处理的上线申请。<br>");
                 }
 
             } else {
@@ -456,15 +456,15 @@ public class UpProjectController {
     @ApiOperation(value = "根据部门id查找项目发起人")
     @ApiImplicitParam(paramType = "query", name = "squadId", value = "小组id", required = true, dataType = "Integer")
     @RequestMapping(value = "/getMembersBySquadId", method = RequestMethod.POST)
-    public ApiResult<List<Map<String,Object>>> getMembers(@RequestParam(value = "squadId") int squadId) {
+    public ApiResult<List<Map<String, Object>>> getMembers(@RequestParam(value = "squadId") int squadId) {
 
-        ApiResult<List<Map<String,Object>>> result = null;
+        ApiResult<List<Map<String, Object>>> result = null;
 
         try {
             //List<DepartmentNew> list = membersService.getMembersById(String.valueOf(squadId));
-            Map<String,Object> map = new HashMap<String,Object>();
-            map.put("UserGroupId",squadId);
-            List<Map<String,Object>> list = new ArrayList<>();
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("UserGroupId", squadId);
+            List<Map<String, Object>> list = new ArrayList<>();
             list = systemUserService.getMembersById();
 
             list = list.stream().filter(x -> x.get("UserGroupId").equals(squadId)).collect(Collectors.toList());

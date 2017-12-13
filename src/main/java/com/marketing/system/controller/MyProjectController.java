@@ -584,8 +584,19 @@ public class MyProjectController {
                 }
             }
 
-            //参与组
-            List<Map<String, Object>> taskList = upProjectService.getProjectTaskListMap1(proId);
+            List<Map<String, Object>> taskList = new ArrayList<>();
+            if (user.getDuty().contains("组长")) {
+                Map<String,Object> mapZuZhang = new HashMap<>();
+                mapZuZhang.put("proId",proId);
+                mapZuZhang.put("squadId",user.getUserGroupId());
+                //参与组
+                taskList = upProjectService.getProjectTaskListMapByZuZhang(mapZuZhang);
+            } else {
+                //参与组
+                taskList = upProjectService.getProjectTaskListMap1(proId);
+            }
+
+
             ProjectTask projectTaskNew = new ProjectTask();
 
             Map<String, Object> map1 = new HashMap<>();

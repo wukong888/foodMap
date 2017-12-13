@@ -115,4 +115,12 @@ public class UpProjectServiceImpl implements UpProjectService {
 
         return department;
     }
+
+    @Override
+    public List<Map<String, Object>> getProjectTaskListMapByZuZhang(Map<String, Object> map) {
+
+        List<Map<String, Object>> list = projectTaskMapper.getProjectTaskListMapByZuZhang(map);
+
+        return list;
+    }
 }

@@ -35,4 +35,6 @@ public interface UpProjectService {
 
     String selectDepartmentByDId(String departmentId);
 
+    List<Map<String,Object>> getProjectTaskListMapByZuZhang(Map<String,Object> map);
+
 }

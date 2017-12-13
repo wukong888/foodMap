@@ -62,6 +62,13 @@
     WHERE proId = #{proId}
   </select>
 
+  <select id="getProjectTaskListMapByZuZhang" resultType="java.util.HashMap" parameterType="java.util.HashMap" >
+    select
+    taskId, proId,taskName,handler,squadId,sDate,eDate,workDate,idd,taskState,taskProgress
+    from project_task
+    WHERE proId = #{proId} AND squadId = #{squadId}
+  </select>
+
   <select id="selectDepartmentIdBySquadId" resultType="java.lang.String" parameterType="java.lang.Integer" >
     select
     departmentId

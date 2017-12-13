@@ -314,7 +314,7 @@ public class UpProjectController {
                             + "\\n\\n项目名称:" + projectInfo.getProname() + "\\n\\n内容:" + explain
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";*/
-                    postUrl = "{\"Uid\":" + projectInfo.getUserId() + ",\"Content\":\"您有关于《" + projectInfo.getProname() + "》的上线申请，请及时处理。"
+                    /*postUrl = "{\"Uid\":" + projectInfo.getUserId() + ",\"Content\":\"您有关于《" + projectInfo.getProname() + "》的上线申请，请及时处理。"
                             + "\\n\\n发起小组:" + group
                             + "\\n\\n发起人:" + projectInfo.getCreater()
                             + "\\n\\n项目名称:" + projectInfo.getProname()
@@ -323,7 +323,7 @@ public class UpProjectController {
                             + "\\n\\n是否逾期:" + yuqi
                             + "\\n\\n上线审批总量:" + sx + "个"
                             + "\\n\\n推送时间:" + str2
-                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
+                            + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";*/
 
                 } else if (Integer.valueOf(proState) == 3) {
                     postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" + projectInfo.getProname() + "》的上线申请，请及时处理。"

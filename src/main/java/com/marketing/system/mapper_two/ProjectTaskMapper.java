@@ -42,4 +42,6 @@ public interface ProjectTaskMapper {
     List<Map<String, Object>> getTaskInfoList(String handler);
 
     boolean updateTaskProgress(Integer proId);
+
+    List<Map<String,Object>> getProjectTaskListMapByZuZhang(Map<String,Object> map);
 }

@@ -308,7 +308,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //任务分配超时
-    @Scheduled(cron="0 0/720 * * * ?")
+    @Scheduled(cron="0 0/5 * * * ?")
     public ApiResult<List<Map>> taskTimeOutWeiXinPush() {
 
         System.out.println("-------------------");
@@ -375,6 +375,8 @@ public class TestJob extends BatchProperties.Job {
     @Scheduled(cron="0 56 9 * * ?")
     public ApiResult<List<Map>> subTaskWXPush() {
     System.out.println("=============");
+        //获取当前时间
+        String nowDay = DateUtil.getYMDDate();
         //获取所有未完成，驳回，逾期项目里的任务
         List<ProjectTask> tasks=DayReportDao.getTaskByWXTimeOutPush();
         for(ProjectTask task:tasks){
@@ -382,38 +384,44 @@ public class TestJob extends BatchProperties.Job {
             //获取任务中对应的所有子任务
             List<ProjectSubtask> subtasks= OnProDao.getSubtaskByTaskId(task.getTaskId());
             for(ProjectSubtask subtask:subtasks){
-                String postUrl = "";
+                String postUrl1 = "";
+                String postUrl2 = "";
                 //判断子任务状态是否是未开始，开发中，驳回状态
                 if("1".equals(subtask.getSubtaskstate())||"2".equals(subtask.getSubtaskstate())||"5".equals(subtask.getSubtaskstate())){
-                      String handler = subtask.getHandler();
-                      Integer Uid = systemUserMapper.getUidByName(handler);
-                      Integer noPutCount = subtask.getNoPutCount();
-                      if(noPutCount == null){
-                          noPutCount = 0 ;
+                      //判断子任务开始时间和当前时间的时间差
+                      if(DateUtil.getDayDiff(subtask.getSdate(),nowDay) <= 0){
+                          String handler = subtask.getHandler();
+                          Integer Uid = systemUserMapper.getUidByName(handler);
+                          Integer noPutCount = subtask.getNoPutCount();
+                          if(noPutCount == null){
+                              noPutCount = 0 ;
+                          }
+                          //微信提示推送给组员
+                          String PushDate = DateUtil.getYMDHMDate();
+                          postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
+                                  + "\\n\\n任务分配:" + task.getHandler()
+                                  + "\\n\\n任务名称:" + subtask.getSubtaskname()
+                                  + "\\n\\n开始时间:" + subtask.getSdate()
+                                  + "\\n\\n结束时间:" + subtask.getEdate()
+                                  + "\\n\\n未按时填写次数:" + noPutCount
+                                  + "\\n\\n推送时间:" + PushDate
+                                  + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
+                          postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
+                                  + "\\n\\n任务分配:" + task.getHandler()
+                                  + "\\n\\n任务名称:" + subtask.getSubtaskname()
+                                  + "\\n\\n开始时间:" + subtask.getSdate()
+                                  + "\\n\\n结束时间:" + subtask.getEdate()
+                                  + "\\n\\n未按时填写次数:" + noPutCount
+                                  + "\\n\\n推送时间:" + PushDate
+                                  + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
                       }
-                    //微信提示推送给组员
-                    String PushDate = DateUtil.getYMDHMDate();
-                    postUrl = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
-                            + "\\n\\n任务分配:" + task.getHandler()
-                            + "\\n\\n任务名称:" + subtask.getSubtaskname()
-                            + "\\n\\n开始时间:" + subtask.getSdate()
-                            + "\\n\\n结束时间:" + subtask.getEdate()
-                            + "\\n\\n未按时填写次数:" + noPutCount
-                            + "\\n\\n推送时间:" + PushDate
-                            + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
-                    postUrl = "{\"Uid\":" + 1367 + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
-                            + "\\n\\n任务分配:" + task.getHandler()
-                            + "\\n\\n任务名称:" + subtask.getSubtaskname()
-                            + "\\n\\n开始时间:" + subtask.getSdate()
-                            + "\\n\\n结束时间:" + subtask.getEdate()
-                            + "\\n\\n未按时填写次数:" + noPutCount
-                            + "\\n\\n推送时间:" + PushDate
-                            + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
                 }
                 try {
                     //消息推送-开发日志
-                    String Str = httpPostWithJSON(postUrl);
-                    System.out.println(Str);
+                    String Str1 = httpPostWithJSON(postUrl1);
+                    String Str2 = httpPostWithJSON(postUrl2);
+                    System.out.println(Str1);
+                    System.out.println(Str2);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -439,59 +447,66 @@ public class TestJob extends BatchProperties.Job {
                 String postUrl = "";
                 //判断子任务状态是否是未开始，开发中，驳回状态
                 if("1".equals(subtask.getSubtaskstate())||"2".equals(subtask.getSubtaskstate())||"5".equals(subtask.getSubtaskstate())){
-                      //获取到该子任务中所有的开发日志记录
-                      List<SubtaskDevelopLog> subtaskDevelopLogs = OnProDao.getAllSubTaskDevLog(subtask.getSubtaskId());
-                      for(SubtaskDevelopLog subtaskDevelopLog : subtaskDevelopLogs){
-                          if(todayDate.equals(subtaskDevelopLog.getDate().substring(0,10))){
-                              flag = true;
-                                 break;
-                          }
-                      }
-                      String postUrl1 = "";
-                      String postUrl2 = "";
-                      if(flag == false){
-                          //修改子任务中未按时更新开发日志记录次数
+                    String postUrl1 = "";
+                    String postUrl2 = "";
+                    //判断子任务开始时间和当前时间的时间差
+                    if(DateUtil.getDayDiff(subtask.getSdate(),todayDate) <= 0) {
+                        //获取到该子任务中所有的开发日志记录
+                        List<SubtaskDevelopLog> subtaskDevelopLogs = OnProDao.getAllSubTaskDevLog(subtask.getSubtaskId());
+                        for (SubtaskDevelopLog subtaskDevelopLog : subtaskDevelopLogs) {
+                            if (todayDate.equals(subtaskDevelopLog.getDate().substring(0, 10))) {
+                                flag = true;
+                                break;
+                            }
+                        }
+
+                        if (flag == false) {
+                            //修改子任务中未按时更新开发日志记录次数
                             Integer NoPutCount = subtask.getNoPutCount();
-                            if(NoPutCount==null){
+                            if (NoPutCount == null) {
                                 NoPutCount = 0;
                             }
                             NoPutCount++;
-                            boolean success=OnProDao.updateNoPutCount(NoPutCount,subtask.getSubtaskId());
-                            if(!success){
+                            boolean success = OnProDao.updateNoPutCount(NoPutCount, subtask.getSubtaskId());
+                            if (!success) {
                                 logger.info("修改noPutCount失败");
                             }
-                          //推送微信延迟预警
+                            //推送微信延迟预警
                             //获得组长id
                             Integer Uid = systemUserMapper.getUidByName(task.getHandler());
                             //获取当前时间
                             String PushDate = DateUtil.getYMDHMDate();
 
-                            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需"+subtask.getHandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
-                                  + "\\n\\n任务分配:" + task.getHandler()
-                                  + "\\n\\n任务名称:" + subtask.getSubtaskname()
-                                  + "\\n\\n开始时间:" + subtask.getSdate()
-                                  + "\\n\\n结束时间:" + subtask.getEdate()
-                                  + "\\n\\n未按时填写次数:" + NoPutCount
-                                  + "\\n\\n推送时间:" + PushDate
-                                  + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
+                            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" + proName + "》需" + subtask.getHandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                                    + "\\n\\n任务分配:" + task.getHandler()
+                                    + "\\n\\n任务名称:" + subtask.getSubtaskname()
+                                    + "\\n\\n开始时间:" + subtask.getSdate()
+                                    + "\\n\\n结束时间:" + subtask.getEdate()
+                                    + "\\n\\n未按时填写次数:" + NoPutCount
+                                    + "\\n\\n推送时间:" + PushDate
+                                    + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
-                            postUrl2 = "{\"Uid\":" + 1285 + ",\"Content\":\"《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
-                                  + "\\n\\n任务分配:" + task.getHandler()
-                                  + "\\n\\n任务名称:" + subtask.getSubtaskname()
-                                  + "\\n\\n开始时间:" + subtask.getSdate()
-                                  + "\\n\\n结束时间:" + subtask.getEdate()
-                                  + "\\n\\n未按时填写次数:" + NoPutCount
-                                  + "\\n\\n推送时间:" + PushDate
-                                  + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
-                          postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
-                                  + "\\n\\n任务分配:" + task.getHandler()
-                                  + "\\n\\n任务名称:" + subtask.getSubtaskname()
-                                  + "\\n\\n开始时间:" + subtask.getSdate()
-                                  + "\\n\\n结束时间:" + subtask.getEdate()
-                                  + "\\n\\n未按时填写次数:" + NoPutCount
-                                  + "\\n\\n推送时间:" + PushDate
-                                  + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
-                      }
+                            postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                                    + "\\n\\n任务分配:" + task.getHandler()
+                                    + "\\n\\n任务名称:" + subtask.getSubtaskname()
+                                    + "\\n\\n开始时间:" + subtask.getSdate()
+                                    + "\\n\\n结束时间:" + subtask.getEdate()
+                                    + "\\n\\n未按时填写次数:" + NoPutCount
+                                    + "\\n\\n推送时间:" + PushDate
+                                    + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
+                            postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                                    + "\\n\\n任务分配:" + task.getHandler()
+                                    + "\\n\\n任务名称:" + subtask.getSubtaskname()
+                                    + "\\n\\n开始时间:" + subtask.getSdate()
+                                    + "\\n\\n结束时间:" + subtask.getEdate()
+                                    + "\\n\\n未按时填写次数:" + NoPutCount
+                                    + "\\n\\n推送时间:" + PushDate
+                                    + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
+
+                        }
+                    }
+
+
                     try {
                         //消息推送-开发日志
                         httpPostWithJSON(postUrl1);
@@ -522,44 +537,49 @@ public class TestJob extends BatchProperties.Job {
                 Boolean flag=false;
                 //判断子任务状态是否是未开始，开发中，驳回状态
                 if("1".equals(subtask.getSubtaskstate())||"2".equals(subtask.getSubtaskstate())||"5".equals(subtask.getSubtaskstate())){
-                    //获取到该子任务中所有的开发日志记录
-                    List<SubtaskDevelopLog> subtaskDevelopLogs = OnProDao.getAllSubTaskDevLog(subtask.getSubtaskId());
-                    for(SubtaskDevelopLog subtaskDevelopLog : subtaskDevelopLogs){
-                        if(todayDate.equals(subtaskDevelopLog.getDate().substring(0,10))){
-                            flag = true;
-                            break;
-                        }
-                    }
                     String postUrl1 = "";
                     String postUrl2 = "";
-                    if(flag == false){
-                        //推送微信延迟预警
-                        //获得部门经理id
-                        Integer managerId = DayReportDao.getManagerIdByGroupId(Integer.parseInt(task.getSquadId()));
-                        //获取当前时间
-                        String PushDate = DateUtil.getYMDHMDate();
-                        Integer NoPutCount = subtask.getNoPutCount();
-                        if(NoPutCount == null){
-                            NoPutCount = 0;
+                    //判断子任务开始时间和当前时间的时间差
+                    if(DateUtil.getDayDiff(subtask.getSdate(),todayDate) <= 0) {
+                        //获取到该子任务中所有的开发日志记录
+                        List<SubtaskDevelopLog> subtaskDevelopLogs = OnProDao.getAllSubTaskDevLog(subtask.getSubtaskId());
+                        for(SubtaskDevelopLog subtaskDevelopLog : subtaskDevelopLogs){
+                            if(todayDate.equals(subtaskDevelopLog.getDate().substring(0,10))){
+                                flag = true;
+                                break;
+                            }
                         }
-                        postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
-                                + "\\n\\n任务分配:" + task.getHandler()
-                                + "\\n\\n任务名称:" + subtask.getSubtaskname()
-                                + "\\n\\n开始时间:" + subtask.getSdate()
-                                + "\\n\\n结束时间:" + subtask.getEdate()
-                                + "\\n\\n未按时填写次数:" + NoPutCount
-                                + "\\n\\n推送时间:" + PushDate
-                                + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
-                        postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
-                                + "\\n\\n任务分配:" + task.getHandler()
-                                + "\\n\\n任务名称:" + subtask.getSubtaskname()
-                                + "\\n\\n开始时间:" + subtask.getSdate()
-                                + "\\n\\n结束时间:" + subtask.getEdate()
-                                + "\\n\\n未按时填写次数:" + NoPutCount
-                                + "\\n\\n推送时间:" + PushDate
-                                + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
+                        if(flag == false){
+                            //推送微信延迟预警
+                            //获得部门经理id
+                            Integer managerId = DayReportDao.getManagerIdByGroupId(Integer.parseInt(task.getSquadId()));
+                            //获取当前时间
+                            String PushDate = DateUtil.getYMDHMDate();
+                            Integer NoPutCount = subtask.getNoPutCount();
+                            if(NoPutCount == null){
+                                NoPutCount = 0;
+                            }
+                            postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
+                                    + "\\n\\n任务分配:" + task.getHandler()
+                                    + "\\n\\n任务名称:" + subtask.getSubtaskname()
+                                    + "\\n\\n开始时间:" + subtask.getSdate()
+                                    + "\\n\\n结束时间:" + subtask.getEdate()
+                                    + "\\n\\n未按时填写次数:" + NoPutCount
+                                    + "\\n\\n推送时间:" + PushDate
+                                    + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
+
+                            postUrl2 = "{\"Uid\":" +  1367 + ",\"Content\":\"《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
+                                    + "\\n\\n任务分配:" + task.getHandler()
+                                    + "\\n\\n任务名称:" + subtask.getSubtaskname()
+                                    + "\\n\\n开始时间:" + subtask.getSdate()
+                                    + "\\n\\n结束时间:" + subtask.getEdate()
+                                    + "\\n\\n未按时填写次数:" + NoPutCount
+                                    + "\\n\\n推送时间:" + PushDate
+                                    + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
+                        }
                     }
+
                     try {
                         //消息推送-开发日志
                         httpPostWithJSON(postUrl1);
@@ -689,13 +709,17 @@ public class TestJob extends BatchProperties.Job {
                  for(ProjectSubtask subtask : subtasks){
                      if("1".equals(subtask.getSubtaskstate())||"2".equals(subtask.getSubtaskstate())||"5".equals(subtask.getSubtaskstate())) {
                          //获取到该子任务中所有的开发日志记录
-                         List<SubtaskDevelopLog> subtaskDevelopLogs = OnProDao.getAllSubTaskDevLog(subtask.getSubtaskId());
-                         for (SubtaskDevelopLog subtaskDevelopLog : subtaskDevelopLogs) {
-                             if (todayDate.equals(subtaskDevelopLog.getDate().substring(0, 10))) {
-                                 flag = true;
-                                 break;
+                         //判断子任务开始时间和当前时间的时间差
+                         if(DateUtil.getDayDiff(subtask.getSdate(),todayDate) <= 0) {
+                             List<SubtaskDevelopLog> subtaskDevelopLogs = OnProDao.getAllSubTaskDevLog(subtask.getSubtaskId());
+                             for (SubtaskDevelopLog subtaskDevelopLog : subtaskDevelopLogs) {
+                                 if (todayDate.equals(subtaskDevelopLog.getDate().substring(0, 10))) {
+                                     flag = true;
+                                     break;
+                                 }
                              }
                          }
+
                      }
                      if(flag==false){
                          idd++;

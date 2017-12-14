@@ -16,6 +16,7 @@
         <result column="Scriptid" property="Scriptid"/>
         <result column="SystemId" property="SystemId"/>
         <result column="isButton" property="isButton"/>
+        <result column="isCEOIndex" property="isCEOIndex"/>
     </resultMap>
 
 
@@ -66,7 +67,7 @@
         Menu
         WHERE
          SystemId = #{SystemId,jdbcType=INTEGER}
-        AND isButton = '0'
+        AND isButton = '0' AND isCEOIndex = '0'
         <foreach item="item" index="index" collection="ids"
                  open="and id IN (" separator="," close=")">
             #{item}
@@ -87,7 +88,25 @@
         FROM
         Menu
         WHERE SystemId = #{SystemId,jdbcType=INTEGER}
-        AND isButton = '0'
+        AND isButton = '0' AND isCEOIndex = '0'
+    </select>
+
+    <!-- 获取首页整合模块 -->
+    <select id="getHomePageModule" resultMap="menuHashMap">
+        SELECT
+        id,
+        ParentId,
+        Name,
+        Url,
+        GroupId,
+        Scriptid,
+        SystemId,
+        isButton,
+        isCEOIndex
+        FROM
+        Menu
+        WHERE SystemId = 30
+        AND isButton = '0' AND isCEOIndex = '1'
     </select>
 
     <select id="getButton" resultMap="menuHashMap">

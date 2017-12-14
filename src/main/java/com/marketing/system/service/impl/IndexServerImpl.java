@@ -336,4 +336,34 @@ public class IndexServerImpl implements IndexService {
 
         return list;
     }
+
+    @Override
+    public List<ProjectInfo> getApprovedProducts(Map<String,Object> map) {
+
+        List<ProjectInfo> list = projectInfoMapper.getApprovedProducts(map);
+
+        return list;
+    }
+
+    @Override
+    public List<ProjectInfo> getActivityProducts(Map<String, Object> map) {
+
+        List<ProjectInfo> list = projectInfoMapper.getActivityProducts(map);
+
+        return list;
+    }
+
+    @Override
+    public Integer getAllDevelopProjects() {
+
+        return projectInfoMapper.getAllDevelopProjects();
+    }
+
+    @Override
+    public List<ProjectInfo> getAllDevelopProjectsList(Map<String, Object> map) {
+
+        List<ProjectInfo> list = projectInfoMapper.getAllDevelopProjectsList(map);
+
+        return list;
+    }
 }

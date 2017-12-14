@@ -19,6 +19,16 @@ public class Menu {
 
     private String isButton;
 
+    private String isCEOIndex;
+
+    public String getIsCEOIndex() {
+        return isCEOIndex;
+    }
+
+    public void setIsCEOIndex(String isCEOIndex) {
+        this.isCEOIndex = isCEOIndex;
+    }
+
     public String getIsButton() {
         return isButton;
     }

@@ -314,4 +314,16 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return projectInfoMapper.getProjectInfoByProId(proId);
     }
+
+    @Override
+    public Integer getProductsCount(Map<String, Object> map) {
+
+        return projectInfoMapper.getProductsCount(map);
+    }
+
+    @Override
+    public Integer getActivityCount(Map<String, Object> map) {
+
+        return projectInfoMapper.getActivityCount(map);
+    }
 }

@@ -45,4 +45,15 @@ public interface IndexService {
     //组长/经理 查看自己和其组员涉及项目
     List<ProjectInfo> getZuZhangProjectInfos(Map<String,Object> map) throws ParseException;
 
+    //CEO-待审批的产品项目
+    List<ProjectInfo> getApprovedProducts(Map<String,Object> map);
+
+    //CEO-待审批的活动项目
+    List<ProjectInfo> getActivityProducts(Map<String,Object> map);
+
+    //开发中的总项目数包含逾期
+    Integer getAllDevelopProjects();
+
+    //开发中的总项目数List
+    List<ProjectInfo> getAllDevelopProjectsList(Map<String,Object> map);
 }

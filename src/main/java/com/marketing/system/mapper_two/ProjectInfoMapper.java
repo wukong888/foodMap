@@ -94,4 +94,17 @@ public interface ProjectInfoMapper {
     ProjectInfo getProjectInfoByTaskId(Integer taskId);
 
     ProjectInfo getProjectInfoBySubTaskId(Integer subtaskId);
+
+    List<ProjectInfo> getApprovedProducts(Map<String,Object> map);
+
+    List<ProjectInfo> getActivityProducts(Map<String,Object> map);
+
+    Integer getAllDevelopProjects();
+
+    List<ProjectInfo> getAllDevelopProjectsList(Map<String,Object> map);
+
+    Integer getProductsCount(Map<String,Object> map);
+
+    Integer getActivityCount(Map<String,Object> map);
+
 }

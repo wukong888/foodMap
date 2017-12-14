@@ -99,4 +99,11 @@ public interface MyProjectService {
     List<ProjectInfo> getProjectInfoByZuzhang(Map<String,Object> map);
 
     ProjectInfo getProjectInfoByProId(int proId);
+
+    //查询产品数量
+    Integer getProductsCount(Map<String,Object> map);
+
+    //查询活动数量
+    Integer getActivityCount(Map<String,Object> map);
+
 }

@@ -42,6 +42,8 @@ public class Constant {
 
 	public static final String NOTCEO_FAIL = "非CEO权限，审批失败";
 
+	public static final String NOTCEO_FAILS = "您登陆的用户非CEO权限！";
+
 	public static final String DAYS_FAIL = "总工时与计算开始时间和结束时间间隔天数不符，请重新填写";
 
 	public static final int SIGN_FAIL = 99; // 验签失败

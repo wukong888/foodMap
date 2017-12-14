@@ -69,14 +69,15 @@
         select
         <include refid="Base_Column_List"/>
         from project_info
-        where  proId = (SELECT  proId from project_task where taskId = #{taskId})
+        where proId = (SELECT proId from project_task where taskId = #{taskId})
     </select>
 
     <select id="getProjectInfoBySubTaskId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from project_info
-        where proId = (SELECT  proId from project_task where taskId = (SELECT taskId from project_subtask where subtaskId = #{subtaskId}))
+        where proId = (SELECT proId from project_task where taskId = (SELECT taskId from project_subtask where subtaskId
+        = #{subtaskId}))
     </select>
 
     <select id="getMyApplyProject" resultType="java.lang.Integer" parameterType="java.lang.String">
@@ -124,6 +125,13 @@
         SELECT COUNT(id) from project_info
         WHERE proType = '2' AND proState = '2'
     </select>
+
+    <!-- 首页整合：开发中的总项目数包含逾期-->
+    <select id="getAllDevelopProjects" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(id) from project_info
+        WHERE proState = '2' or proState = '7'
+    </select>
+
     <!-- 首页：开发中的项目数量 （组员）活动-->
     <select id="getHdDevelopProjects" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT COUNT(id) from project_info
@@ -190,10 +198,34 @@
         ORDER BY
         planSDate
         DESC
-  </select>
+    </select>
+
+    <!-- 查询产品数量 -->
+    <select id="getProductsCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select
+        COUNT (id)
+        from project_info WHERE proType = '1'
+        <if test="proState != 0 ">
+            AND proState = #{proState}
+        </if>
+        AND createDate BETWEEN #{startTime} AND  #{endTime}
+
+    </select>
+
+    <!-- 查询活动数量 -->
+    <select id="getActivityCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select
+        COUNT (id)
+        from project_info WHERE proType = '2'
+        <if test="proState != 0 ">
+            AND proState = #{proState}
+        </if>
+        AND createDate BETWEEN #{startTime} AND  #{endTime}
+
+    </select>
 
     <!-- 项目概况 -->
-    <select id="getProjectInfoListNew" resultMap="BaseResultMap" >
+    <select id="getProjectInfoListNew" resultMap="BaseResultMap">
         select
         TOP ${pageSize}
         <include refid="Base_Column_List"/>
@@ -207,7 +239,7 @@
         ASC
     </select>
 
-    <select id="getProjectInfoListNullNew" resultMap="BaseResultMap" >
+    <select id="getProjectInfoListNullNew" resultMap="BaseResultMap">
         select
         TOP ${pageSize}
         <include refid="Base_Column_List"/>
@@ -215,6 +247,45 @@
         where id
         IN (select TOP (${current}*${pageSize}) id from project_info)
         AND proState = '2'
+        ORDER BY
+        planSDate
+        ASC
+    </select>
+
+    <select id="getApprovedProducts" resultMap="BaseResultMap">
+        select
+        TOP ${pageSize}
+        <include refid="Base_Column_List"/>
+        from project_info
+        where id
+        IN (select TOP (${current}*${pageSize}) id from project_info)
+        AND (proState = '1' OR proState = '3') and proType = '1'
+        ORDER BY
+        planSDate
+        ASC
+    </select>
+
+    <select id="getActivityProducts" resultMap="BaseResultMap">
+        select
+        TOP ${pageSize}
+        <include refid="Base_Column_List"/>
+        from project_info
+        where id
+        IN (select TOP (${current}*${pageSize}) id from project_info)
+        AND (proState = '1' OR proState = '3') and proType = '2'
+        ORDER BY
+        planSDate
+        ASC
+    </select>
+
+    <select id="getAllDevelopProjectsList" resultMap="BaseResultMap">
+        select
+        TOP ${pageSize}
+        <include refid="Base_Column_List"/>
+        from project_info
+        where id
+        IN (select TOP (${current}*${pageSize}) id from project_info)
+        AND (proState = '2' OR proState = '7')
         ORDER BY
         planSDate
         ASC

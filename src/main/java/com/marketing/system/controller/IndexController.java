@@ -2,6 +2,7 @@ package com.marketing.system.controller;
 
 import com.marketing.system.entity.*;
 import com.marketing.system.mapper.DepartmentNewMapper;
+import com.marketing.system.mapper.RoleMenusMapper;
 import com.marketing.system.service.IndexService;
 import com.marketing.system.service.MyProjectService;
 import com.marketing.system.service.SystemUserService;
@@ -47,6 +48,9 @@ public class IndexController {
 
     @Autowired
     private DepartmentNewMapper departmentNewMapper;
+
+    @Autowired
+    private RoleMenusMapper roleMenusMapper;
 
     /**
      * 用户首页
@@ -313,6 +317,288 @@ public class IndexController {
             logger.error("用户首页错误信息：" + e);
         }
 
+        return result;
+    }
+
+    @ApiOperation(value = "首页接口-待审批的产品项目",notes = "返回参数：lx_cp:立项产品数量，sx_cp:上线产品数量，approvedProductsList：待审批产品-点击查看")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
+    })
+    @RequestMapping(value = "/getCEOHomePageApprovedProducts", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getCEOHomePageProductsApproved(
+            @RequestParam(value = "id", required = true) int id,
+            @RequestParam(value = "current") int current,
+            @RequestParam(value = "pageSize") int pageSize) {
+
+        Map<String, Object> map = new HashMap<>();
+        ApiResult<List<Map<String, Object>>> result = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        try {
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
+
+            /**
+             * CEO-待审批的产品项目
+             */
+            //职位，立项待审批、上线待审批暂时只有CEO有该权限
+            String dutyName = user.getDuty();
+            if (!dutyName.equals("CEO")) {
+                return new ApiResult<>(Constant.PERM_CODE_VALUE, Constant.NOTCEO_FAILS, null, null);
+            }
+            map.put("dutyName", dutyName);
+
+            String creater = "";
+
+            if ("CEO".equals(dutyName)) {
+                creater = "";
+            } else {
+                creater = user.getUserName();
+            }
+            //2、立项待审批-产品
+            Integer lx_cp = indexService.getLxProjects(creater);
+            map.put("lx_cp", lx_cp);
+
+            //3、上线待审批-产品
+            Integer sx_cp = indexService.getSxProjects(creater);
+            map.put("sx_cp", sx_cp);
+
+            //待审批产品-点击查看
+            List<ProjectInfo> infoList = new ArrayList<>();
+
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("current", current);
+            map1.put("pageSize", 1000);
+            infoList = indexService.getApprovedProducts(map1);
+            map.put("approvedProductsList", infoList);//待审批产品-点击查看
+
+            Integer sum = infoList.size();
+            list.add(map);
+
+            RdPage rdPage = new RdPage();
+            //分页信息
+            rdPage.setTotal(sum);
+            rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+            rdPage.setCurrent(current);
+            rdPage.setPageSize(pageSize);
+
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, rdPage);
+        } catch (Exception e) {
+            logger.error("CEO首页接口-待审批的产品项目:" + e);
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "首页接口-待审批的活动项目",notes = "返回参数：lx_hd:立项活动数量，sx_hd:上线活动数量，activityProductsList：待审批活动-点击查看")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
+    })
+    @RequestMapping(value = "/getCEOHomePageActivityProducts", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getCEOHomePageActivityProducts(
+            @RequestParam(value = "id", required = true) int id,
+            @RequestParam(value = "current") int current,
+            @RequestParam(value = "pageSize") int pageSize) {
+
+        Map<String, Object> map = new HashMap<>();
+        ApiResult<List<Map<String, Object>>> result = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        try {
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            /**
+             * CEO-待审批的产品项目
+             */
+            //职位，立项待审批、上线待审批暂时只有CEO有该权限
+            String dutyName = user.getDuty();
+
+            if (!dutyName.equals("CEO")) {
+                return new ApiResult<>(Constant.PERM_CODE_VALUE, Constant.NOTCEO_FAILS, null, null);
+            }
+            map.put("dutyName", dutyName);
+
+            String creater = "";
+
+            if ("CEO".equals(dutyName)) {
+                creater = "";
+            } else {
+                creater = user.getUserName();
+            }
+
+            //2、立项待审批-活动
+            Integer lx_hd = indexService.getHdLxProjects(creater);
+            map.put("lx_hd", lx_hd);
+
+            //3、上线待审批-活动
+            Integer sx_hd = indexService.getHdSxProjects(creater);
+            map.put("sx_hd", sx_hd);
+
+            //待审批活动-点击查看
+            List<ProjectInfo> infoList = new ArrayList<>();
+
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("current", current);
+            map1.put("pageSize", 1000);
+            infoList = indexService.getActivityProducts(map1);
+            map.put("activityProductsList", infoList);//待审批活动-点击查看
+
+            Integer sum = infoList.size();
+            list.add(map);
+
+            RdPage rdPage = new RdPage();
+            //分页信息
+            rdPage.setTotal(sum);
+            rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+            rdPage.setCurrent(current);
+            rdPage.setPageSize(pageSize);
+
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, rdPage);
+        } catch (Exception e) {
+            logger.error("CEO首页接口-待审批的活动项目:" + e);
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "首页接口-开发中的总项目数",notes = "返回参数：kfTotal:开发中的总项目数，developProductsList:开发中项目数-点击查看")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
+    })
+    @RequestMapping(value = "/getCEOHomePageDevelopProducts", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getCEOHomePageDevelopProducts(
+            @RequestParam(value = "current") int current,
+            @RequestParam(value = "pageSize") int pageSize) {
+
+        Map<String, Object> map = new HashMap<>();
+        ApiResult<List<Map<String, Object>>> result = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        try {
+            //SystemUser user = systemUserService.selectByPrimaryKey(id);
+            /**
+             * CEO-待审批的产品项目
+             */
+            Integer kfTotal = indexService.getAllDevelopProjects();
+            map.put("kfTotal", kfTotal);//开发中的总项目数包含逾期
+
+            //开发中的总项目数-点击查看
+            List<ProjectInfo> infoList = new ArrayList<>();
+
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("current", current);
+            map1.put("pageSize", 1000);
+
+            infoList = indexService.getAllDevelopProjectsList(map1);
+            map.put("developProductsList", infoList);//开发中项目数-点击查看
+
+            Integer sum = infoList.size();
+            list.add(map);
+
+            RdPage rdPage = new RdPage();
+            //分页信息
+            rdPage.setTotal(sum);
+            rdPage.setPages(sum % pageSize == 0 ? sum / pageSize : sum / pageSize + 1);
+            rdPage.setCurrent(current);
+            rdPage.setPageSize(pageSize);
+
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, rdPage);
+        } catch (Exception e) {
+            logger.error("开发中的总项目数:" + e);
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "首页接口-项目信息", notes = "返回参数：productsCount:产品数量，activityCount:活动数量")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "startTime", value = "开始时间", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "endTime", value = "结束时间", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "proState", value = "项目类型0：全部 2：开发中 4：完成 7：逾期", required = true, dataType = "Integer")
+    })
+    @RequestMapping(value = "/getCEOHomeProjectInfos", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getCEOHomeProjectInfos(
+            @RequestParam(value = "startTime", required = false) String startTime,
+            @RequestParam(value = "endTime", required = false) String endTime,
+            @RequestParam(value = "proState") int proState) {
+
+        Map<String, Object> map = new HashMap<>();
+        ApiResult<List<Map<String, Object>>> result = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        try {
+            //SystemUser user = systemUserService.selectByPrimaryKey(id);
+
+            Map<String, Object> mapp = new HashMap<>();
+            if (startTime == "" || startTime == null) {
+                startTime = "1980-01-01";
+            }
+            if (endTime == "" || endTime == null) {
+                endTime = "2999-01-01";
+            }
+            mapp.put("startTime", startTime);
+            mapp.put("endTime", endTime);
+            mapp.put("proState", proState);
+
+            //产品数量
+            Integer p = myProjectService.getProductsCount(mapp);
+
+            //活动数量
+            Integer a = myProjectService.getActivityCount(mapp);
+
+            map.put("productsCount", p);//产品数量
+            map.put("activityCount", a);//活动数量
+
+            list.add(map);
+
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+        } catch (Exception e) {
+            logger.error("项目信息:" + e);
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "首页接口-显示的模块",notes = "返回参数：showModule:显示的模块")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "int"),
+    })
+    @RequestMapping(value = "/getShowModule", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getShowModule(
+            @RequestParam(value = "id", required = true) int id ) {
+
+        Map<String, Object> map = new HashMap<>();
+        ApiResult<List<Map<String, Object>>> result = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        try {
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            /**
+             * CEO-待审批的产品项目
+             */
+            //职位，立项待审批、上线待审批暂时只有CEO有该权限
+            String dutyName = user.getDuty();
+
+            List<Map<String, Object>> roleListNew = new ArrayList<>();
+            List<Map<String, Object>> roleList = roleMenusMapper.getHomePageModule();
+
+            if ("CEO".equals(dutyName)) {
+                roleListNew = roleList;
+            } else {
+                roleListNew = roleList.stream().filter(x ->x.get("Name").equals("开发中的总项目数") || x.get("Name").equals("项目数量")).collect(Collectors.toList());
+            }
+            map.put("showModule",roleListNew);
+
+            list.add(map);
+
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
+        } catch (Exception e) {
+            logger.error("显示的模块:" + e);
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+        }
         return result;
     }
 

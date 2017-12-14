@@ -29,4 +29,8 @@ public interface RoleMenusMapper {
 
     List<Map<String,Object>> getButton();
 
+    List<Map<String,Object>> getHomePageModule();
+
+
+
 }

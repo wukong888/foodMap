@@ -867,7 +867,7 @@ public class MyProjectController {
                 //判断任务工时是否是任务开始时间和任务结束时间
                 long days = ToolUtil.getBetweenDays(sDate,eDate);
 
-                if (days != Long.valueOf(workDate)) {
+                if (days != Long.valueOf(Integer.valueOf(workDate))) {
                     return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.DAYS_FAIL,null,null);
                 }
 

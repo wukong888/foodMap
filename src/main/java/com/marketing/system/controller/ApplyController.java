@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.marketing.system.entity.*;
 import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper.SystemUserMapper;
+import com.marketing.system.mapper_two.DayReportMapper;
 import com.marketing.system.mapper_two.OnlineProMapper;
 import com.marketing.system.service.*;
 import com.marketing.system.util.*;
@@ -72,6 +73,9 @@ public class ApplyController {
 
     @Autowired
     private SystemUserMapper systemUserMapper;
+
+    @Autowired
+    private DayReportMapper DayReportDao;
 
     @Value("${ceo.id}")
     private String ceoId;
@@ -291,6 +295,53 @@ public class ApplyController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            //判断12小时后分配的任务有没有执行操作
+            Timer timer = new Timer();
+            TimerTask threadTask = new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.println("进行延迟预警");
+
+                    Integer taskId=task.getTaskId();
+                    Integer groupId=Integer.parseInt(task.getSquadId());
+                    List<ProjectSubtask> subtasks=DayReportDao.getSubtaskByWXTimeOutPush(taskId);
+                    String postUrl1 = "";
+                    String postUrl2 = "";
+                    if(subtasks.size()==0){
+                        //该任务下面未分配子任务
+                        String PushDate = DateUtil.getYMDHMDate();
+                        Integer managerId=DayReportDao.getManagerIdByGroupId(groupId);
+                        String proName=DayReportDao.getProNameByTaskId(taskId);
+                        //推送给部门经理
+                    /*postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                            + "\\n\\n任务分配:" + task.getHandler()
+                            + "\\n\\n任务名称:" + task.getTaskname()
+                            + "\\n\\n开始时间:" + task.getSdate()
+                            + "\\n\\n结束时间:" + task.getEdate()
+                            + "\\n\\n推送时间:" + PushDate
+                            + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";*/
+
+                        //推送给郑洁
+                        postUrl2 = "{\"Uid\":" + 1367 + ",\"Content\":\"《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                                + "\\n\\n任务分配:" + task.getHandler()
+                                + "\\n\\n任务名称:" + task.getTaskname()
+                                + "\\n\\n开始时间:" + task.getSdate()
+                                + "\\n\\n结束时间:" + task.getEdate()
+                                + "\\n\\n推送时间:" + PushDate
+                                + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";
+                    }
+                    try {
+                        //消息推送-延迟预警
+                        String Str = httpPostWithJSON(postUrl1);
+                        System.out.println(Str);
+                        httpPostWithJSON(postUrl2);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            timer.schedule(threadTask, 12*60*60*1000);
         }
 
 

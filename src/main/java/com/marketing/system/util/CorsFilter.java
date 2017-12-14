@@ -76,7 +76,7 @@ public class CorsFilter implements Filter {
                 isFilter = true;
             }
             if (isFilter) {
-                logger.error("token filter过滤ok!");
+                //logger.error("token filter过滤ok!");
                 chain.doFilter(req, res);
             }
 

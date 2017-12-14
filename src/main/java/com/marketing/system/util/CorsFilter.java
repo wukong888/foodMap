@@ -42,14 +42,14 @@ public class CorsFilter implements Filter {
         response.setDateHeader("Expires", 0);
         response.setContentType("image/gif");
         response.setContentType("application/json");
-        chain.doFilter(req, res);
+       // chain.doFilter(req, res);
         String token = reqs.getHeader("Authorization");
 
         Map<String, Object> rec = new LinkedHashMap<String, Object>();
         String url = reqs.getRequestURI();
 
         try {
-           /* List<TokenRecord> list = tokenRecordMapper.selectByToken(token);
+            List<TokenRecord> list = tokenRecordMapper.selectByToken(token);
             boolean isFilter = false;
             if (null == token || token.isEmpty()) {
                 if (url.contains("index") || url.contains("doc") || url.contains("webjars/bycdao") || url.contains("getGifCode")) {
@@ -76,9 +76,9 @@ public class CorsFilter implements Filter {
                 isFilter = true;
             }
             if (isFilter) {
-                logger.info("token filter过滤ok!");
+                logger.error("token filter过滤ok!");
                 chain.doFilter(req, res);
-            }*/
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

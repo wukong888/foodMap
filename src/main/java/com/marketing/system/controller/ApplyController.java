@@ -342,7 +342,8 @@ public class ApplyController {
                     }
                 }
             };
-            timer.schedule(threadTask, 12*60*60*1000);
+            //timer.schedule(threadTask, 12*60*60*1000);
+            timer.schedule(threadTask, 3*60*1000);
         }
 
 

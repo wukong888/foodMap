@@ -254,7 +254,7 @@ public class ApplyController {
             String postUrl1 = "";
             String postUrl2 = "";
             String postUrl3 = "";
-            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()
@@ -271,7 +271,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
 
             //推送给郑洁
-            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()
@@ -280,7 +280,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给陈总
-            postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()
@@ -315,7 +315,7 @@ public class ApplyController {
                         Integer managerId=DayReportDao.getManagerIdByGroupId(groupId);
                         String proName=DayReportDao.getProNameByTaskId(taskId);
                         //推送给部门经理
-                    postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                    postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【延迟预警】\\n\\n《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
                             + "\\n\\n任务分配:" + task.getHandler()
                             + "\\n\\n任务名称:" + task.getTaskname()
                             + "\\n\\n开始时间:" + task.getSdate()
@@ -324,7 +324,7 @@ public class ApplyController {
                             + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";
 
                         //推送给郑洁
-                        postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                        postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警】\\n\\n《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
                                 + "\\n\\n任务分配:" + task.getHandler()
                                 + "\\n\\n任务名称:" + task.getTaskname()
                                 + "\\n\\n开始时间:" + task.getSdate()
@@ -382,7 +382,7 @@ public class ApplyController {
 
         String proTypeName = "";
         //项目类型(1:产品，2：活动)
-        if (proType == "1") {
+        if ("1".equals(proType)) {
             proTypeName = "产品";
         } else {
             proTypeName = "活动";

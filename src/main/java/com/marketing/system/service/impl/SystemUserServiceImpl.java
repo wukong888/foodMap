@@ -70,9 +70,9 @@ public class SystemUserServiceImpl implements SystemUserService{
     }
 
     @Override
-    public List<Map<String,Object>> getMembersById() {
+    public List<Map<String,Object>> getMembersById(String squadId) {
 
-        List<Map<String,Object>> list = systemUserMapper.getMembersByIdNew();
+        List<Map<String,Object>> list = systemUserMapper.getMembersByIdNew(squadId);
 
         return list;
     }

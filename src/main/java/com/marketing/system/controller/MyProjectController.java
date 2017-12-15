@@ -760,9 +760,9 @@ public class MyProjectController {
                 projectTask.setWorkDate(workDate);//任务工时
 
                 List<Map<String,Object>> list = new ArrayList<>();
-                list = systemUserService.getMembersById();
+                list = systemUserService.getMembersById(squadId);
 
-                list = list.stream().filter(x -> x.get("UserGroupId").equals(squadId)).collect(Collectors.toList());
+                //list = list.stream().filter(x -> x.get("UserGroupId").equals(squadId)).collect(Collectors.toList());
 
                 List<Map<String, Object>> systemUserListNew = new ArrayList<>();
 
@@ -798,7 +798,7 @@ public class MyProjectController {
                 logger.error("我的项目参与组添加任务成功------"+i+"任务名称："+taskName);
 
                 //任务分配完成时，推送消息给相关负责人
-                Integer Uid=systemUserMapper.getUidByName(handler);
+                Integer Uid=systemUserMapper.getUidByName(handler2);
                 //获取当前时间
                 String PushDate=DateUtil.getYMDHMDate();
                 //获取相应项目信息

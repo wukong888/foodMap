@@ -465,9 +465,9 @@ public class UpProjectController {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("UserGroupId", squadId);
             List<Map<String, Object>> list = new ArrayList<>();
-            list = systemUserService.getMembersById();
+            list = systemUserService.getMembersById(String.valueOf(squadId));
 
-            list = list.stream().filter(x -> x.get("UserGroupId").equals(squadId)).collect(Collectors.toList());
+            //list = list.stream().filter(x -> x.get("UserGroupId").equals(squadId)).collect(Collectors.toList());
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, null);
 

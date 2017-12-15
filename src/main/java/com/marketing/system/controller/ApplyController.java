@@ -390,7 +390,7 @@ public class ApplyController {
         if (v > 0 && ilog > 0 && ap > 0) {
             r = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, null, null);
             String postUrl = "";
-            postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" + proName + "》的立项申请，请及时处理。"
+            postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"【项目立项】\\n\\n您有关于《" + proName + "》的立项申请，请及时处理。"
                     + "\\n\\n发起小组:" + group
                     + "\\n\\n发起人:" + creatName
                     + "\\n\\n项目名称:" + proName
@@ -411,7 +411,7 @@ public class ApplyController {
             ToolUtil.sendMsg(ceoPhone, group + creatName + "向您申请对《" + projectInfo.getProname() + "》实施项目立项审批，请您及时处理。");
 
             //发送邮件
-            ToolUtil.sendEmial(ceoEmail, "关于《" + projectInfo.getProname() + "》的立项申请审批", "您好，" + group + creatName + "向您发起名为《" + projectInfo.getProname() + "》的立项申请，该项目类型为" + proTypeName + "，要求上线时间为" + planSDate + "，提交的附件数量为" + filePath + "个。请您及时处理。项目简介如下：<br>" +
+            ToolUtil.sendEmial(ceoEmail, "关于《" + projectInfo.getProname() + "》的立项申请审批", "陈总：<br>" + group + creatName + "向您发起名为《" + projectInfo.getProname() + "》的立项申请，该项目类型为" + proTypeName + "，要求上线时间为" + planSDate + "，提交的附件数量为" + filePath + "个。请您及时处理。项目简介如下：<br>" +
                     projectInfo.getProdeclare() + "<br>" +
                     "点击进入项目审批页：https://192.168.11.132:2222<br>" +
                     "注：您目前还有" + lx + "个未处理的立项申请。<br>");

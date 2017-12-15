@@ -271,7 +271,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
 
             //推送给郑洁
-            postUrl2 = "{\"Uid\":" + 1307 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + task.getTaskname()
                     + "\\n\\n开始时间:" + task.getSdate()
@@ -324,7 +324,7 @@ public class ApplyController {
                             + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";
 
                         //推送给郑洁
-                        postUrl2 = "{\"Uid\":" + 1307 + ",\"Content\":\"【延迟预警】\\n\\n《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                        postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警】\\n\\n《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
                                 + "\\n\\n任务分配:" + task.getHandler()
                                 + "\\n\\n任务名称:" + task.getTaskname()
                                 + "\\n\\n开始时间:" + task.getSdate()
@@ -343,7 +343,7 @@ public class ApplyController {
                 }
             };
             //timer.schedule(threadTask, 12*60*60*1000);
-            timer.schedule(threadTask, 3*60*1000);
+            timer.schedule(threadTask, 12*60*60*1000);
         }
 
 

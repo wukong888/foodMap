@@ -406,7 +406,7 @@ public class TestJob extends BatchProperties.Job {
                                   + "\\n\\n未按时填写次数:" + noPutCount
                                   + "\\n\\n推送时间:" + PushDate
                                   + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
-                          postUrl2 = "{\"Uid\":" + 1307 + ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
+                          postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
                                   + "\\n\\n任务分配:" + task.getHandler()
                                   + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                   + "\\n\\n开始时间:" + subtask.getSdate()
@@ -490,7 +490,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
                             //推送给郑洁
-                            postUrl2 = "{\"Uid\":" + 1307 + ",\"Content\":\"《【开发日志】\\n\\n" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" + 1340+ ",\"Content\":\"《【开发日志】\\n\\n" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -575,7 +575,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\\n\\n推送时间:" + PushDate
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
-                            postUrl2 = "{\"Uid\":" +  1307 + ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" +  1340+ ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()

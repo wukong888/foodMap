@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -733,7 +734,7 @@ public class MyProjectController {
             @RequestParam(value = "squadId", required = false) String squadId,
             @RequestParam(value = "workDate", required = false) String workDate,
             @RequestParam(value = "idd", required = false) String idd,
-            @RequestParam(value = "taskId", required = false) String taskId) {
+            @RequestParam(value = "taskId", required = false) String taskId) throws ParseException{
 
         Integer Type = Integer.parseInt(type);
         Integer ProId = Integer.parseInt(proId);
@@ -871,6 +872,40 @@ public class MyProjectController {
                     return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.DAYS_FAIL,null,null);
                 }
 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                List<ProjectSubtask> subtaskListNew = new ArrayList<>();
+                //判断修改任务的时间是否包含其子任务的开始和结束时间
+                List<ProjectSubtask> subtaskList = myProjectService.getProjectSubtaskList(Integer.valueOf(taskId));
+
+                for (ProjectSubtask projectSubtask:subtaskList) {
+                    projectSubtask.setSdate(String.valueOf(sdf.parse(projectSubtask.getSdate()).getTime()));
+                    projectSubtask.setEdate(String.valueOf(sdf.parse(projectSubtask.getEdate()).getTime()));
+                }
+                subtaskListNew = subtaskList;
+                //子任务开始时间最小值
+                LongSummaryStatistics stats = subtaskListNew.stream().mapToLong(x -> Long.valueOf(x.getSdate())).summaryStatistics();
+
+                //子任务结束时间最大值
+                LongSummaryStatistics statMax = subtaskListNew.stream().mapToLong(x -> Long.valueOf(x.getEdate())).summaryStatistics();
+
+                Long mindate = stats.getMin();//子任务开始时间最小值
+                Date plansdate = sdf.parse(sDate);//任务修改开始时间
+
+                Long maxdate = statMax.getMax();//子任务开始时间最大值
+                Date planedate = sdf.parse(eDate);//任务修改结束时间
+
+                if ((plansdate.getTime() <= mindate) && plansdate.getTime() < maxdate) {
+
+                } else {
+                    return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.TASK_TIMEFAIL_START,null,null);
+                }
+                if (planedate.getTime() > mindate && planedate.getTime() >= maxdate) {
+
+                } else {
+                    return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.TASK_TIMEFAIL_END,null,null);
+                }
+                logger.error("修改任务时间正常：任务id"+taskId);
+
                 Integer TaskId = Integer.parseInt(taskId);
                 ProjectTask projectTask = new ProjectTask();
                 projectTask.setTaskId(TaskId);
@@ -881,8 +916,6 @@ public class MyProjectController {
                 projectTask.setEdate(eDate);//任务结束时间
                 projectTask.setWorkDate(workDate);//任务工时
                 //projectTask.setHandler(handler);//操作人
-
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                 java.util.Date date = new java.util.Date();
                 String str = sdf.format(date);

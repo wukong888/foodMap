@@ -46,6 +46,9 @@ public class Constant {
 
 	public static final String DAYS_FAIL = "总工时与计算开始时间和结束时间间隔天数不符，请重新填写";
 
+	public static final String TASK_TIMEFAIL_START = "与该任务下的子任务开始时间冲突,请重新填写!";
+	public static final String TASK_TIMEFAIL_END = "与该任务下的子任务结束时间冲突,请重新填写!";
+
 	public static final int SIGN_FAIL = 99; // 验签失败
 
 	public static final int SUCCEED_CODE_VALUE = 200; // 成功 插入 、删除 更新 修改

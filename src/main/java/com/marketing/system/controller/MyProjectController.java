@@ -1402,7 +1402,7 @@ public class MyProjectController {
 
                 String postUrl1 = "";
                 String postUrl2 = "";
-                postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
+                postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【子任务分配】<br>《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + task.getHandler()
                         + "\\n\\n任务名称:" + subtaskName
                         + "\\n\\n开始时间:" + sDate
@@ -1410,13 +1410,13 @@ public class MyProjectController {
                         + "\\n\\n推送时间:" + PushDate
                         + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
-                postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
+               /* postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"《" +proName+ "》需您协助实施"+subtaskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + task.getHandler()
                         + "\\n\\n任务名称:" + subtaskName
                         + "\\n\\n开始时间:" + sDate
                         + "\\n\\n结束时间:" + eDate
                         + "\\n\\n推送时间:" + PushDate
-                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
 
                 try {
                     //消息推送-任务分配

@@ -35,7 +35,7 @@ public interface SystemUserMapper {
     Integer getUidByName(@Param("name")String name);
 
     //根据任务id查找项目创建人
-    @Select("SELECT creater FROM [dbo].[project_info] a join dbo.project_task b on a.proId = b.proId where b.taskId =#{taskId}")
+    @Select("SELECT creater FROM [projectManage].[dbo].[project_info] a join dbo.project_task b on a.proId = b.proId where b.taskId =#{taskId}")
     String getCreaterByTaskId(@Param("taskId")Integer taskId);
 
 

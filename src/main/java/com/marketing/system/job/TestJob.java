@@ -700,6 +700,10 @@ public class TestJob extends BatchProperties.Job {
                 String success2 = ToolUtil.sendEmial(email,"关于《"+proName+"》今日进展情况的日报"+todayProDate+"","您好:<br>   截至"+nowDate+"，"+proName+"实施情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
                         +"通报表格见下方<br>"
                         +report);
+                //推送邮件到运营总监
+                ToolUtil.sendEmial(ceoemail,"关于《"+pro.getProname()+"》中未按时填写开发日志的通报"+nowDate+"","您好:<br>    截至"+nowDate+"，"+pro.getProname()+"中未按时填写开发日志的情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
+                        +"通报表格见下方<br>"
+                        +report);
                 logger.error("项目实施进度邮件通报--通报成功！");
 
                 System.out.println(success1);

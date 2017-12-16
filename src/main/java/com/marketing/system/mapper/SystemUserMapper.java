@@ -34,6 +34,10 @@ public interface SystemUserMapper {
     @Select("SELECT id from SystemUser where UserName=#{name} and job = 1")
     Integer getUidByName(@Param("name")String name);
 
+    //根据用户名查找用户邮箱
+    @Select("SELECT email FROM [dbo].[SystemUser] where UserName = #{UserName}")
+    String getEmailByName(@Param("UserName")String UserName);
+
     //根据任务id查找项目创建人
     @Select("SELECT creater FROM [projectManage].[dbo].[project_info] a join [projectManage].[dbo].[project_task] b on a.proId = b.proId where b.taskId =#{taskId}")
     String getCreaterByTaskId(@Param("taskId")Integer taskId);

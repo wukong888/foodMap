@@ -45,6 +45,9 @@ public class TestJob extends BatchProperties.Job {
     @Value("${prosupervisor.email}")
     private String prosupervisoremail;
 
+    @Value("${ceo.eamil}")
+    private String ceoemail;
+
     @Resource
     private com.marketing.system.service.DayReportService DayReportService;
 
@@ -390,8 +393,8 @@ public class TestJob extends BatchProperties.Job {
                 if("1".equals(subtask.getSubtaskstate())||"2".equals(subtask.getSubtaskstate())||"5".equals(subtask.getSubtaskstate())){
                       //判断子任务开始时间和当前时间的时间差
                       if(DateUtil.getDayDiff(subtask.getSdate(),nowDay) <= 0){
-                          String handler = subtask.getHandler();
-                          Integer Uid = systemUserMapper.getUidByName(handler);
+                          String subtaskHandler = subtask.getSubtaskhandler();
+                          Integer Uid = systemUserMapper.getUidByName(subtaskHandler);
                           Integer noPutCount = subtask.getNoPutCount();
                           if(noPutCount == null){
                               noPutCount = 0 ;
@@ -406,14 +409,14 @@ public class TestJob extends BatchProperties.Job {
                                   + "\\n\\n未按时填写次数:" + noPutCount
                                   + "\\n\\n推送时间:" + PushDate
                                   + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
-                          postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
+                          /*postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
                                   + "\\n\\n任务分配:" + task.getHandler()
                                   + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                   + "\\n\\n开始时间:" + subtask.getSdate()
                                   + "\\n\\n结束时间:" + subtask.getEdate()
                                   + "\\n\\n未按时填写次数:" + noPutCount
                                   + "\\n\\n推送时间:" + PushDate
-                                  + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
+                                  + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";*/
                       }
                 }
                 try {
@@ -476,11 +479,11 @@ public class TestJob extends BatchProperties.Job {
                             Integer Uid = systemUserMapper.getUidByName(task.getHandler());
                             //获取当前时间
                             String PushDate = DateUtil.getYMDHMDate();
-                            //获取项目负责人id
+                            //获取项目
                             String proCreater = systemUserMapper.getCreaterByTaskId(task.getTaskId());
                             Integer createrid = systemUserMapper.getUidByName(proCreater);
 
-                            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【开发日志】\\n\\n《" + proName + "》需" + subtask.getHandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【延迟预警1级】\\n\\n《" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -490,7 +493,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
                             //推送给郑洁
-                            postUrl2 = "{\"Uid\":" + 1340+ ",\"Content\":\"《【开发日志】\\n\\n" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" + 1340+ ",\"Content\":\"【延迟预警1级】\\n\\n《" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -568,7 +571,7 @@ public class TestJob extends BatchProperties.Job {
                             if(NoPutCount == null){
                                 NoPutCount = 0;
                             }
-                            postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
+                            postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【延迟预警2级】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -577,7 +580,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\\n\\n推送时间:" + PushDate
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
-                            postUrl2 = "{\"Uid\":" +  1340+ ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" +  1340+ ",\"Content\":\"【延迟预警2级】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -684,14 +687,22 @@ public class TestJob extends BatchProperties.Job {
             //发送邮件
             String nowDate = DateUtil.getMDDate();
             String report = str.toString();
+            //根据用户名查出用户邮箱
+           String email = systemUserMapper.getEmailByName(creater);
               //获取
             try {
-                String success = ToolUtil.sendEmial(prosupervisoremail,"关于《"+proName+"》今日进展情况的日报"+todayProDate+"","您好:<br>   截至"+nowDate+"，"+proName+"实施情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
+                //发送邮件给项目监管人
+                String success1 = ToolUtil.sendEmial(prosupervisoremail,"关于《"+proName+"》今日进展情况的日报"+todayProDate+"","您好:<br>   截至"+nowDate+"，"+proName+"实施情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
+                        +"通报表格见下方<br>"
+                        +report);
+                //发送邮件给项目负责人
+                String success2 = ToolUtil.sendEmial(email,"关于《"+proName+"》今日进展情况的日报"+todayProDate+"","您好:<br>   截至"+nowDate+"，"+proName+"实施情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
                         +"通报表格见下方<br>"
                         +report);
                 logger.error("项目实施进度邮件通报--通报成功！");
 
-                System.out.println(success);
+                System.out.println(success1);
+                System.out.println(success2);
             } catch (IOException e) {
                 logger.error("项目实施进度邮件通报--通报失败！"+e);
                 e.printStackTrace();
@@ -750,13 +761,25 @@ public class TestJob extends BatchProperties.Job {
             //发送邮件
             String nowDate = DateUtil.getMDDate();
             String report = str.toString();
+            //根据用户名查出用户邮箱
+            String email = systemUserMapper.getEmailByName(pro.getCreater());
             //获取
             if(idd > 0){
                 try {
+                    //推送邮件到项目监管人
                     ToolUtil.sendEmial(prosupervisoremail,"关于《"+pro.getProname()+"》中未按时填写开发日志的通报"+nowDate+"","您好:<br>    截至"+nowDate+"，"+pro.getProname()+"中未按时填写开发日志的情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
                             +"通报表格见下方<br>"
                             +report);
+                    //推送邮件到运营总监
+                    ToolUtil.sendEmial(ceoemail,"关于《"+pro.getProname()+"》中未按时填写开发日志的通报"+nowDate+"","您好:<br>    截至"+nowDate+"，"+pro.getProname()+"中未按时填写开发日志的情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
+                            +"通报表格见下方<br>"
+                            +report);
+                    //推送邮件给项目责任人
+                    ToolUtil.sendEmial(email,"关于《"+pro.getProname()+"》中未按时填写开发日志的通报"+nowDate+"","您好:<br>    截至"+nowDate+"，"+pro.getProname()+"中未按时填写开发日志的情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
+                            +"通报表格见下方<br>"
+                            +report);
                     logger.error("项目未实施更新邮件通报--通报成功！");
+
                 } catch (IOException e) {
                     logger.error("项目未实施更新邮件通报--通报失败！"+e);
                     e.printStackTrace();

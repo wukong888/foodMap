@@ -449,6 +449,7 @@ public class TestJob extends BatchProperties.Job {
                 if("1".equals(subtask.getSubtaskstate())||"2".equals(subtask.getSubtaskstate())||"5".equals(subtask.getSubtaskstate())){
                     String postUrl1 = "";
                     String postUrl2 = "";
+                    String postUrl3 = "";
                     //判断子任务开始时间和当前时间的时间差
                     if(DateUtil.getDayDiff(subtask.getSdate(),todayDate) <= 0) {
                         //获取到该子任务中所有的开发日志记录
@@ -500,7 +501,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
                             //推送给项目创建人
-                            postUrl2 = "{\"Uid\":" + createrid + ",\"Content\":\"《【延迟预警】\\n\\n" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                            postUrl3 = "{\"Uid\":" + createrid + ",\"Content\":\"《【延迟预警】\\n\\n" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -517,6 +518,7 @@ public class TestJob extends BatchProperties.Job {
                         //消息推送-开发日志
                         httpPostWithJSON(postUrl1);
                         httpPostWithJSON(postUrl2);
+                        httpPostWithJSON(postUrl3);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

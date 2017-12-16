@@ -372,7 +372,7 @@ public class TestJob extends BatchProperties.Job {
     }*/
 
     //下午4点定时提醒更新子任务开发日志
-    @Scheduled(cron="0 52 10 * * ?")
+    @Scheduled(cron="0 03 11 * * ?")
     public ApiResult<List<Map>> subTaskWXPush() {
     System.out.println("=============");
         //获取当前时间
@@ -431,7 +431,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //下午4点半判断是否更新日志，并推送
-    @Scheduled(cron="0 52 10 * * ?")
+    @Scheduled(cron="0 04 11 * * ?")
     public ApiResult<List<Map>> subTaskWXPush1() {
         System.out.println("-=-=-=-=-=-=-");
         //获取当前时间
@@ -530,7 +530,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //下午5点判断是否更新日志，并推送
-    @Scheduled(cron="0 59 10 * * ?")
+    @Scheduled(cron="0 03 11 * * ?")
     public ApiResult<List<Map>> subTaskWXPush2() {
 
         //获取当前时间

@@ -7,6 +7,7 @@ import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper.SystemUserMapper;
 import com.marketing.system.mapper_two.DayReportMapper;
 import com.marketing.system.mapper_two.OnlineProMapper;
+import com.marketing.system.mapper_two.ProjectInfoMapper;
 import com.marketing.system.service.*;
 import com.marketing.system.util.*;
 import io.swagger.annotations.*;
@@ -14,6 +15,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+import org.apache.tools.ant.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +78,9 @@ public class ApplyController {
 
     @Autowired
     private DayReportMapper DayReportDao;
+
+    @Autowired
+    private ProjectInfoMapper proInfoMapper;
 
     @Value("${ceo.id}")
     private String ceoId;
@@ -305,6 +310,8 @@ public class ApplyController {
                     System.out.println("进行延迟预警");
 
                     Integer taskId=task.getTaskId();
+                    //根据任务Id查找项目信息
+                    ProjectInfo pro = proInfoMapper.getProjectInfoByTaskId(taskId);
                     Integer groupId=Integer.parseInt(task.getSquadId());
                     List<ProjectSubtask> subtasks=DayReportDao.getSubtaskByWXTimeOutPush(taskId);
                     String postUrl1 = "";
@@ -315,7 +322,7 @@ public class ApplyController {
                         Integer managerId=DayReportDao.getManagerIdByGroupId(groupId);
                         String proName=DayReportDao.getProNameByTaskId(taskId);
                         //推送给部门经理
-                    postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【延迟预警1级】\\n\\n《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                    postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
                             + "\\n\\n任务分配:" + task.getHandler()
                             + "\\n\\n任务名称:" + task.getTaskname()
                             + "\\n\\n开始时间:" + task.getSdate()
@@ -324,7 +331,7 @@ public class ApplyController {
                             + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";
 
                         //推送给郑洁
-                        postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警1级】\\n\\n《" +proName+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                        postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
                                 + "\\n\\n任务分配:" + task.getHandler()
                                 + "\\n\\n任务名称:" + task.getTaskname()
                                 + "\\n\\n开始时间:" + task.getSdate()

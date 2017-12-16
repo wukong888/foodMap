@@ -326,13 +326,12 @@ public class UpProjectController {
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";*/
 
                 } else if (Integer.valueOf(proState) == 3) {
-                    postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"您有关于《" + projectInfo.getProname() + "》的上线申请，请及时处理。"
+                    postUrl = "{\"Uid\":" + ceoId + ",\"Content\":\"【项目上线】\\n\\n您有关于《" + projectInfo.getProname() + "》的上线申请，请及时处理。"
                             + "\\n\\n发起小组:" + group
                             + "\\n\\n发起人:" + projectInfo.getCreater()
                             + "\\n\\n项目名称:" + projectInfo.getProname()
                             + "\\n\\n项目类型:" + proTypeName
                             + "\\n\\n发起时间:" + projectInfo.getCreatedate()
-                            + "\\n\\n是否逾期:" + projectInfo.getProname()
                             + "\\n\\n上线审批总量:" + sx + "个"
                             + "\\n\\n推送时间:" + str2
                             + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
@@ -352,7 +351,7 @@ public class UpProjectController {
                     ToolUtil.sendMsg(ceoPhone, group + projectInfo.getCreater() + "向您申请对《" + projectInfo.getProname() + "》实施项目上线，请您及时处理。");
 
                     //发送邮件
-                    ToolUtil.sendEmial(ceoEmail, "关于《" + projectInfo.getProname() + "》的上线申请", "您好，" + group + projectInfo.getCreater() + "向您发起名为《" + projectInfo.getProname() + "》的立项申请，该项目类型为" + proTypeName + "，此项目按照要求时间上线（要求上线时间为" + projectInfo.getPlanedate() + ")。请您及时处理。项目简介如下：<br>" +
+                    ToolUtil.sendEmial(ceoEmail, "关于《" + projectInfo.getProname() + "》的上线申请", "陈总:<br> " + group + projectInfo.getCreater() + "向您发起名为《" + projectInfo.getProname() + "》的上线申请，该项目类型为" + proTypeName + "，此项目按照要求时间上线（要求上线时间为" + projectInfo.getPlanedate() + ")。请您及时处理。项目简介如下：<br>" +
                             projectInfo.getProdeclare() + "<br>" +
                             "点击进入项目审批页：https://192.168.11.132:2222<br>" +
                             "注：您目前还有" + sx + "个未处理的上线申请。<br>");

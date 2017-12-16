@@ -808,7 +808,7 @@ public class MyProjectController {
                 String postUrl1 = "";
                 String postUrl2 = "";
                 String postUrl3 = "";
-                postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + handler
                         + "\\n\\n任务名称:" + taskName
                         + "\\n\\n开始时间:" + sDate
@@ -817,7 +817,7 @@ public class MyProjectController {
                         + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
                 //推送给郑洁
-                postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + handler
                         + "\\n\\n任务名称:" + taskName
                         + "\\n\\n开始时间:" + sDate
@@ -826,7 +826,7 @@ public class MyProjectController {
                         + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
                 //推送给陈总
-                postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + handler
                         + "\\n\\n任务名称:" + taskName
                         + "\\n\\n开始时间:" + sDate

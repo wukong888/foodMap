@@ -322,13 +322,13 @@ public class IndexController {
 
     @ApiOperation(value = "首页接口-待审批的产品项目",notes = "返回参数：lx_cp:立项产品数量，sx_cp:上线产品数量，approvedProductsList：待审批产品-点击查看")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getCEOHomePageApprovedProducts", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getCEOHomePageProductsApproved(
-            @RequestParam(value = "id", required = true) int id,
+            @RequestParam(value = "userId", required = true) int userId,
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
 
@@ -337,7 +337,7 @@ public class IndexController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
             /**
              * CEO-待审批的产品项目
@@ -393,13 +393,13 @@ public class IndexController {
 
     @ApiOperation(value = "首页接口-待审批的活动项目",notes = "返回参数：lx_hd:立项活动数量，sx_hd:上线活动数量，activityProductsList：待审批活动-点击查看")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getCEOHomePageActivityProducts", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getCEOHomePageActivityProducts(
-            @RequestParam(value = "id", required = true) int id,
+            @RequestParam(value = "userId", required = true) int userId,
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
 
@@ -408,7 +408,7 @@ public class IndexController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
             /**
              * CEO-待审批的产品项目
              */
@@ -564,18 +564,18 @@ public class IndexController {
 
     @ApiOperation(value = "首页接口-显示的模块",notes = "返回参数：showModule:显示的模块")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "id", value = "登录用户id", required = true, dataType = "int"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "int"),
     })
     @RequestMapping(value = "/getShowModule", method = RequestMethod.POST)
     public ApiResult<List<Map<String, Object>>> getShowModule(
-            @RequestParam(value = "id", required = true) int id ) {
+            @RequestParam(value = "userId", required = true) int userId ) {
 
         Map<String, Object> map = new HashMap<>();
         ApiResult<List<Map<String, Object>>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
             /**
              * CEO-待审批的产品项目
              */

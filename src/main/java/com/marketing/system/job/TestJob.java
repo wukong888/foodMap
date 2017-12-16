@@ -372,7 +372,7 @@ public class TestJob extends BatchProperties.Job {
     }*/
 
     //下午4点定时提醒更新子任务开发日志
-    @Scheduled(cron="0 10 15 * * ?")
+    @Scheduled(cron="0 50 09 * * ?")
     public ApiResult<List<Map>> subTaskWXPush() {
     System.out.println("=============");
         //获取当前时间
@@ -431,7 +431,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //下午4点半判断是否更新日志，并推送
-    @Scheduled(cron="0 01 15 * * ?")
+    @Scheduled(cron="0 52 09 * * ?")
     public ApiResult<List<Map>> subTaskWXPush1() {
         System.out.println("-=-=-=-=-=-=-");
         //获取当前时间
@@ -528,7 +528,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //下午5点判断是否更新日志，并推送
-    @Scheduled(cron="0 02 15 * * ?")
+    @Scheduled(cron="0 55 09 * * ?")
     public ApiResult<List<Map>> subTaskWXPush2() {
 
         //获取当前时间
@@ -602,7 +602,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //项目实施进度通报
-    @Scheduled(cron="0 20 15 * * ?")
+    @Scheduled(cron="0 00 10 * * ?")
     public ApiResult<List<Map>> progresseport() {
 
         System.out.println("===---===---==");
@@ -696,7 +696,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //未实施更新通报
-    @Scheduled(cron="0 20 15 * * ?")
+    @Scheduled(cron="0 00 10 * * ?")
     public ApiResult<List<Map>> noPutCountReport() {
 
         String todayDate = DateUtil.getYMDDate();

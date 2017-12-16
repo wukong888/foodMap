@@ -45,7 +45,7 @@ public class TestJob extends BatchProperties.Job {
     @Value("${prosupervisor.email}")
     private String prosupervisoremail;
 
-    @Value("${ceo.eamil}")
+    @Value("${ceo.email}")
     private String ceoemail;
 
     @Resource

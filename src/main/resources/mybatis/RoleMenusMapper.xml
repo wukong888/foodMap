@@ -105,7 +105,7 @@
         isCEOIndex
         FROM
         Menu
-        WHERE SystemId = 30
+        WHERE SystemId = 3
         AND isButton = '0' AND isCEOIndex = '1'
     </select>
 

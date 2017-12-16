@@ -480,7 +480,7 @@ public class TestJob extends BatchProperties.Job {
                             String proCreater = systemUserMapper.getCreaterByTaskId(task.getTaskId());
                             Integer createrid = systemUserMapper.getUidByName(proCreater);
 
-                            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【开发日志】\\n\\n《" + proName + "》需" + subtask.getHandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【延迟预警】\\n\\n《" + proName + "》需" + subtask.getHandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -490,7 +490,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
                             //推送给郑洁
-                            postUrl2 = "{\"Uid\":" + 1340+ ",\"Content\":\"《【开发日志】\\n\\n" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" + 1340+ ",\"Content\":\"【延迟预警】\\n\\n《" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -500,7 +500,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
                             //推送给项目创建人
-                            postUrl2 = "{\"Uid\":" + createrid + ",\"Content\":\"《" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" + createrid + ",\"Content\":\"《【延迟预警】\\n\\n" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()

@@ -260,7 +260,7 @@ public class ApplyController {
             String postUrl1 = "";
             String postUrl2 = "";
             String postUrl3 = "";
-            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
+            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + Task.getTaskname()
                     + "\\n\\n开始时间:" + Task.getSdate()
@@ -277,7 +277,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
 
             //推送给郑洁
-            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
+            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + Task.getTaskname()
                     + "\\n\\n开始时间:" + Task.getSdate()
@@ -286,7 +286,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给陈总
-            postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
+            postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + Task.getTaskname()
                     + "\\n\\n开始时间:" + Task.getSdate()

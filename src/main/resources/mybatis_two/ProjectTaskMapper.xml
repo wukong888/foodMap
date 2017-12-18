@@ -117,6 +117,9 @@
     where taskId = #{taskId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.marketing.system.entity.ProjectTask" >
+    <selectKey resultType="java.lang.Integer" keyProperty="taskId" order="AFTER">
+    SELECT @@IDENTITY as taskId
+  </selectKey>
     insert into project_task (proId, squadId,
       taskName, sDate, eDate, 
       taskState, taskProgress,
@@ -127,8 +130,11 @@
       #{tasklogrecordid,jdbcType=INTEGER}, #{taskdeveloplogid,jdbcType=INTEGER},#{handler,jdbcType=VARCHAR},
       #{workDate,jdbcType=VARCHAR},#{createDate,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectTask" >
 
+  <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectTask" >
+    <selectKey resultType="java.lang.Integer" keyProperty="taskId" order="AFTER">
+      SELECT @@IDENTITY as taskId
+    </selectKey>
     insert into project_task
     <trim prefix="(" suffix=")" suffixOverrides="," >
 

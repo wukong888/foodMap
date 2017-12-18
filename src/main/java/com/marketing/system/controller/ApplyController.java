@@ -312,7 +312,8 @@ public class ApplyController {
                     System.out.println("进行延迟预警");
                     logger.error("进行延迟预警!!!");
 
-                    Integer taskId=Task.getTaskId();
+                    Integer taskId=projectTask.getTaskId();
+                    logger.error("任务id："+taskId);
                     //根据任务Id查找项目信息
                     ProjectInfo pro = proInfoMapper.getProjectInfoByTaskId(taskId);
                     Integer groupId=Integer.parseInt(Task.getSquadId());

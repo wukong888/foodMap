@@ -4,9 +4,7 @@ package com.marketing.system.controller;
 import com.marketing.system.entity.*;
 import com.marketing.system.mapper.DepartmentNewMapper;
 import com.marketing.system.mapper.SystemUserMapper;
-import com.marketing.system.mapper_two.GroupMapper;
-import com.marketing.system.mapper_two.OnlineProMapper;
-import com.marketing.system.mapper_two.ProjectSubtaskMapper;
+import com.marketing.system.mapper_two.*;
 import com.marketing.system.service.*;
 import com.marketing.system.util.*;
 import io.swagger.annotations.Api;
@@ -68,6 +66,12 @@ public class MyProjectController {
 
     @Autowired
     private SystemUserMapper systemUserMapper;
+
+    @Autowired
+    private DayReportMapper DayReportDao;
+
+    @Autowired
+    private ProjectInfoMapper proInfoMapper;
 
     /**
      * 查询我的项目列表
@@ -842,6 +846,60 @@ public class MyProjectController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                //判断12小时后分配的任务有没有执行操作
+                Timer timer = new Timer();
+                // timer.schedule(new SynchronizingTask(Task), 5*60*1000);
+                TimerTask threadTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        System.out.println("进行延迟预警");
+                        logger.error("进行延迟预警!!!");
+
+                        Integer taskId=projectTask.getTaskId();
+                        //根据任务Id查找项目信息
+                        ProjectInfo pro = proInfoMapper.getProjectInfoByTaskId(taskId);
+                        Integer groupId=Integer.parseInt(projectTask.getSquadId());
+                        List<ProjectSubtask> subtasks=DayReportDao.getSubtaskByWXTimeOutPush(taskId);
+                        String postUrl1 = "";
+                        String postUrl2 = "";
+                        if(subtasks.size()==0){
+                            //该任务下面未分配子任务
+                            String PushDate = DateUtil.getYMDHMDate();
+                            Integer managerId=DayReportDao.getManagerIdByGroupId(groupId);
+                            String proName=DayReportDao.getProNameByTaskId(taskId);
+                            //推送给部门经理
+                    /*postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+Task.getHandler()+"协助实施"+Task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                            + "\\n\\n任务分配:" + Task.getHandler()
+                            + "\\n\\n任务名称:" + Task.getTaskname()
+                            + "\\n\\n开始时间:" + Task.getSdate()
+                            + "\\n\\n结束时间:" + Task.getEdate()
+                            + "\\n\\n推送时间:" + PushDate
+                            + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";*/
+
+                            //推送给郑洁
+                            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+projectTask.getHandler()+"协助实施"+projectTask.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                                    + "\\n\\n任务分配:" + projectTask.getHandler()
+                                    + "\\n\\n任务名称:" + projectTask.getTaskname()
+                                    + "\\n\\n开始时间:" + projectTask.getSdate()
+                                    + "\\n\\n结束时间:" + projectTask.getEdate()
+                                    + "\\n\\n推送时间:" + PushDate
+                                    + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";
+                            logger.error("延迟预警内容："+postUrl2);
+                        }
+                        try {
+                            //消息推送-延迟预警
+                            String Str = httpPostWithJSON(postUrl1);
+                            System.out.println(Str);
+                            httpPostWithJSON(postUrl2);
+                            logger.error("消息推送-延迟预警成功！");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            logger.error("消息推送-延迟预警出错："+e);
+                        }
+                    }
+                };
+                timer.schedule(threadTask, 5*60*1000);
 
                 ProLogRecord proLogRecord = new ProLogRecord();
 

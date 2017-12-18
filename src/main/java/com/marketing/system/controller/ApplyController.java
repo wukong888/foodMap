@@ -310,6 +310,7 @@ public class ApplyController {
                 @Override
                 public void run() {
                     System.out.println("进行延迟预警");
+                    logger.error("进行延迟预警!!!");
 
                     Integer taskId=Task.getTaskId();
                     //根据任务Id查找项目信息
@@ -340,14 +341,17 @@ public class ApplyController {
                                 + "\\n\\n结束时间:" + Task.getEdate()
                                 + "\\n\\n推送时间:" + PushDate
                                 + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";
+                        logger.error("延迟预警内容："+postUrl2);
                     }
                     try {
                         //消息推送-延迟预警
                         String Str = httpPostWithJSON(postUrl1);
                         System.out.println(Str);
                         httpPostWithJSON(postUrl2);
+                        logger.error("消息推送-延迟预警成功！");
                     } catch (Exception e) {
                         e.printStackTrace();
+                        logger.error("消息推送-延迟预警出错："+e);
                     }
                 }
             };

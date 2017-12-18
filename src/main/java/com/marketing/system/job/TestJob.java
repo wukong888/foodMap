@@ -375,7 +375,7 @@ public class TestJob extends BatchProperties.Job {
     }*/
 
     //下午4点定时提醒更新子任务开发日志
-    @Scheduled(cron="0 25 18 * * ?")
+    @Scheduled(cron="0 42 18 * * ?")
     public ApiResult<List<Map>> subTaskWXPush() {
     System.out.println("=============");
         //获取当前时间
@@ -434,7 +434,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //下午4点半判断是否更新日志，并推送
-    @Scheduled(cron="0 26 18 * * ?")
+    @Scheduled(cron="0 43 18 * * ?")
     public ApiResult<List<Map>> subTaskWXPush1() {
         System.out.println("-=-=-=-=-=-=-");
         //获取当前时间
@@ -454,6 +454,7 @@ public class TestJob extends BatchProperties.Job {
                     String postUrl2 = "";
                     String postUrl3 = "";
                     //判断子任务开始时间和当前时间的时间差
+                    Integer NoPutCount = null;
                     if(DateUtil.getDayDiff(subtask.getSdate(),todayDate) <= 0) {
                         //获取到该子任务中所有的开发日志记录
                         List<SubtaskDevelopLog> subtaskDevelopLogs = OnProDao.getAllSubTaskDevLog(subtask.getSubtaskId());
@@ -466,11 +467,11 @@ public class TestJob extends BatchProperties.Job {
 
                         if (flag == false) {
                             //修改子任务中未按时更新开发日志记录次数
-                            Integer NoPutCount = subtask.getNoPutCount();
+                            NoPutCount = subtask.getNoPutCount();
                             if (NoPutCount == null) {
                                 NoPutCount = 0;
                             }
-                            NoPutCount++;
+                            NoPutCount = NoPutCount + 1;
                             boolean success = OnProDao.updateNoPutCount(NoPutCount, subtask.getSubtaskId());
                             if (!success) {
                                 logger.info("修改noPutCount失败");
@@ -534,7 +535,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //下午5点判断是否更新日志，并推送
-    @Scheduled(cron="0 27 18 * * ?")
+    @Scheduled(cron="0 44 18 * * ?")
     public ApiResult<List<Map>> subTaskWXPush2() {
 
         //获取当前时间
@@ -613,7 +614,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //项目实施进度通报
-    @Scheduled(cron="0 28 18 * * ?")
+    @Scheduled(cron="0 45 18 * * ?")
     public ApiResult<List<Map>> progresseport() {
 
         System.out.println("===---===---==");
@@ -722,7 +723,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //未实施更新通报
-    @Scheduled(cron="0 28 18 * * ?")
+    @Scheduled(cron="0 45 18 * * ?")
     public ApiResult<List<Map>> noPutCountReport() {
 
         String todayDate = DateUtil.getYMDDate();

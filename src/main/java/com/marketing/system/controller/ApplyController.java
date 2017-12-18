@@ -16,6 +16,7 @@ import org.apache.shiro.session.Session;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,11 +203,11 @@ public class ApplyController {
         int ap = 0;
         int sum = 0;
         Map<String, Object> map1 = new HashMap<>();
-        for (ProjectTask task : list) {
+        for (ProjectTask  Task: list) {
             projectTask.setProid(Integer.valueOf(code));//项目Id
-            projectTask.setSquadId(task.getSquadId());//参与组id
+            projectTask.setSquadId(Task.getSquadId());//参与组id
 
-            String squadId = task.getSquadId();
+            String squadId = Task.getSquadId();
 
             /*String squad = upProjectService.selectSquadBySquadId(Integer.parseInt(squadId));
 
@@ -234,10 +235,10 @@ public class ApplyController {
 
             }
             projectTask.setHandler(handler);
-            projectTask.setTaskname(task.getTaskname());//任务名称
-            projectTask.setSdate(task.getSdate());//任务开始时间
-            projectTask.setEdate(task.getEdate());//任务结束时间
-            projectTask.setWorkDate(task.getWorkDate());//任务工时
+            projectTask.setTaskname(Task.getTaskname());//任务名称
+            projectTask.setSdate(Task.getSdate());//任务开始时间
+            projectTask.setEdate(Task.getEdate());//任务结束时间
+            projectTask.setWorkDate(Task.getWorkDate());//任务工时
 
             projectTask.setCreateDate(str);//创建时间
             projectTask.setTaskprogress("0");//任务进度
@@ -248,7 +249,7 @@ public class ApplyController {
             //创建任务
             ap = applyService.insertSelective(projectTask);
 
-            logger.error("创建任务成功------" + ap + "任务名称：" + task.getTaskname());
+            logger.error("创建任务成功------" + ap + "任务名称：" + Task.getTaskname());
 
             //任务分配完成时，推送消息给相关负责人
             Integer Uid = systemUserMapper.getUidByName(handler);
@@ -259,11 +260,11 @@ public class ApplyController {
             String postUrl1 = "";
             String postUrl2 = "";
             String postUrl3 = "";
-            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
-                    + "\\n\\n任务名称:" + task.getTaskname()
-                    + "\\n\\n开始时间:" + task.getSdate()
-                    + "\\n\\n结束时间:" + task.getEdate()
+                    + "\\n\\n任务名称:" + Task.getTaskname()
+                    + "\\n\\n开始时间:" + Task.getSdate()
+                    + "\\n\\n结束时间:" + Task.getEdate()
                     + "\\n\\n推送时间:" + PushDate
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
@@ -276,20 +277,20 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
 
             //推送给郑洁
-            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
-                    + "\\n\\n任务名称:" + task.getTaskname()
-                    + "\\n\\n开始时间:" + task.getSdate()
-                    + "\\n\\n结束时间:" + task.getEdate()
+                    + "\\n\\n任务名称:" + Task.getTaskname()
+                    + "\\n\\n开始时间:" + Task.getSdate()
+                    + "\\n\\n结束时间:" + Task.getEdate()
                     + "\\n\\n推送时间:" + PushDate
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给陈总
-            postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + task.getTaskname() + "工作，请及时处理。"
+            postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【项目立项】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
-                    + "\\n\\n任务名称:" + task.getTaskname()
-                    + "\\n\\n开始时间:" + task.getSdate()
-                    + "\\n\\n结束时间:" + task.getEdate()
+                    + "\\n\\n任务名称:" + Task.getTaskname()
+                    + "\\n\\n开始时间:" + Task.getSdate()
+                    + "\\n\\n结束时间:" + Task.getEdate()
                     + "\\n\\n推送时间:" + PushDate
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
@@ -304,15 +305,16 @@ public class ApplyController {
 
             //判断12小时后分配的任务有没有执行操作
             Timer timer = new Timer();
-            TimerTask threadTask = new TimerTask() {
+            timer.schedule(new SynchronizingTask(Task), 5*60*1000);  
+            /*TimerTask threadTask = new TimerTask() {
                 @Override
                 public void run() {
                     System.out.println("进行延迟预警");
 
-                    Integer taskId=task.getTaskId();
+                    Integer taskId=Task.getTaskId();
                     //根据任务Id查找项目信息
                     ProjectInfo pro = proInfoMapper.getProjectInfoByTaskId(taskId);
-                    Integer groupId=Integer.parseInt(task.getSquadId());
+                    Integer groupId=Integer.parseInt(Task.getSquadId());
                     List<ProjectSubtask> subtasks=DayReportDao.getSubtaskByWXTimeOutPush(taskId);
                     String postUrl1 = "";
                     String postUrl2 = "";
@@ -322,20 +324,20 @@ public class ApplyController {
                         Integer managerId=DayReportDao.getManagerIdByGroupId(groupId);
                         String proName=DayReportDao.getProNameByTaskId(taskId);
                         //推送给部门经理
-                    postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
-                            + "\\n\\n任务分配:" + task.getHandler()
-                            + "\\n\\n任务名称:" + task.getTaskname()
-                            + "\\n\\n开始时间:" + task.getSdate()
-                            + "\\n\\n结束时间:" + task.getEdate()
+                    postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+Task.getHandler()+"协助实施"+Task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                            + "\\n\\n任务分配:" + Task.getHandler()
+                            + "\\n\\n任务名称:" + Task.getTaskname()
+                            + "\\n\\n开始时间:" + Task.getSdate()
+                            + "\\n\\n结束时间:" + Task.getEdate()
                             + "\\n\\n推送时间:" + PushDate
                             + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";
 
                         //推送给郑洁
-                        postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+task.getHandler()+"协助实施"+task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
-                                + "\\n\\n任务分配:" + task.getHandler()
-                                + "\\n\\n任务名称:" + task.getTaskname()
-                                + "\\n\\n开始时间:" + task.getSdate()
-                                + "\\n\\n结束时间:" + task.getEdate()
+                        postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+Task.getHandler()+"协助实施"+Task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                                + "\\n\\n任务分配:" + Task.getHandler()
+                                + "\\n\\n任务名称:" + Task.getTaskname()
+                                + "\\n\\n开始时间:" + Task.getSdate()
+                                + "\\n\\n结束时间:" + Task.getEdate()
                                 + "\\n\\n推送时间:" + PushDate
                                 + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";
                     }
@@ -348,10 +350,14 @@ public class ApplyController {
                         e.printStackTrace();
                     }
                 }
-            };
+            };*/
             //timer.schedule(threadTask, 12*60*60*1000);
-            timer.schedule(threadTask, 5*60*1000);
-        }
+
+
+
+
+
+    }
 
 
         ProLogRecord proLogRecord = new ProLogRecord();

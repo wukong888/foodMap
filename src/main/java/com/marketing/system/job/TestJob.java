@@ -564,15 +564,18 @@ public class TestJob extends BatchProperties.Job {
 
                         if(flag == false){
                             //推送微信延迟预警
-                            //获得部门经理id
-                            Integer managerId = DayReportDao.getManagerIdByGroupId(Integer.parseInt(task.getSquadId()));
+                            /*//获得部门经理id
+                            Integer managerId = DayReportDao.getManagerIdByGroupId(Integer.parseInt(task.getSquadId()));*/
+                            //获取组长id
+                            String Uname = task.getHandler();
+                            Integer Uid = systemUserMapper.getUidByName(Uname);
                             //获取当前时间
                             String PushDate = DateUtil.getYMDHMDate();
                             Integer NoPutCount = subtask.getNoPutCount();
                             if(NoPutCount == null){
                                 NoPutCount = 0;
                             }
-                            postUrl1 = "{\"Uid\":" + managerId + ",\"Content\":\"【延迟预警2级】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过一小时未处理，请督促处理。"
+                            postUrl1 = "{\"Uid\":" + Uid + ",\"Content\":\"【延迟预警2级】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过一小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()

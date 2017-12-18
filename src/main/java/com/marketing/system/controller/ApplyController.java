@@ -286,13 +286,13 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给陈总
-            postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
+           /* postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + Task.getTaskname()
                     + "\\n\\n开始时间:" + Task.getSdate()
                     + "\\n\\n结束时间:" + Task.getEdate()
                     + "\\n\\n推送时间:" + PushDate
-                    + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+                    + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
 
             try {
                 //消息推送-任务分配
@@ -355,7 +355,7 @@ public class ApplyController {
                     }
                 }
             };
-            timer.schedule(threadTask, 5*60*1000);
+            timer.schedule(threadTask, 2*60*1000);
 
 
 

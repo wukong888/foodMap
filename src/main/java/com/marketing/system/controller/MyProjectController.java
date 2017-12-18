@@ -830,13 +830,13 @@ public class MyProjectController {
                         + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
                 //推送给陈总
-                postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                /*postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + handler
                         + "\\n\\n任务名称:" + taskName
                         + "\\n\\n开始时间:" + sDate
                         + "\\n\\n结束时间:" + eDate
                         + "\\n\\n推送时间:" + PushDate
-                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
+                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
 
                 try {
                     //消息推送-任务分配

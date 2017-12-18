@@ -614,7 +614,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //项目实施进度通报
-    @Scheduled(cron="0 48 18 * * ?")
+    @Scheduled(cron="0 54 18 * * ?")
     public ApiResult<List<Map>> progresseport() {
 
         System.out.println("===---===---==");
@@ -723,7 +723,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //未实施更新通报
-    @Scheduled(cron="0 48 18 * * ?")
+    @Scheduled(cron="0 54 18 * * ?")
     public ApiResult<List<Map>> noPutCountReport() {
 
         String todayDate = DateUtil.getYMDDate();

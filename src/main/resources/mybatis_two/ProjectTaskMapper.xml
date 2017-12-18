@@ -132,7 +132,9 @@
   </insert>
 
   <insert id="insertSelective" parameterType="com.marketing.system.entity.ProjectTask" >
-
+    <selectKey resultType="java.lang.Integer" keyProperty="taskId" order="AFTER">
+      SELECT @@IDENTITY as taskId
+    </selectKey>
     insert into project_task
     <trim prefix="(" suffix=")" suffixOverrides="," >
 

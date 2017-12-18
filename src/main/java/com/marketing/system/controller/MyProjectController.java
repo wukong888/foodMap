@@ -899,7 +899,7 @@ public class MyProjectController {
                         }
                     }
                 };
-                timer.schedule(threadTask, 5*60*1000);
+                timer.schedule(threadTask, 2*60*1000);
 
                 ProLogRecord proLogRecord = new ProLogRecord();
 

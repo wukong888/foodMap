@@ -320,7 +320,7 @@ public class IndexController {
         return result;
     }
 
-    @ApiOperation(value = "首页接口",notes = "返回参数：lx_cp:立项产品数量，sx_cp:上线产品数量,lx_hd:立项活动数量，sx_hd:上线活动数量,kfTotal:开发中的总项目数")
+    @ApiOperation(value = "首页接口",notes = "返回参数：lx_cp:立项产品数量，sx_cp:上线产品数量,lx_hd:立项活动数量，sx_hd:上线活动数量,kfTotal:开发中的总项目数,toatls:总和")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "int")
     })
@@ -364,19 +364,23 @@ public class IndexController {
                 Integer sx_cp = indexService.getSxProjects(creater);
                 map.put("notes","待审批的产品项目");
                 map.put("sx_cp", sx_cp);
+                map.put("toatls", sx_cp+lx_cp);
 
                 //2、立项待审批-活动
                 Integer lx_hd = indexService.getHdLxProjects(creater);
                 mapAgain.put("notes","待审批的活动项目");
-                mapAgain.put("lx_hd", lx_hd);
+                mapAgain.put("lx_cp", lx_hd);
 
                 //3、上线待审批-活动
                 Integer sx_hd = indexService.getHdSxProjects(creater);
-                mapAgain.put("sx_hd", sx_hd);
+                mapAgain.put("sx_cp", sx_hd);
+                mapAgain.put("toatls", sx_hd+lx_hd);
 
                 Integer kfTotal = indexService.getAllDevelopProjects();
                 mapAgainAg.put("notes","开发中的总项目数");
-                mapAgainAg.put("kfTotal", kfTotal);//开发中的总项目数包含逾期
+                mapAgainAg.put("lx_cp", kfTotal);//开发中的总项目数包含逾期
+                mapAgainAg.put("sx_cp", 0);//开发中的总项目数包含逾期
+                mapAgainAg.put("toatls", kfTotal);//开发中的总项目数包含逾期
                 list.add(map);
                 list.add(mapAgain);
                 list.add(mapAgainAg);

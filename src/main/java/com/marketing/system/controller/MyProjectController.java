@@ -952,17 +952,19 @@ public class MyProjectController {
                 Long maxdate = statMax.getMax();//子任务开始时间最大值
                 Date planedate = sdf.parse(eDate);//任务修改结束时间
 
-                if ((plansdate.getTime() <= mindate) && plansdate.getTime() < maxdate) {
+                if (subtaskList.size() > 0) {
+                    if ((plansdate.getTime() <= mindate) && plansdate.getTime() < maxdate) {
 
-                } else {
-                    return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.TASK_TIMEFAIL_START,null,null);
-                }
-                if (planedate.getTime() > mindate && planedate.getTime() >= maxdate) {
+                    } else {
+                        return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.TASK_TIMEFAIL_START,null,null);
+                    }
+                    if (planedate.getTime() > mindate && planedate.getTime() >= maxdate) {
 
-                } else {
-                    return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.TASK_TIMEFAIL_END,null,null);
+                    } else {
+                        return new ApiResult<>(Constant.FAIL_CODE_VALUE,Constant.TASK_TIMEFAIL_END,null,null);
+                    }
+                    logger.error("修改任务时间正常：任务id"+taskId);
                 }
-                logger.error("修改任务时间正常：任务id"+taskId);
 
                 Integer TaskId = Integer.parseInt(taskId);
                 ProjectTask projectTask = new ProjectTask();

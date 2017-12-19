@@ -339,14 +339,10 @@ public class IndexController {
         try {
             SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
-            /**
-             * CEO-待审批的产品项目
-             */
+            List<Map<String, Object>> roleList = roleMenusMapper.getHomePageModule();
+
             //职位，立项待审批、上线待审批暂时只有CEO有该权限
             String dutyName = user.getDuty();
-            /*if (!dutyName.equals("CEO")) {
-                return new ApiResult<>(Constant.PERM_CODE_VALUE, Constant.NOTCEO_FAILS, null, null);
-            }*/
 
             String creater = "";
 
@@ -362,25 +358,42 @@ public class IndexController {
 
                 //3、上线待审批-产品
                 Integer sx_cp = indexService.getSxProjects(creater);
-                map.put("notes","待审批的产品项目");
+
                 map.put("sx_cp", sx_cp);
                 map.put("toatls", sx_cp+lx_cp);
+                for (Map<String,Object> map1 : roleList) {
+                    if (map1.get("Name").equals("待审批的产品项目")) {
+                        map.put("notes",map1.get("Name"));
+                        map.put("moduleId", map1.get("Scriptid"));
+                    }
+                }
 
                 //2、立项待审批-活动
                 Integer lx_hd = indexService.getHdLxProjects(creater);
-                mapAgain.put("notes","待审批的活动项目");
                 mapAgain.put("lx_cp", lx_hd);
 
                 //3、上线待审批-活动
                 Integer sx_hd = indexService.getHdSxProjects(creater);
                 mapAgain.put("sx_cp", sx_hd);
                 mapAgain.put("toatls", sx_hd+lx_hd);
+                for (Map<String,Object> map2 : roleList) {
+                    if (map2.get("Name").equals("待审批的活动项目")) {
+                        mapAgain.put("notes",map2.get("Name"));
+                        mapAgain.put("moduleId", map2.get("Scriptid"));
+                    }
+                }
 
                 Integer kfTotal = indexService.getAllDevelopProjects();
-                mapAgainAg.put("notes","开发中的总项目数");
                 mapAgainAg.put("lx_cp", kfTotal);//开发中的总项目数包含逾期
                 mapAgainAg.put("sx_cp", 0);//开发中的总项目数包含逾期
                 mapAgainAg.put("toatls", kfTotal);//开发中的总项目数包含逾期
+                for (Map<String,Object> map1 : roleList) {
+                    if (map1.get("Name").equals("开发中的总项目数")) {
+                        mapAgainAg.put("notes",map1.get("Name"));
+                        mapAgainAg.put("moduleId", map1.get("Scriptid"));
+                    }
+                }
+
                 list.add(map);
                 list.add(mapAgain);
                 list.add(mapAgainAg);
@@ -388,18 +401,20 @@ public class IndexController {
                 listNew.add(mapNew);
             } else {
                 Integer kfTotal = indexService.getAllDevelopProjects();
-                mapAgainAg.put("notes","开发中的总项目数");
-                mapAgainAg.put("kfTotal", kfTotal);//开发中的总项目数包含逾期
+                mapAgainAg.put("lx_cp", kfTotal);//开发中的总项目数包含逾期
+                mapAgainAg.put("sx_cp", 0);//开发中的总项目数包含逾期
+                mapAgainAg.put("toatls", kfTotal);//开发中的总项目数包含逾期
+                for (Map<String,Object> map1 : roleList) {
+                    if (map1.get("Name").equals("开发中的总项目数")) {
+                        mapAgainAg.put("notes",map1.get("Name"));
+                        mapAgainAg.put("moduleId", map1.get("Scriptid"));
+                    }
+                }
+
                 list.add(mapAgainAg);
                 mapNew.put("ceoHomePage",list);
                 listNew.add(mapNew);
             }
-
-            //待审批产品-点击查看
-            List<ProjectInfo> infoList = new ArrayList<>();
-            List<Map<String,Object>> mapList = new ArrayList<>();
-
-
 
             result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, listNew, null);
         } catch (Exception e) {

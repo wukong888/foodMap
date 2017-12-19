@@ -375,7 +375,7 @@ public class TestJob extends BatchProperties.Job {
     }*/
 
     //下午4点定时提醒更新子任务开发日志
-    @Scheduled(cron="0 48 09 * * ?")
+    @Scheduled(cron="0 58 09 * * ?")
     public ApiResult<List<Map>> subTaskWXPush() {
     System.out.println("=============");
         //获取当前时间

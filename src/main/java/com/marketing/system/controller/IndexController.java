@@ -320,14 +320,99 @@ public class IndexController {
         return result;
     }
 
-    @ApiOperation(value = "首页接口-待审批的产品项目",notes = "返回参数：lx_cp:立项产品数量，sx_cp:上线产品数量，approvedProductsList：待审批产品-点击查看")
+    @ApiOperation(value = "首页接口",notes = "返回参数：lx_cp:立项产品数量，sx_cp:上线产品数量,lx_hd:立项活动数量，sx_hd:上线活动数量,kfTotal:开发中的总项目数")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "int")
+    })
+    @RequestMapping(value = "/getCEOHomePage", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getCEOHomePage(
+            @RequestParam(value = "userId", required = true) int userId) {
+
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> mapNew = new HashMap<>();
+        Map<String, Object> mapAgain = new HashMap<>();
+        Map<String, Object> mapAgainAg = new HashMap<>();
+        ApiResult<List<Map<String, Object>>> result = null;
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> listNew = new ArrayList<Map<String, Object>>();
+
+        try {
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
+
+            /**
+             * CEO-待审批的产品项目
+             */
+            //职位，立项待审批、上线待审批暂时只有CEO有该权限
+            String dutyName = user.getDuty();
+            /*if (!dutyName.equals("CEO")) {
+                return new ApiResult<>(Constant.PERM_CODE_VALUE, Constant.NOTCEO_FAILS, null, null);
+            }*/
+
+            String creater = "";
+
+            if ("CEO".equals(dutyName)) {
+                creater = "";
+            } else {
+                creater = user.getUserName();
+            }
+            if (dutyName.equals("CEO")) {
+                //2、立项待审批-产品
+                Integer lx_cp = indexService.getLxProjects(creater);
+                map.put("lx_cp", lx_cp);
+
+                //3、上线待审批-产品
+                Integer sx_cp = indexService.getSxProjects(creater);
+                map.put("notes","待审批的产品项目");
+                map.put("sx_cp", sx_cp);
+
+                //2、立项待审批-活动
+                Integer lx_hd = indexService.getHdLxProjects(creater);
+                mapAgain.put("notes","待审批的活动项目");
+                mapAgain.put("lx_hd", lx_hd);
+
+                //3、上线待审批-活动
+                Integer sx_hd = indexService.getHdSxProjects(creater);
+                mapAgain.put("sx_hd", sx_hd);
+
+                Integer kfTotal = indexService.getAllDevelopProjects();
+                mapAgainAg.put("notes","开发中的总项目数");
+                mapAgainAg.put("kfTotal", kfTotal);//开发中的总项目数包含逾期
+                list.add(map);
+                list.add(mapAgain);
+                list.add(mapAgainAg);
+                mapNew.put("ceoHomePage",list);
+                listNew.add(mapNew);
+            } else {
+                Integer kfTotal = indexService.getAllDevelopProjects();
+                mapAgainAg.put("notes","开发中的总项目数");
+                mapAgainAg.put("kfTotal", kfTotal);//开发中的总项目数包含逾期
+                list.add(mapAgainAg);
+                mapNew.put("ceoHomePage",list);
+                listNew.add(mapNew);
+            }
+
+            //待审批产品-点击查看
+            List<ProjectInfo> infoList = new ArrayList<>();
+            List<Map<String,Object>> mapList = new ArrayList<>();
+
+
+
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, listNew, null);
+        } catch (Exception e) {
+            logger.error("CEO首页接口-待审批的产品项目:" + e);
+            result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "首页接口-查看待审批产品项目",notes = "返回参数：approvedProductsList:待审批产品")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
     })
-    @RequestMapping(value = "/getCEOHomePageApprovedProducts", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getCEOHomePageProductsApproved(
+    @RequestMapping(value = "/getCEOHomePageProducts", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getCEOHomePageProducts(
             @RequestParam(value = "userId", required = true) int userId,
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
@@ -347,34 +432,20 @@ public class IndexController {
             if (!dutyName.equals("CEO")) {
                 return new ApiResult<>(Constant.PERM_CODE_VALUE, Constant.NOTCEO_FAILS, null, null);
             }
-            map.put("dutyName", dutyName);
-
-            String creater = "";
-
-            if ("CEO".equals(dutyName)) {
-                creater = "";
-            } else {
-                creater = user.getUserName();
-            }
-            //2、立项待审批-产品
-            Integer lx_cp = indexService.getLxProjects(creater);
-            map.put("lx_cp", lx_cp);
-
-            //3、上线待审批-产品
-            Integer sx_cp = indexService.getSxProjects(creater);
-            map.put("sx_cp", sx_cp);
 
             //待审批产品-点击查看
             List<ProjectInfo> infoList = new ArrayList<>();
+            List<Map<String,Object>> mapList = new ArrayList<>();
 
             Map<String, Object> map1 = new HashMap<>();
             map1.put("current", current);
             map1.put("pageSize", 1000);
             infoList = indexService.getApprovedProducts(map1);
+
             map.put("approvedProductsList", infoList);//待审批产品-点击查看
 
-            Integer sum = infoList.size();
             list.add(map);
+            Integer sum = infoList.size();
 
             RdPage rdPage = new RdPage();
             //分页信息
@@ -391,7 +462,7 @@ public class IndexController {
         return result;
     }
 
-    @ApiOperation(value = "首页接口-待审批的活动项目",notes = "返回参数：lx_hd:立项活动数量，sx_hd:上线活动数量，activityProductsList：待审批活动-点击查看")
+    @ApiOperation(value = "首页接口-查看待审批的活动项目",notes = "返回参数：activityProductsList：待审批活动-点击查看")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "userId", value = "登录用户id", required = true, dataType = "int"),
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
@@ -418,23 +489,6 @@ public class IndexController {
             if (!dutyName.equals("CEO")) {
                 return new ApiResult<>(Constant.PERM_CODE_VALUE, Constant.NOTCEO_FAILS, null, null);
             }
-            map.put("dutyName", dutyName);
-
-            String creater = "";
-
-            if ("CEO".equals(dutyName)) {
-                creater = "";
-            } else {
-                creater = user.getUserName();
-            }
-
-            //2、立项待审批-活动
-            Integer lx_hd = indexService.getHdLxProjects(creater);
-            map.put("lx_hd", lx_hd);
-
-            //3、上线待审批-活动
-            Integer sx_hd = indexService.getHdSxProjects(creater);
-            map.put("sx_hd", sx_hd);
 
             //待审批活动-点击查看
             List<ProjectInfo> infoList = new ArrayList<>();
@@ -463,7 +517,7 @@ public class IndexController {
         return result;
     }
 
-    @ApiOperation(value = "首页接口-开发中的总项目数",notes = "返回参数：kfTotal:开发中的总项目数，developProductsList:开发中项目数-点击查看")
+    @ApiOperation(value = "首页接口-查看开发中的总项目数",notes = "返回参数：developProductsList:开发中项目数-点击查看")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
@@ -482,8 +536,6 @@ public class IndexController {
             /**
              * CEO-待审批的产品项目
              */
-            Integer kfTotal = indexService.getAllDevelopProjects();
-            map.put("kfTotal", kfTotal);//开发中的总项目数包含逾期
 
             //开发中的总项目数-点击查看
             List<ProjectInfo> infoList = new ArrayList<>();

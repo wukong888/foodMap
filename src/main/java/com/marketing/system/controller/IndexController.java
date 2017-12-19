@@ -362,7 +362,7 @@ public class IndexController {
                 map.put("sx_cp", sx_cp);
                 map.put("toatls", sx_cp+lx_cp);
                 for (Map<String,Object> map1 : roleList) {
-                    if (map1.get("Name").equals("待审批的产品项目")) {
+                    if (map1.get("Url").equals("/getCEOHomePageApprovedProducts")) {
                         map.put("notes",map1.get("Name"));
                         map.put("moduleId", map1.get("Scriptid"));
                     }
@@ -377,7 +377,7 @@ public class IndexController {
                 mapAgain.put("sx_cp", sx_hd);
                 mapAgain.put("toatls", sx_hd+lx_hd);
                 for (Map<String,Object> map2 : roleList) {
-                    if (map2.get("Name").equals("待审批的活动项目")) {
+                    if (map2.get("Url").equals("/getCEOHomePageActivityProducts")) {
                         mapAgain.put("notes",map2.get("Name"));
                         mapAgain.put("moduleId", map2.get("Scriptid"));
                     }
@@ -388,7 +388,7 @@ public class IndexController {
                 mapAgainAg.put("sx_cp", 0);//开发中的总项目数包含逾期
                 mapAgainAg.put("toatls", kfTotal);//开发中的总项目数包含逾期
                 for (Map<String,Object> map1 : roleList) {
-                    if (map1.get("Name").equals("开发中的总项目数")) {
+                    if (map1.get("Url").equals("/getCEOHomePageDevelopProducts")) {
                         mapAgainAg.put("notes",map1.get("Name"));
                         mapAgainAg.put("moduleId", map1.get("Scriptid"));
                     }
@@ -430,8 +430,8 @@ public class IndexController {
             @ApiImplicitParam(paramType = "query", name = "current", value = "当前页", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
     })
-    @RequestMapping(value = "/getCEOHomePageProducts", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getCEOHomePageProducts(
+    @RequestMapping(value = "/getCEOHomePageApprovedProducts", method = RequestMethod.POST)
+    public ApiResult<List<Map<String, Object>>> getCEOHomePageApprovedProducts(
             @RequestParam(value = "userId", required = true) int userId,
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
@@ -551,7 +551,6 @@ public class IndexController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
-            //SystemUser user = systemUserService.selectByPrimaryKey(id);
             /**
              * CEO-待审批的产品项目
              */

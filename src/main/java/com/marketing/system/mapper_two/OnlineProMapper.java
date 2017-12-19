@@ -132,7 +132,7 @@ public interface OnlineProMapper {
     boolean updateNoPutCount(@Param("NoPutCount")Integer NoPutCount,@Param("subtaskId")Integer subtaskId);
 
     //获取所有未上线项目
-    @Select("SELECT * FROM project_info WHERE proState = 2 OR proState = 7")
+    @Select("SELECT * FROM project_info WHERE proState = 2 OR proState = 7 OR proState = 1")
     List<ProjectInfo> getAllNoOnlinePro();
 
 

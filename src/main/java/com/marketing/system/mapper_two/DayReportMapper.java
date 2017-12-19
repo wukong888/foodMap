@@ -157,7 +157,7 @@ public interface DayReportMapper {
     Integer getSubtaskDayReportInfosCount2(@Param("reportDate")String reportDate,@Param("taskId")Integer taskId);
 
     //查找所有未完成，驳回，逾期项目里的任务
-    @Select("SELECT a.* FROM [dbo].[project_task] a JOIN project_info b ON a.proId=b.proId WHERE proState=2 OR proState=5 OR proState=7")
+    @Select("SELECT a.* FROM [dbo].[project_task] a JOIN project_info b ON a.proId=b.proId WHERE proState =1 OR proState=2 OR proState=5 OR proState=7")
     List<ProjectTask> getTaskByWXTimeOutPush();
 
     //根据任务id查找任务里面是否有子任务

@@ -86,11 +86,11 @@ public class RecycleProServiceImpl implements RecycleProService{
     //查看驳回项目的日志记录
     public List<ProLogRecord> selectRecProLogRecord(Integer proId){
         List<ProLogRecord> RecProLogRecords=RecProDao.selectRecProLogRecord(proId);
-        for(ProLogRecord RecProLogRecord:RecProLogRecords){
+        /*for(ProLogRecord RecProLogRecord:RecProLogRecords){
             String squadId=RecProLogRecord.getSquadid()+"";
             String squad=departmentNewMapper.selectSquadByIdNew(squadId);
             RecProLogRecord.setSquadid(squad);
-        }
+        }*/
         return RecProLogRecords;
     }
 

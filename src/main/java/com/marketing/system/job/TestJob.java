@@ -416,7 +416,7 @@ public class TestJob extends BatchProperties.Job {
                 }
                 try {
                     //消息推送-开发日志
-                    String Str1 = httpPostWithJSON(postUrl1);
+                  //  String Str1 = httpPostWithJSON(postUrl1);
                     logger.error("微信推送下午4点定时更新子任务开发日志--提醒成功！");
                 } catch (Exception e) {
                     logger.error("微信推送下午4点定时更新子任务开发日志--提醒失败！"+ e);
@@ -513,9 +513,9 @@ public class TestJob extends BatchProperties.Job {
 
                     try {
                         //消息推送-开发日志
-                        httpPostWithJSON(postUrl1);
-                        httpPostWithJSON(postUrl2);
-                        httpPostWithJSON(postUrl3);
+                       // httpPostWithJSON(postUrl1);
+                       // httpPostWithJSON(postUrl2);
+                       // httpPostWithJSON(postUrl3);
                         logger.error("微信推送下午4点半判断是否更新日志--提醒成功！");
                     } catch (Exception e) {
                         logger.error("微信推送下午4点半判断是否更新日志--提醒失败！"+e);
@@ -592,8 +592,8 @@ public class TestJob extends BatchProperties.Job {
 
                     try {
                         //消息推送-开发日志
-                        httpPostWithJSON(postUrl1);
-                        httpPostWithJSON(postUrl2);
+                      //  httpPostWithJSON(postUrl1);
+                     //   httpPostWithJSON(postUrl2);
                         logger.error("下午5点判断是否更新日志--提醒成功！");
                     } catch (Exception e) {
                         logger.error("下午5点判断是否更新日志--提醒失败！"+ e);
@@ -689,7 +689,7 @@ public class TestJob extends BatchProperties.Job {
             //根据用户名查出用户邮箱
            String email = systemUserMapper.getEmailByName(creater);
               //获取
-            try {
+           /* try {
                 //发送邮件给项目监管人
                 String success1 = ToolUtil.sendEmial(prosupervisoremail,"关于《"+proName+"》今日进展情况的日报"+todayProDate+"","您好:<br>   截至"+nowDate+"，"+proName+"实施情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
                         +"通报表格见下方<br>"
@@ -707,7 +707,7 @@ public class TestJob extends BatchProperties.Job {
             } catch (IOException e) {
                 logger.error("项目实施进度邮件通报--通报失败！"+e);
                 e.printStackTrace();
-            }
+            }*/
         }
 
 
@@ -766,7 +766,7 @@ public class TestJob extends BatchProperties.Job {
             String email = systemUserMapper.getEmailByName(pro.getCreater());
             //获取
             if(idd > 0){
-                try {
+                /*try {
                     //推送邮件到项目监管人
                     ToolUtil.sendEmial(prosupervisoremail,"关于《"+pro.getProname()+"》中未按时填写开发日志的通报"+nowDate+"","您好:<br>    截至"+nowDate+"，"+pro.getProname()+"中未按时填写开发日志的情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
                             +"通报表格见下方<br>"
@@ -784,7 +784,7 @@ public class TestJob extends BatchProperties.Job {
                 } catch (IOException e) {
                     logger.error("项目未实施更新邮件通报--通报失败！"+e);
                     e.printStackTrace();
-                }
+                }*/
             }
 
         }

@@ -847,9 +847,9 @@ public class MyProjectController {
 
                 try {
                     //消息推送-任务分配
-                   httpPostWithJSON(postUrl1);
+                   /*httpPostWithJSON(postUrl1);
                     httpPostWithJSON(postUrl2);
-                    httpPostWithJSON(postUrl3);
+                    httpPostWithJSON(postUrl3);*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -898,7 +898,7 @@ public class MyProjectController {
                             //消息推送-延迟预警
                           //  String Str = httpPostWithJSON(postUrl1);
                            // System.out.println(Str);
-                            httpPostWithJSON(postUrl2);
+                            //httpPostWithJSON(postUrl2);
                             logger.error("消息推送-延迟预警成功！");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1487,7 +1487,7 @@ public class MyProjectController {
 
                 try {
                     //消息推送-任务分配
-                    httpPostWithJSON(postUrl1);
+                   // httpPostWithJSON(postUrl1);
                    // httpPostWithJSON(postUrl2);
                 } catch (Exception e) {
                     e.printStackTrace();

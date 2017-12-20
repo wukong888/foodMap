@@ -42,10 +42,10 @@ public class CorsFilter implements Filter {
         response.setDateHeader("Expires", 0);
         response.setContentType("image/gif");
         response.setContentType("application/json");
-        //chain.doFilter(req, res);
+        chain.doFilter(req, res);
         String token = reqs.getHeader("Authorization");
 
-        Map<String, Object> rec = new LinkedHashMap<String, Object>();
+        /*Map<String, Object> rec = new LinkedHashMap<String, Object>();
         String url = reqs.getRequestURI();
 
         try {
@@ -83,7 +83,7 @@ public class CorsFilter implements Filter {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("查询token出错：" + e);
-        }
+        }*/
     }
 
     public void init(FilterConfig filterConfig) {

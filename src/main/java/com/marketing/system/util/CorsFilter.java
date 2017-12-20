@@ -52,7 +52,7 @@ public class CorsFilter implements Filter {
             List<TokenRecord> list = tokenRecordMapper.selectByToken(token);
             boolean isFilter = false;
             if (null == token || token.isEmpty()) {
-                if (url.contains("index") || url.contains("doc") || url.contains("webjars/bycdao") || url.contains("getGifCode")) {
+                if (url.contains("getCEOHomePageDevelopProducts") || url.contains("getCEOHomePageApprovedProducts") || url.contains("getCEOHomePageActivityProducts") || url.contains("getCEOHomePage") || url.contains("index") || url.contains("doc") || url.contains("webjars/bycdao") || url.contains("getGifCode")) {
                     isFilter = true;
                 } else {
                     rec.put("code", Constant.FAIL_CODE_VALUE);

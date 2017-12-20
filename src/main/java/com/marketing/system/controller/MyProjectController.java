@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,6 +73,12 @@ public class MyProjectController {
 
     @Autowired
     private ProjectInfoMapper proInfoMapper;
+
+    @Value("${prosupervisor.id}")
+    private String prosupervisorid;
+
+    @Value("${ceo.id}")
+    private String ceoid;
 
     /**
      * 查询我的项目列表
@@ -821,7 +828,7 @@ public class MyProjectController {
                         + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
                 //推送给郑洁
-                postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                postUrl2 = "{\"Uid\":" + prosupervisorid + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + handler
                         + "\\n\\n任务名称:" + taskName
                         + "\\n\\n开始时间:" + sDate
@@ -830,19 +837,19 @@ public class MyProjectController {
                         + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
                 //推送给陈总
-                /*postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
+                postUrl3 = "{\"Uid\":" + ceoid + ",\"Content\":\"【任务分配】\\n\\n《" +pro.getProname()+ "》需您协助实施"+taskName+"工作，请及时处理。"
                         + "\\n\\n任务分配:" + handler
                         + "\\n\\n任务名称:" + taskName
                         + "\\n\\n开始时间:" + sDate
                         + "\\n\\n结束时间:" + eDate
                         + "\\n\\n推送时间:" + PushDate
-                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
+                        + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
                 try {
                     //消息推送-任务分配
-                   //httpPostWithJSON(postUrl1);
-                   // httpPostWithJSON(postUrl2);
-                 //   httpPostWithJSON(postUrl3);
+                   httpPostWithJSON(postUrl1);
+                    httpPostWithJSON(postUrl2);
+                    httpPostWithJSON(postUrl3);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -878,7 +885,7 @@ public class MyProjectController {
                             + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";*/
 
                             //推送给郑洁
-                            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+projectTask.getHandler()+"协助实施"+projectTask.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" + prosupervisorid + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+projectTask.getHandler()+"协助实施"+projectTask.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + projectTask.getHandler()
                                     + "\\n\\n任务名称:" + projectTask.getTaskname()
                                     + "\\n\\n开始时间:" + projectTask.getSdate()
@@ -891,7 +898,7 @@ public class MyProjectController {
                             //消息推送-延迟预警
                           //  String Str = httpPostWithJSON(postUrl1);
                            // System.out.println(Str);
-                          //  httpPostWithJSON(postUrl2);
+                            httpPostWithJSON(postUrl2);
                             logger.error("消息推送-延迟预警成功！");
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1480,7 +1487,7 @@ public class MyProjectController {
 
                 try {
                     //消息推送-任务分配
-                   // httpPostWithJSON(postUrl1);
+                    httpPostWithJSON(postUrl1);
                    // httpPostWithJSON(postUrl2);
                 } catch (Exception e) {
                     e.printStackTrace();

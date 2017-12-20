@@ -45,6 +45,9 @@ public class TestJob extends BatchProperties.Job {
     @Value("${prosupervisor.email}")
     private String prosupervisoremail;
 
+    @Value("${prosupervisor.id}")
+    private String prosupervisorid;
+
     @Value("${ceo.email}")
     private String ceoemail;
 
@@ -375,7 +378,7 @@ public class TestJob extends BatchProperties.Job {
     }*/
 
     //下午4点定时提醒更新子任务开发日志
-    @Scheduled(cron="0 45 10 * * ?")
+    @Scheduled(cron="0 00 16 * * ?")
     public ApiResult<List<Map>> subTaskWXPush() {
     System.out.println("=============");
         //获取当前时间
@@ -388,7 +391,6 @@ public class TestJob extends BatchProperties.Job {
             List<ProjectSubtask> subtasks= OnProDao.getSubtaskByTaskId(task.getTaskId());
             for(ProjectSubtask subtask:subtasks){
                 String postUrl1 = "";
-                String postUrl2 = "";
                 //判断子任务状态是否是未开始，开发中，驳回状态
                 if("1".equals(subtask.getSubtaskstate())||"2".equals(subtask.getSubtaskstate())||"5".equals(subtask.getSubtaskstate())){
                       //判断子任务开始时间和当前时间的时间差
@@ -409,20 +411,12 @@ public class TestJob extends BatchProperties.Job {
                                   + "\\n\\n未按时填写次数:" + noPutCount
                                   + "\\n\\n推送时间:" + PushDate
                                   + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
-                          /*postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【开发日志】\\n\\n《" +proName+ "》需您协助实施"+subtask.getSubtaskname()+"工作，请及时填写开发日志。"
-                                  + "\\n\\n任务分配:" + task.getHandler()
-                                  + "\\n\\n任务名称:" + subtask.getSubtaskname()
-                                  + "\\n\\n开始时间:" + subtask.getSdate()
-                                  + "\\n\\n结束时间:" + subtask.getEdate()
-                                  + "\\n\\n未按时填写次数:" + noPutCount
-                                  + "\\n\\n推送时间:" + PushDate
-                                  + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";*/
+
                       }
                 }
                 try {
                     //消息推送-开发日志
-                    /*String Str1 = httpPostWithJSON(postUrl1);
-                    String Str2 = httpPostWithJSON(postUrl2);*/
+                    String Str1 = httpPostWithJSON(postUrl1);
                     logger.error("微信推送下午4点定时更新子任务开发日志--提醒成功！");
                 } catch (Exception e) {
                     logger.error("微信推送下午4点定时更新子任务开发日志--提醒失败！"+ e);
@@ -434,7 +428,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //下午4点半判断是否更新日志，并推送
-    @Scheduled(cron="0 17 11 * * ?")
+    @Scheduled(cron="0 30 16 * * ?")
     public ApiResult<List<Map>> subTaskWXPush1() {
         System.out.println("-=-=-=-=-=-=-");
         //获取当前时间
@@ -495,7 +489,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
                             //推送给郑洁
-                            postUrl2 = "{\"Uid\":" + 1340+ ",\"Content\":\"【延迟预警1级】\\n\\n《" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" + prosupervisorid+ ",\"Content\":\"【延迟预警1级】\\n\\n《" + proName + "》需" + subtask.getSubtaskhandler() + "协助实施" + subtask.getSubtaskname() + "工作，现已超过半小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -519,9 +513,9 @@ public class TestJob extends BatchProperties.Job {
 
                     try {
                         //消息推送-开发日志
-                        /*httpPostWithJSON(postUrl1);
+                        httpPostWithJSON(postUrl1);
                         httpPostWithJSON(postUrl2);
-                        httpPostWithJSON(postUrl3);*/
+                        httpPostWithJSON(postUrl3);
                         logger.error("微信推送下午4点半判断是否更新日志--提醒成功！");
                     } catch (Exception e) {
                         logger.error("微信推送下午4点半判断是否更新日志--提醒失败！"+e);
@@ -535,7 +529,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //下午5点判断是否更新日志，并推送
-    @Scheduled(cron="0 47 10 * * ?")
+    @Scheduled(cron="0 00 17 * * ?")
     public ApiResult<List<Map>> subTaskWXPush2() {
 
         //获取当前时间
@@ -585,7 +579,7 @@ public class TestJob extends BatchProperties.Job {
                                     + "\\n\\n推送时间:" + PushDate
                                     + "\",\"AgentId\":1000011,\"Title\":\"开发日志\",\"Url\":\"\"}";
 
-                            postUrl2 = "{\"Uid\":" +  1340+ ",\"Content\":\"【延迟预警2级】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过一小时未处理，请督促处理。"
+                            postUrl2 = "{\"Uid\":" +  prosupervisorid+ ",\"Content\":\"【延迟预警2级】\\n\\n《" +proName+ "》需"+subtask.getSubtaskhandler()+"协助实施"+subtask.getSubtaskname()+"工作，现已超过一小时未处理，请督促处理。"
                                     + "\\n\\n任务分配:" + task.getHandler()
                                     + "\\n\\n任务名称:" + subtask.getSubtaskname()
                                     + "\\n\\n开始时间:" + subtask.getSdate()
@@ -598,8 +592,8 @@ public class TestJob extends BatchProperties.Job {
 
                     try {
                         //消息推送-开发日志
-                        /*httpPostWithJSON(postUrl1);
-                        httpPostWithJSON(postUrl2);*/
+                        httpPostWithJSON(postUrl1);
+                        httpPostWithJSON(postUrl2);
                         logger.error("下午5点判断是否更新日志--提醒成功！");
                     } catch (Exception e) {
                         logger.error("下午5点判断是否更新日志--提醒失败！"+ e);
@@ -614,7 +608,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //项目实施进度通报
-    @Scheduled(cron="0 48 10 * * ?")
+    @Scheduled(cron="0 00 18 * * ?")
     public ApiResult<List<Map>> progresseport() {
 
         System.out.println("===---===---==");
@@ -695,7 +689,7 @@ public class TestJob extends BatchProperties.Job {
             //根据用户名查出用户邮箱
            String email = systemUserMapper.getEmailByName(creater);
               //获取
-           /* try {
+            try {
                 //发送邮件给项目监管人
                 String success1 = ToolUtil.sendEmial(prosupervisoremail,"关于《"+proName+"》今日进展情况的日报"+todayProDate+"","您好:<br>   截至"+nowDate+"，"+proName+"实施情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
                         +"通报表格见下方<br>"
@@ -713,7 +707,7 @@ public class TestJob extends BatchProperties.Job {
             } catch (IOException e) {
                 logger.error("项目实施进度邮件通报--通报失败！"+e);
                 e.printStackTrace();
-            }*/
+            }
         }
 
 
@@ -721,7 +715,7 @@ public class TestJob extends BatchProperties.Job {
     }
 
     //未实施更新通报
-    @Scheduled(cron="0 48 10 * * ?")
+    @Scheduled(cron="0 00 18 * * ?")
     public ApiResult<List<Map>> noPutCountReport() {
 
         String todayDate = DateUtil.getYMDDate();
@@ -772,7 +766,7 @@ public class TestJob extends BatchProperties.Job {
             String email = systemUserMapper.getEmailByName(pro.getCreater());
             //获取
             if(idd > 0){
-               /* try {
+                try {
                     //推送邮件到项目监管人
                     ToolUtil.sendEmial(prosupervisoremail,"关于《"+pro.getProname()+"》中未按时填写开发日志的通报"+nowDate+"","您好:<br>    截至"+nowDate+"，"+pro.getProname()+"中未按时填写开发日志的情况如下，请及时督促项目实施人员按时、按量完成具体工作。<br>"
                             +"通报表格见下方<br>"
@@ -790,7 +784,7 @@ public class TestJob extends BatchProperties.Job {
                 } catch (IOException e) {
                     logger.error("项目未实施更新邮件通报--通报失败！"+e);
                     e.printStackTrace();
-                }*/
+                }
             }
 
         }

@@ -92,6 +92,9 @@ public class ApplyController {
     @Value("${ceo.email}")
     private String ceoEmail;
 
+    @Value("${prosupervisor.id}")
+    private String prosupervisorid;
+
     @ApiOperation(value = "项目申请")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "proName", value = "项目名称", required = true, dataType = "String"),
@@ -277,7 +280,7 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
 
             //推送给郑洁
-            postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
+            postUrl2 = "{\"Uid\":" + prosupervisorid + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + Task.getTaskname()
                     + "\\n\\n开始时间:" + Task.getSdate()
@@ -286,13 +289,13 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             //推送给陈总
-           /* postUrl3 = "{\"Uid\":" + 217 + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
+            postUrl3 = "{\"Uid\":" + ceoId + ",\"Content\":\"【任务分配】\\n\\n《" + proName + "》需您协助实施" + Task.getTaskname() + "工作，请及时处理。"
                     + "\\n\\n任务分配:" + creatName
                     + "\\n\\n任务名称:" + Task.getTaskname()
                     + "\\n\\n开始时间:" + Task.getSdate()
                     + "\\n\\n结束时间:" + Task.getEdate()
                     + "\\n\\n推送时间:" + PushDate
-                    + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";*/
+                    + "\",\"AgentId\":1000011,\"Title\":\"任务分配\",\"Url\":\"\"}";
 
             try {
                 //消息推送-任务分配
@@ -335,7 +338,7 @@ public class ApplyController {
                             + "\",\"AgentId\":1000011,\"Title\":\"延迟预警\",\"Url\":\"\"}";*/
 
                         //推送给郑洁
-                        postUrl2 = "{\"Uid\":" + 1340 + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+projectTask.getHandler()+"协助实施"+Task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
+                        postUrl2 = "{\"Uid\":" + prosupervisorid + ",\"Content\":\"【延迟预警1级】\\n\\n《" +pro.getProname()+ "》需"+projectTask.getHandler()+"协助实施"+Task.getTaskname()+"工作，现已超过12小时未处理，请督促处理。"
                                 + "\\n\\n任务分配:" + projectTask.getHandler()
                                 + "\\n\\n任务名称:" + Task.getTaskname()
                                 + "\\n\\n开始时间:" + Task.getSdate()
@@ -346,8 +349,8 @@ public class ApplyController {
                     }
                     try {
                         //消息推送-延迟预警
-                        String Str = httpPostWithJSON(postUrl1);
-                        System.out.println(Str);
+                        //String Str = httpPostWithJSON(postUrl1);
+                       // System.out.println(Str);
                         httpPostWithJSON(postUrl2);
                         logger.error("消息推送-延迟预警成功！");
                     } catch (Exception e) {

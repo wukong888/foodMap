@@ -420,19 +420,19 @@ public class ApplyController {
                     + "\",\"AgentId\":1000011,\"Title\":\"创建\",\"Url\":\"\"}";
             try {
                 //消息推送-回复
-                httpPostWithJSON(postUrl);
+               // httpPostWithJSON(postUrl);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             //数据研发中心柏铭成向您申请对《大数据分析平台项目》实施项目立项，请您及时处理。
-            ToolUtil.sendMsg(ceoPhone, group + creatName + "向您申请对《" + projectInfo.getProname() + "》实施项目立项审批，请您及时处理。");
+           // ToolUtil.sendMsg(ceoPhone, group + creatName + "向您申请对《" + projectInfo.getProname() + "》实施项目立项审批，请您及时处理。");
 
             //发送邮件
-            ToolUtil.sendEmial(ceoEmail, "关于《" + projectInfo.getProname() + "》的立项申请审批", "陈总：<br>" + group + creatName + "向您发起名为《" + projectInfo.getProname() + "》的立项申请，该项目类型为" + proTypeName + "，要求上线时间为" + planSDate + "，提交的附件数量为" + filePath + "个。请您及时处理。项目简介如下：<br>" +
+           /* ToolUtil.sendEmial(ceoEmail, "关于《" + projectInfo.getProname() + "》的立项申请审批", "陈总：<br>" + group + creatName + "向您发起名为《" + projectInfo.getProname() + "》的立项申请，该项目类型为" + proTypeName + "，要求上线时间为" + planSDate + "，提交的附件数量为" + filePath + "个。请您及时处理。项目简介如下：<br>" +
                     projectInfo.getProdeclare() + "<br>" +
                     "点击进入项目审批页：https://192.168.11.132:2222<br>" +
-                    "注：您目前还有" + lx + "个未处理的立项申请。<br>");
+                    "注：您目前还有" + lx + "个未处理的立项申请。<br>");*/
         } else {
             r = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
         }

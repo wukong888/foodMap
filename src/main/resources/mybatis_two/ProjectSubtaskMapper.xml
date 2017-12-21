@@ -90,6 +90,14 @@
     taskId = #{taskId} AND subtaskName = #{subtaskName} AND subtaskHandler = #{subtaskHandler}
   </select>
 
+  <select id="getAvgSubTaskProgress" resultType="java.lang.Integer">
+    SELECT
+    AVG (CONVERT(INT ,subtaskProgress))
+    FROM
+    project_subtask
+    WHERE
+    taskId = #{taskId}
+  </select>
 
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

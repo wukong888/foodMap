@@ -519,6 +519,17 @@ public class MyProjectController {
             //基本信息+项目信息Basic Information
             ProjectInfo projectInfo = upProjectService.selectByPrimaryKey(id);
 
+            //通过任务计算项目进度
+            int avgTaskProgress = myProjectService.getAvgTaskProgress(proId);
+
+            //自动更新对应项目进度
+            ProjectInfo projectInfoGress = new ProjectInfo();
+            projectInfoGress.setProprogress(String.valueOf(avgTaskProgress));
+            projectInfoGress.setId(id);
+
+            int proProgress = myProjectService.updateProjectInfo(projectInfoGress);
+
+
             SystemUser user = systemUserService.selectByPrimaryKey(userId);
 
            /* String department = user.getDepartment();
@@ -625,18 +636,29 @@ public class MyProjectController {
                 String squad = departmentNew.getDeptno();
                 //projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
                 projectTask.put("squad", squad);//根据id取对应小组中文名
-                /*String squadId = (String) projectTask.get("squadId");
 
-                String departmentId = upProjectService.selectDepartmentIdBySquadId(Integer.parseInt(squadId));
-                projectTask.put("departmentId", departmentId);//根据squadid取对应部门Id
-
-                String department2 = upProjectService.selectDepartmentByDId(departmentId);
-
-                if (department2.length() > 1) {
-                    department2 = department2.substring(0, 2);
+                //判断该任务有无子任务
+                int taskProgress = 0;
+                List<ProjectSubtask> subtaskList = myProjectService.getProjectSubtaskList(Integer.valueOf(String.valueOf(projectTask.get("taskId"))));
+                if (subtaskList.size() > 0) {
+                    //根据子任务查计算询任务进度
+                    taskProgress = myProjectService.getAvgSubTaskProgress(Integer.valueOf(String.valueOf(projectTask.get("taskId"))));
                 }
 
-                map1.put("department", department2);*/
+                //如果任务为预验收/完成状态则不更新
+                if (projectTask.get("taskState").equals("3") || projectTask.get("taskState").equals("4")) {
+
+                } else{
+                    //根据子任务更新任务进度
+                    ProjectTask projectTaskUp = new ProjectTask();
+                    projectTaskUp.setTaskprogress(String.valueOf(taskProgress));
+                    projectTaskUp.setTaskId(Integer.valueOf(String.valueOf(projectTask.get("taskId"))));
+                    if (taskProgress > 0 && projectTask.get("taskState").equals("1")) {
+                        projectTaskUp.setTaskstate("2");
+                    }
+
+                    int subUp = myProjectService.updateTaskById(projectTaskUp);
+                }
 
                 //对应组所有人信息
                 //List<Map<String, Object>> systemUserList = systemUserService.selectManagerBydepartment(map1);
@@ -1184,8 +1206,33 @@ public class MyProjectController {
                 mapT.put("menuLeafIds", Ids);
             }
 
+
             //基本信息+任务信息Basic Information
             ProjectTask projectTask = myProjectService.getProjectTaskByTaskId(taskId);
+            int taskProgress = 0;
+            List<ProjectSubtask> subtaskList = myProjectService.getProjectSubtaskList(projectTask.getTaskId());
+            if (subtaskList.size() > 0) {
+                //根据子任务查计算询任务进度
+                taskProgress = myProjectService.getAvgSubTaskProgress(projectTask.getTaskId());
+            }
+
+            if (taskProgress > 0 && projectTask.getTaskstate().equals("1")) {
+                ProjectTask projectTaskUp = new ProjectTask();
+                projectTaskUp.setTaskstate("2");
+                projectTaskUp.setTaskprogress(String.valueOf(taskProgress));
+                projectTaskUp.setTaskId(projectTask.getTaskId());
+
+                int subUp = myProjectService.updateTaskById(projectTaskUp);
+
+                projectTask.setTaskstate("2");
+            } else if (taskProgress > 0 && projectTask.getTaskstate().equals("2")) {
+                ProjectTask projectTaskUp = new ProjectTask();
+                projectTaskUp.setTaskstate("2");
+                projectTaskUp.setTaskprogress(String.valueOf(taskProgress));
+                projectTaskUp.setTaskId(projectTask.getTaskId());
+
+                int subUp = myProjectService.updateTaskById(projectTaskUp);
+            }
 
             if ((user.getDuty().contains("组长") || user.getDuty().contains("经理")) && menuLeafIdsmember.contains(projectTask.getSquadId())) {
                 projectTask.setDuty("经理/组长");

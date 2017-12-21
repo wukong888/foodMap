@@ -112,6 +112,11 @@
     from project_task where handler = #{handler}
   </select>
 
+  <select id="getAvgTaskProgress" resultType="java.lang.Integer" >
+    SELECT AVG (CONVERT(int,taskProgress))
+    from project_task where proId = #{proId}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_task
     where taskId = #{taskId,jdbcType=INTEGER}

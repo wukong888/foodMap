@@ -326,4 +326,16 @@ public class MyProjectServiceImpl implements MyProjectService {
 
         return projectInfoMapper.getActivityCount(map);
     }
+
+    @Override
+    public Integer getAvgTaskProgress(int proId) {
+
+        return projectTaskMapper.getAvgTaskProgress(proId);
+    }
+
+    @Override
+    public Integer getAvgSubTaskProgress(int taskId) {
+
+        return projectSubtaskMapper.getAvgSubTaskProgress(taskId);
+    }
 }

@@ -44,4 +44,6 @@ public interface ProjectTaskMapper {
     boolean updateTaskProgress(Integer proId);
 
     List<Map<String,Object>> getProjectTaskListMapByZuZhang(Map<String,Object> map);
+
+    Integer getAvgTaskProgress(Integer proId);
 }

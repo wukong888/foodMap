@@ -1,6 +1,7 @@
 package com.marketing.system.mapper_two;
 
 import com.marketing.system.entity.ProjectSubtask;
+import io.swagger.models.auth.In;
 
 import java.util.List;
 import java.util.Map;
@@ -37,5 +38,7 @@ public interface ProjectSubtaskMapper {
     boolean updateSubtaskProgress(Map<String,Object> map);
 
     ProjectSubtask selectProSubtaskByMap(Map<String,Object> map);
+
+    Integer getAvgSubTaskProgress(Integer taskId);
 
 }

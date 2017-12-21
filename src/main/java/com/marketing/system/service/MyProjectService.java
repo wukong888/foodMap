@@ -106,4 +106,9 @@ public interface MyProjectService {
     //查询活动数量
     Integer getActivityCount(Map<String,Object> map);
 
+    //通过任务计算项目进度
+    Integer getAvgTaskProgress(int proId);
+
+    //根据子任务查计算询任务进度
+    Integer getAvgSubTaskProgress(int taskId);
 }

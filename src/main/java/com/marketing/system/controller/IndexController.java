@@ -431,13 +431,13 @@ public class IndexController {
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getCEOHomePageApprovedProducts", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getCEOHomePageApprovedProducts(
+    public ApiResult<List<ProjectInfo>> getCEOHomePageApprovedProducts(
             @RequestParam(value = "userId", required = true) int userId,
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
 
         Map<String, Object> map = new HashMap<>();
-        ApiResult<List<Map<String, Object>>> result = null;
+        ApiResult<List<ProjectInfo>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
@@ -473,7 +473,7 @@ public class IndexController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, rdPage);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoList, rdPage);
         } catch (Exception e) {
             logger.error("CEO首页接口-待审批的产品项目:" + e);
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -488,13 +488,13 @@ public class IndexController {
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getCEOHomePageActivityProducts", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getCEOHomePageActivityProducts(
+    public ApiResult<List<ProjectInfo>> getCEOHomePageActivityProducts(
             @RequestParam(value = "userId", required = true) int userId,
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
 
         Map<String, Object> map = new HashMap<>();
-        ApiResult<List<Map<String, Object>>> result = null;
+        ApiResult<List<ProjectInfo>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
@@ -528,7 +528,7 @@ public class IndexController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, rdPage);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoList, rdPage);
         } catch (Exception e) {
             logger.error("CEO首页接口-待审批的活动项目:" + e);
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -542,12 +542,12 @@ public class IndexController {
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页显示条数", required = true, dataType = "Integer")
     })
     @RequestMapping(value = "/getCEOHomePageDevelopProducts", method = RequestMethod.POST)
-    public ApiResult<List<Map<String, Object>>> getCEOHomePageDevelopProducts(
+    public ApiResult<List<ProjectInfo>> getCEOHomePageDevelopProducts(
             @RequestParam(value = "current") int current,
             @RequestParam(value = "pageSize") int pageSize) {
 
         Map<String, Object> map = new HashMap<>();
-        ApiResult<List<Map<String, Object>>> result = null;
+        ApiResult<List<ProjectInfo>> result = null;
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         try {
@@ -575,7 +575,7 @@ public class IndexController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, list, rdPage);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoList, rdPage);
         } catch (Exception e) {
             logger.error("开发中的总项目数:" + e);
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);

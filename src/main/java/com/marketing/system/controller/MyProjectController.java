@@ -361,7 +361,7 @@ public class MyProjectController {
                     pro = ToolUtil.setDuty(pro, userName, user, new HashMap());
                 }
 
-                if (projectInfosNew3.size() > 0) {
+                /*if (projectInfosNew3.size() > 0) {
                     for (ProjectInfo map1 : projectInfosNew3) {
                         map1.getCreater();
                         if (!StringUtil.isEmpty(user.getDuty()) && user.getDuty() != "") {
@@ -384,7 +384,7 @@ public class MyProjectController {
                             map1.setDuty("项目无关人员");
                         }
                     }
-                }
+                }*/
                 for (Map map1 : taskList) {
                     if (map1.get("proId") == (Integer.valueOf(pro.getProid()))) {
                         projectInfosNew.add(pro);
@@ -608,17 +608,9 @@ public class MyProjectController {
             }
 
             List<Map<String, Object>> taskList = new ArrayList<>();
-            if (user.getDuty().contains("组长")) {
-                Map<String,Object> mapZuZhang = new HashMap<>();
-                mapZuZhang.put("proId",proId);
-                mapZuZhang.put("squadId",user.getUserGroupId());
-                //参与组
-                taskList = upProjectService.getProjectTaskListMapByZuZhang(mapZuZhang);
-            } else {
-                //参与组
-                taskList = upProjectService.getProjectTaskListMap1(proId);
-            }
 
+            //参与组
+            taskList = upProjectService.getProjectTaskListMap1(proId);
 
             ProjectTask projectTaskNew = new ProjectTask();
 
@@ -636,6 +628,19 @@ public class MyProjectController {
                 String squad = departmentNew.getDeptno();
                 //projectTask.setSquadId(group.getSquad());//根据id取对应小组中文名
                 projectTask.put("squad", squad);//根据id取对应小组中文名
+
+                if (user.getDuty().contains("组长")) {
+                    Map<String,Object> mapZuZhang = new HashMap<>();
+                    mapZuZhang.put("proId",proId);
+                    mapZuZhang.put("squadId",user.getUserGroupId());
+
+                    if (projectTask.get("squadId").equals(String.valueOf(user.getUserGroupId()))) {
+                        projectTask.put("power","true");
+                    } else {
+                        projectTask.put("power","false");
+                    }
+
+                }
 
                 //判断该任务有无子任务
                 int taskProgress = 0;

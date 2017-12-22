@@ -454,12 +454,14 @@ public class IndexController {
 
             //待审批产品-点击查看
             List<ProjectInfo> infoList = new ArrayList<>();
+            List<ProjectInfo> infoListNew = new ArrayList<>();
             List<Map<String,Object>> mapList = new ArrayList<>();
 
             Map<String, Object> map1 = new HashMap<>();
             map1.put("current", current);
             map1.put("pageSize", 1000);
             infoList = indexService.getApprovedProducts(map1);
+            infoListNew = ToolUtil.listSplit2(current, pageSize, infoList);
 
             map.put("approvedProductsList", infoList);//待审批产品-点击查看
 
@@ -473,7 +475,7 @@ public class IndexController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoList, rdPage);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoListNew, rdPage);
         } catch (Exception e) {
             logger.error("CEO首页接口-待审批的产品项目:" + e);
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -511,11 +513,13 @@ public class IndexController {
 
             //待审批活动-点击查看
             List<ProjectInfo> infoList = new ArrayList<>();
+            List<ProjectInfo> infoListNew = new ArrayList<>();
 
             Map<String, Object> map1 = new HashMap<>();
             map1.put("current", current);
             map1.put("pageSize", 1000);
             infoList = indexService.getActivityProducts(map1);
+            infoListNew = ToolUtil.listSplit2(current, pageSize, infoList);
             map.put("activityProductsList", infoList);//待审批活动-点击查看
 
             Integer sum = infoList.size();
@@ -528,7 +532,7 @@ public class IndexController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoList, rdPage);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoListNew, rdPage);
         } catch (Exception e) {
             logger.error("CEO首页接口-待审批的活动项目:" + e);
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
@@ -557,12 +561,15 @@ public class IndexController {
 
             //开发中的总项目数-点击查看
             List<ProjectInfo> infoList = new ArrayList<>();
+            List<ProjectInfo> infoListNew = new ArrayList<>();
 
             Map<String, Object> map1 = new HashMap<>();
             map1.put("current", current);
             map1.put("pageSize", 1000);
 
             infoList = indexService.getAllDevelopProjectsList(map1);
+
+            infoListNew = ToolUtil.listSplit2(current, pageSize, infoList);
             map.put("developProductsList", infoList);//开发中项目数-点击查看
 
             Integer sum = infoList.size();
@@ -575,7 +582,7 @@ public class IndexController {
             rdPage.setCurrent(current);
             rdPage.setPageSize(pageSize);
 
-            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoList, rdPage);
+            result = new ApiResult<>(Constant.SUCCEED_CODE_VALUE, Constant.OPERATION_SUCCESS, infoListNew, rdPage);
         } catch (Exception e) {
             logger.error("开发中的总项目数:" + e);
             result = new ApiResult<>(Constant.FAIL_CODE_VALUE, Constant.OPERATION_FAIL, null, null);
